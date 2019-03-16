@@ -1,6 +1,6 @@
 {
-  "name": "ts-helpers-sefa",
-  "version": "1.0.4",
+  "name": "helpers-lib",
+  "version": "1.0.0",
   "description": "Typescript Helpers Library",
   "main": "dist/index.js",
   "repository": {

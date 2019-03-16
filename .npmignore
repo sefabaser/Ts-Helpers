@@ -1,4 +1,6 @@
-src/
+src
 tslint.json
 tsconfig.json
 jasmine.json
+**/*.spec.js
+**/*.spec.d.ts
