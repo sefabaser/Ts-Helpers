@@ -1,8 +1,8 @@
 {
   "name": "ts-helpers-sefa",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Typescript Helpers Library",
-  "main": "index.js",
+  "main": "dist/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sefabaser/Ts-Helpers.git"
@@ -22,7 +22,8 @@
   "scripts": {
     "build": "tsc",
     "pretest": "clear",
-    "test": "node_modules/jasmine/bin/jasmine.js JASMINE_CONFIG_PATH=jasmine.json"
+    "test": "node_modules/jasmine/bin/jasmine.js JASMINE_CONFIG_PATH=jasmine.json",
+    "deploy": "npm run build && npm publish"
   },
   "devDependencies": {
     "@types/node": "^11.11.3",
