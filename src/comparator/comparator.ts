@@ -7,6 +7,10 @@ export class Comparator {
     return a && typeof a === 'object';
   }
 
+  static isObservable(a: any) {
+    return Comparator.isObject(a) && !!a._subscribe;
+  }
+
   static isString(a: any) {
     return typeof a === 'string';
   }
@@ -70,6 +74,7 @@ export class Comparator {
 
         a.forEach((item: any) => {
           if (!b.has(item)) {
+            // TODO: this needs to do deep check
             equal = false;
           }
         });
@@ -92,6 +97,8 @@ export class Comparator {
       } else {
         return false;
       }
+    } else if (Comparator.isDate(a) && Comparator.isDate(b)) {
+      return (<Date>a).getTime() === (<Date>b).getTime();
     } else if (Comparator.isObject(a) && Comparator.isObject(b)) {
       if (Object.keys(a).length === Object.keys(b).length) {
         let equal = true;

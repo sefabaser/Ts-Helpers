@@ -27,6 +27,13 @@ describe(`Comparator`, () => {
     });
   });
 
+  describe(`isObservable`, () => {
+    it('should compare non observable object', () => {
+      let obj = 'str';
+      expect(Comparator.isObservable(obj)).toEqual(false);
+    });
+  });
+
   describe(`isString`, () => {
     it('should compare non string object', () => {
       let obj = 2;
@@ -269,6 +276,11 @@ describe(`Comparator`, () => {
     it('should compare objects deeply with Maps', () => {
       expect(Comparator.isEqual({ a: { b: new Map([[1, 'one']]) } }, { a: { b: [[1, 'one']] } })).toEqual(false);
       expect(Comparator.isEqual({ a: { b: new Map([[1, 'one']]) } }, { a: { b: new Map([[1, 'one']]) } })).toEqual(true);
+    });
+
+    it('should compare objects deeply with Dates', () => {
+      expect(Comparator.isEqual({ a: { b: new Date(1) } }, { a: { b: new Date(1000000) } })).toEqual(false);
+      expect(Comparator.isEqual({ a: { b: new Date(1) } }, { a: { b: new Date(1) } })).toEqual(true);
     });
   });
 });
