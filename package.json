@@ -1,6 +1,6 @@
 {
   "name": "helpers-lib",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Typescript Helpers Library",
   "main": "dist/index.js",
   "repository": {
@@ -22,7 +22,7 @@
   "scripts": {
     "build": "tsc",
     "pretest": "clear",
-    "test": "node_modules/jasmine/bin/jasmine.js JASMINE_CONFIG_PATH=jasmine.json",
+    "test": "jasmine JASMINE_CONFIG_PATH=jasmine.json",
     "deploy": "npm test && npm run build && npm publish"
   },
   "devDependencies": {

@@ -72,4 +72,19 @@ export class JsonHelper {
   static mergeMaps(map1: Map<any, any>, map2: Map<any, any>) {
     return new Map([...Array.from(map1.entries()), ...Array.from(map2.entries())]);
   }
+
+  static stringify(obj: any) {
+    return JSON.stringify(obj, () => {
+      const seen = new WeakSet();
+      return (key: any, value: any) => {
+        if (typeof value === 'object' && value !== null) {
+          if (seen.has(value)) {
+            return;
+          }
+          seen.add(value);
+        }
+        return value;
+      };
+    });
+  }
 }
