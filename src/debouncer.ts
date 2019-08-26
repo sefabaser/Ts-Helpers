@@ -1,7 +1,9 @@
 export class Debouncer {
-  timeout: any;
+  private timeout: any;
 
-  debounce(func: () => void, wait: number, immediate = false) {
+  constructor(private waitTime: number = 200) {}
+
+  debounce(func: () => void, immediate = false) {
     if (immediate) {
       this.timeout && clearTimeout(this.timeout);
       this.timeout = null;
@@ -11,7 +13,7 @@ export class Debouncer {
       this.timeout = setTimeout(() => {
         this.timeout = null;
         func();
-      }, wait);
+      }, this.waitTime);
     }
   }
 }
