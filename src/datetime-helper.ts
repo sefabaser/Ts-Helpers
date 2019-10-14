@@ -1,6 +1,6 @@
 export class DatetimeHelper {
   static getNumberOfDaysInYear(year: number) {
-    return DatetimeHelper.isLeapYear(year) ? 366 : 355;
+    return DatetimeHelper.isLeapYear(year) ? 366 : 365;
   }
 
   static isLeapYear(year: number) {
