@@ -7,6 +7,12 @@ export class DatetimeHelper {
     return year % 400 === 0 || (year % 100 !== 0 && year % 4 === 0);
   }
 
+  static addDay(date: Date, days: number) {
+    let result = new Date(date.getTime());
+    result.setDate(date.getDate() + days);
+    return result;
+  }
+
   static differenceInDays(date1: Date, date2: Date) {
     return Math.abs(date1.valueOf() - date2.valueOf()) / this.totalTicksInOneDay;
   }
