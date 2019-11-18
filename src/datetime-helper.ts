@@ -16,15 +16,51 @@ export class DatetimeHelper {
   }
 
   static differenceInDays(date1: Date, date2: Date) {
-    return Math.abs(date1.valueOf() - date2.valueOf()) / this.totalTicksInOneDay;
+    return Math.abs(date1.getTime() - date2.getTime()) / this.totalTicksInOneDay;
   }
 
   static differanceInHours(date1: Date, date2: Date) {
-    return Math.abs(date1.valueOf() - date2.valueOf()) / this.totalTicksInOneHour;
+    return Math.abs(date1.getTime() - date2.getTime()) / this.totalTicksInOneHour;
+  }
+
+  static getStartOfTheDay(date = new Date()): Date {
+    let response = new Date(date.getTime());
+    response.setHours(0, 0, 0, 0);
+    return response;
+  }
+
+  static getStartOfTheNextDay(date = new Date()): Date {
+    let response = this.getStartOfTheDay(date);
+    response.setDate(response.getDate() + 1);
+    return response;
+  }
+
+  static getDayCountOfTheMonth(date: Date): number {
+    if (Comparator.isDate(date)) {
+      return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+    } else {
+      throw -1;
+    }
+  }
+
+  static addDays(date: Date, days: number) {
+    let result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
+  }
+
+  static isSameDay(date1: Date, date2: Date): boolean {
+    if (Comparator.isDate(date1) && Comparator.isDate(date2)) {
+      let date1Tick = this.getDayTick(date1);
+      let date2Tick = this.getDayTick(date2);
+      return date1Tick > -1 && date1Tick === date2Tick;
+    } else {
+      return false;
+    }
   }
 
   static getDayTick(date: Date): number {
-    return Math.floor(date.valueOf() / this.totalTicksInOneDay);
+    return Math.floor(date.getTime() / this.totalTicksInOneDay);
   }
 
   static get totalTicksInOneDay() {
