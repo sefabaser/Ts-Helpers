@@ -9,12 +9,6 @@ export class DatetimeHelper {
     return year % 400 === 0 || (year % 100 !== 0 && year % 4 === 0);
   }
 
-  static addDay(date: Date, days: number) {
-    let result = new Date(date.getTime());
-    result.setDate(date.getDate() + days);
-    return result;
-  }
-
   static differenceInDays(date1: Date, date2: Date) {
     return Math.abs(date1.getTime() - date2.getTime()) / this.totalTicksInOneDay;
   }
@@ -26,12 +20,6 @@ export class DatetimeHelper {
   static getStartOfTheDay(date = new Date()): Date {
     let response = new Date(date.getTime());
     response.setHours(0, 0, 0, 0);
-    return response;
-  }
-
-  static getStartOfTheNextDay(date = new Date()): Date {
-    let response = this.getStartOfTheDay(date);
-    response.setDate(response.getDate() + 1);
     return response;
   }
 
