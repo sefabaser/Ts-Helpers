@@ -127,4 +127,17 @@ describe(`Json Helper`, () => {
       expect(mergedMap.get('y')).toEqual('4');
     });
   });
+
+  describe(`Get Subset`, () => {
+    it('should return the subset of object', () => {
+      let result = JsonHelper.getSubset({ a: 1, b: 2, c: 3 }, ['a', 'b']);
+      expect(result).toEqual({ a: 1, b: 2 });
+    });
+
+    it('should throw error if called by non object parameter', () => {
+      expect(() => {
+        JsonHelper.getSubset('a', ['a']);
+      }).toThrow();
+    });
+  });
 });

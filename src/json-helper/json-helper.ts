@@ -1,3 +1,5 @@
+import { Comparator } from '../comparator/comparator';
+
 export class JsonHelper {
   static deepFind(obj: any, path: string) {
     if (!path) {
@@ -86,5 +88,18 @@ export class JsonHelper {
         return value;
       };
     });
+  }
+
+  static getSubset<T>(obj: T, properties: string[]): Partial<T> {
+    if (!Comparator.isObject(obj)) {
+      throw new Error(`JsonHelper.getSubset: 'object' type is expected! Type received: '${typeof obj}'`);
+    }
+
+    let subset = {};
+    properties.forEach(key => {
+      // @ts-ignore
+      subset[key] = obj[key];
+    });
+    return subset;
   }
 }
