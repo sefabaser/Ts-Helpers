@@ -90,6 +90,11 @@ describe(`Comparator`, () => {
       let obj = 2;
       expect(Comparator.isNumber(obj)).toEqual(true);
     });
+
+    it('should compare number as string', () => {
+      let obj = '2';
+      expect(Comparator.isNumber(obj)).toEqual(false);
+    });
   });
 
   describe(`isBoolean`, () => {

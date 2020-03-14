@@ -24,7 +24,7 @@ export class Comparator {
   }
 
   static isNumber(a: any) {
-    return !isNaN(a);
+    return !isNaN(a) && typeof a === 'number';
   }
 
   static isBoolean(a: any) {
