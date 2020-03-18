@@ -29,46 +29,54 @@ export class JsonHelper {
   }
 
   static deepCopy<T>(target: T): T {
-    if (target === null) {
+    try {
+      if (target === null) {
+        return target;
+      }
+
+      if (target instanceof Date) {
+        return new Date(target.getTime()) as any;
+      }
+
+      if (target instanceof Array) {
+        const cp = [] as any[];
+        (target as any[]).forEach(v => {
+          cp.push(v);
+        });
+        return cp.map((n: any) => JsonHelper.deepCopy<any>(n)) as any;
+      }
+
+      if (target instanceof Set) {
+        const cp = new Set<any>();
+        (target as Set<any>).forEach(v => {
+          cp.add(JsonHelper.deepCopy<any>(v));
+        });
+        return cp as any;
+      }
+
+      if (target instanceof Map) {
+        const cp = new Map<any, any>();
+        (target as Map<any, any>).forEach((v, k) => {
+          cp.set(k, JsonHelper.deepCopy<any>(v));
+        });
+        return cp as any;
+      }
+
+      if (typeof target === 'object' && target !== {}) {
+        const cp = { ...(target as { [key: string]: any }) } as { [key: string]: any };
+        Object.keys(cp).forEach(k => {
+          cp[k] = JsonHelper.deepCopy<any>(cp[k]);
+        });
+        return cp as T;
+      }
       return target;
+    } catch (e) {
+      if (e instanceof RangeError) {
+        throw new Error('Deep copy attempt on circularly dependent object!');
+      } else {
+        throw e;
+      }
     }
-
-    if (target instanceof Date) {
-      return new Date(target.getTime()) as any;
-    }
-
-    if (target instanceof Array) {
-      const cp = [] as any[];
-      (target as any[]).forEach(v => {
-        cp.push(v);
-      });
-      return cp.map((n: any) => JsonHelper.deepCopy<any>(n)) as any;
-    }
-
-    if (target instanceof Set) {
-      const cp = new Set<any>();
-      (target as Set<any>).forEach(v => {
-        cp.add(JsonHelper.deepCopy<any>(v));
-      });
-      return cp as any;
-    }
-
-    if (target instanceof Map) {
-      const cp = new Map<any, any>();
-      (target as Map<any, any>).forEach((v, k) => {
-        cp.set(k, JsonHelper.deepCopy<any>(v));
-      });
-      return cp as any;
-    }
-
-    if (typeof target === 'object' && target !== {}) {
-      const cp = { ...(target as { [key: string]: any }) } as { [key: string]: any };
-      Object.keys(cp).forEach(k => {
-        cp[k] = JsonHelper.deepCopy<any>(cp[k]);
-      });
-      return cp as T;
-    }
-    return target;
   }
 
   static mergeMaps(map1: Map<any, any>, map2: Map<any, any>) {

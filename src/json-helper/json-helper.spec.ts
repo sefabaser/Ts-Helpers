@@ -108,6 +108,14 @@ describe(`Json Helper`, () => {
       expect(obj.a.b !== copy.a.b).toEqual(true);
       expect(copy.a.b.get('a')).toEqual('b');
     });
+
+    it('should throw error for looped object', () => {
+      let obj: any = {};
+      obj.obj = obj;
+      expect(() => {
+        JsonHelper.deepCopy(obj);
+      }).toThrow();
+    });
   });
 
   describe(`Merge Maps`, () => {
