@@ -80,8 +80,7 @@ export class JsonHelper {
   }
 
   static deepCompare(item1: any, item2: any): boolean {
-    // TODO: it is naive implementation, add complex type support
-    return JSON.stringify(item1) === JSON.stringify(item2);
+    return Comparator.isEqual(item1, item2);
   }
 
   static mergeMaps(map1: Map<any, any>, map2: Map<any, any>) {
