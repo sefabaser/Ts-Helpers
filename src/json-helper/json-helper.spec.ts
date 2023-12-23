@@ -51,7 +51,7 @@ describe(`Json Helper`, () => {
   describe(`Deep Copy`, () => {
     it('should work with primitive types', () => {
       let primitiveTypeSamples = [undefined, null, NaN, 0, 1, '', '0', 'false', 'true', 'str', true, false];
-      primitiveTypeSamples.forEach(item => {
+      primitiveTypeSamples.forEach((item) => {
         let copy = JsonHelper.deepCopy(item);
         expect(JSON.stringify(item)).toEqual(JSON.stringify(JsonHelper.deepCopy(copy)));
       });
@@ -59,7 +59,7 @@ describe(`Json Helper`, () => {
 
     it('should deep copy objects', () => {
       let sampleObjects = [{}, { a: 1 }, { a: true }, { a: {} }, { a: { b: 1 } }];
-      sampleObjects.forEach(item => {
+      sampleObjects.forEach((item) => {
         let copy = JsonHelper.deepCopy(item);
         expect(JSON.stringify(item)).toEqual(JSON.stringify(JsonHelper.deepCopy(copy)));
         expect(item !== copy).toEqual(true);

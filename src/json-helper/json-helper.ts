@@ -20,7 +20,7 @@ export class JsonHelper {
       let paths = path.split('.');
       let current = obj;
 
-      paths.forEach(currentPath => {
+      paths.forEach((currentPath) => {
         current = (current && current[currentPath]) || undefined;
       });
 
@@ -40,7 +40,7 @@ export class JsonHelper {
 
       if (target instanceof Array) {
         const cp = [] as any[];
-        (target as any[]).forEach(v => {
+        (target as any[]).forEach((v) => {
           cp.push(v);
         });
         return cp.map((n: any) => JsonHelper.deepCopy<any>(n)) as any;
@@ -48,7 +48,7 @@ export class JsonHelper {
 
       if (target instanceof Set) {
         const cp = new Set<any>();
-        (target as Set<any>).forEach(v => {
+        (target as Set<any>).forEach((v) => {
           cp.add(JsonHelper.deepCopy<any>(v));
         });
         return cp as any;
@@ -62,9 +62,9 @@ export class JsonHelper {
         return cp as any;
       }
 
-      if (typeof target === 'object' && target !== {}) {
+      if (typeof target === 'object') {
         const cp = { ...(target as { [key: string]: any }) } as { [key: string]: any };
-        Object.keys(cp).forEach(k => {
+        Object.keys(cp).forEach((k) => {
           cp[k] = JsonHelper.deepCopy<any>(cp[k]);
         });
         return cp as T;
@@ -108,7 +108,7 @@ export class JsonHelper {
     }
 
     let subset = {};
-    properties.forEach(key => {
+    properties.forEach((key) => {
       // @ts-ignore
       subset[key] = obj[key];
     });
