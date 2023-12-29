@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { Comparator } from '../comparator/comparator';
 
 export class JsonHelper {
-  static deepFind(obj: any, path: string) {
+  static deepFind(obj: any, path: string): any {
     if (!path) {
       return obj;
     } else {
@@ -20,7 +21,7 @@ export class JsonHelper {
       let paths = path.split('.');
       let current = obj;
 
-      paths.forEach((currentPath) => {
+      paths.forEach(currentPath => {
         current = (current && current[currentPath]) || undefined;
       });
 
@@ -30,6 +31,7 @@ export class JsonHelper {
 
   static deepCopy<T>(target: T): T {
     try {
+      // eslint-disable-next-line no-null/no-null
       if (target === null) {
         return target;
       }
@@ -39,35 +41,35 @@ export class JsonHelper {
       }
 
       if (target instanceof Array) {
-        const cp = [] as any[];
-        (target as any[]).forEach((v) => {
-          cp.push(v);
+        let targetClone = [] as any[];
+        (target as any[]).forEach(v => {
+          targetClone.push(v);
         });
-        return cp.map((n: any) => JsonHelper.deepCopy<any>(n)) as any;
+        return targetClone.map((n: any) => JsonHelper.deepCopy<any>(n)) as any;
       }
 
       if (target instanceof Set) {
-        const cp = new Set<any>();
-        (target as Set<any>).forEach((v) => {
-          cp.add(JsonHelper.deepCopy<any>(v));
+        let targetClone = new Set<any>();
+        (target as Set<any>).forEach(v => {
+          targetClone.add(JsonHelper.deepCopy<any>(v));
         });
-        return cp as any;
+        return targetClone as any;
       }
 
       if (target instanceof Map) {
-        const cp = new Map<any, any>();
+        let targetClone = new Map<any, any>();
         (target as Map<any, any>).forEach((v, k) => {
-          cp.set(k, JsonHelper.deepCopy<any>(v));
+          targetClone.set(k, JsonHelper.deepCopy<any>(v));
         });
-        return cp as any;
+        return targetClone as any;
       }
 
       if (typeof target === 'object') {
-        const cp = { ...(target as { [key: string]: any }) } as { [key: string]: any };
-        Object.keys(cp).forEach((k) => {
-          cp[k] = JsonHelper.deepCopy<any>(cp[k]);
+        let targetClone = { ...(target as { [key: string]: any }) } as { [key: string]: any };
+        Object.keys(targetClone).forEach(k => {
+          targetClone[k] = JsonHelper.deepCopy<any>(targetClone[k]);
         });
-        return cp as T;
+        return targetClone as T;
       }
       return target;
     } catch (e) {
@@ -83,14 +85,15 @@ export class JsonHelper {
     return Comparator.isEqual(item1, item2);
   }
 
-  static mergeMaps(map1: Map<any, any>, map2: Map<any, any>) {
+  static mergeMaps(map1: Map<any, any>, map2: Map<any, any>): Map<any, any> {
     return new Map([...Array.from(map1.entries()), ...Array.from(map2.entries())]);
   }
 
-  static stringify(obj: any) {
+  static stringify(obj: any): string {
     return JSON.stringify(obj, () => {
-      const seen = new WeakSet();
+      let seen = new WeakSet();
       return (key: any, value: any) => {
+        // eslint-disable-next-line no-null/no-null
         if (typeof value === 'object' && value !== null) {
           if (seen.has(value)) {
             return;
@@ -108,7 +111,7 @@ export class JsonHelper {
     }
 
     let subset = {};
-    properties.forEach((key) => {
+    properties.forEach(key => {
       // @ts-ignore
       subset[key] = obj[key];
     });

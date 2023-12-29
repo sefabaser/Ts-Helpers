@@ -1,45 +1,46 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 export class Comparator {
-  static isFunction(fn: any) {
+  static isFunction(fn: any): boolean {
     return typeof fn === 'function';
   }
 
-  static isObject(a: any) {
-    return a && typeof a === 'object';
+  static isObject(a: any): boolean {
+    return !!a && typeof a === 'object';
   }
 
-  static isObservable(a: any) {
+  static isObservable(a: any): boolean {
     return Comparator.isObject(a) && !!a._subscribe;
   }
 
-  static isString(a: any) {
+  static isString(a: any): boolean {
     return typeof a === 'string';
   }
 
-  static isDate(a: any) {
+  static isDate(a: any): boolean {
     return a instanceof Date && !isNaN(a.getTime());
   }
 
-  static isInteger(a: any) {
+  static isInteger(a: any): boolean {
     return Number.isInteger(a);
   }
 
-  static isNumber(a: any) {
+  static isNumber(a: any): boolean {
     return !isNaN(a) && typeof a === 'number';
   }
 
-  static isBoolean(a: any) {
+  static isBoolean(a: any): boolean {
     return typeof a === 'boolean';
   }
 
-  static isArray(a: any) {
+  static isArray(a: any): boolean {
     return Array.isArray(a);
   }
 
-  static isSet(a: any) {
+  static isSet(a: any): boolean {
     return a instanceof Set;
   }
 
-  static isMap(a: any) {
+  static isMap(a: any): boolean {
     return a instanceof Map;
   }
 
@@ -47,11 +48,11 @@ export class Comparator {
     return Object.values(enumType).includes(value);
   }
 
-  static isEmptyObject(obj: any) {
+  static isEmptyObject(obj: any): boolean {
     return Comparator.isObject(obj) && Object.keys(obj).length === 0;
   }
 
-  static isEqual(a: any, b: any) {
+  static isEqual(a: any, b: any): boolean {
     if (a === b) {
       return true;
     } else if (Comparator.isArray(a) || Comparator.isArray(b)) {

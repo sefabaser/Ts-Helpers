@@ -4,15 +4,15 @@ export class Debouncer {
 
   constructor(private waitTime: number = 200) {}
 
-  debounce(func: () => void, immediate = false) {
+  debounce(func: () => void, immediate = false): void {
     if (immediate) {
       this.timeout && clearTimeout(this.timeout);
-      this.timeout = null;
+      this.timeout = undefined;
       func();
     } else {
       clearTimeout(this.timeout);
       this.timeout = setTimeout(() => {
-        this.timeout = null;
+        this.timeout = undefined;
         func();
       }, this.waitTime);
     }
@@ -28,7 +28,7 @@ export class FunctionDelayer {
     this.delay = delay;
   }
 
-  call(callback: () => void) {
+  call(callback: () => void): void {
     this.halt();
     this.delayerTimeout = setTimeout(() => {
       this.delayerTimeout = undefined;
@@ -36,11 +36,11 @@ export class FunctionDelayer {
     }, this.delay);
   }
 
-  halt() {
+  halt(): void {
     this.delayerTimeout && clearTimeout(this.delayerTimeout);
   }
 }
 
-export function Wait(duration: number = 0) {
-  return new Promise(resolve => setTimeout(resolve, duration));
+export function Wait(duration: number = 0): Promise<void> {
+  return new Promise<void>(resolve => setTimeout(resolve, duration));
 }

@@ -1,19 +1,19 @@
 import { Comparator } from './comparator/comparator';
 
 export class DatetimeHelper {
-  static getNumberOfDaysInYear(year: number) {
+  static getNumberOfDaysInYear(year: number): 365 | 366 {
     return DatetimeHelper.isLeapYear(year) ? 366 : 365;
   }
 
-  static isLeapYear(year: number) {
+  static isLeapYear(year: number): boolean {
     return year % 400 === 0 || (year % 100 !== 0 && year % 4 === 0);
   }
 
-  static differenceInDays(date1: Date, date2: Date) {
+  static differenceInDays(date1: Date, date2: Date): number {
     return Math.abs(date1.getTime() - date2.getTime()) / this.totalTicksInOneDay;
   }
 
-  static differanceInHours(date1: Date, date2: Date) {
+  static differanceInHours(date1: Date, date2: Date): number {
     return Math.abs(date1.getTime() - date2.getTime()) / this.totalTicksInOneHour;
   }
 
@@ -27,11 +27,11 @@ export class DatetimeHelper {
     if (Comparator.isDate(date)) {
       return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
     } else {
-      throw -1;
+      throw new Error('Invalid date');
     }
   }
 
-  static addDays(date: Date, days: number) {
+  static addDays(date: Date, days: number): Date {
     let result = new Date(date);
     result.setDate(result.getDate() + days);
     return result;
@@ -51,11 +51,11 @@ export class DatetimeHelper {
     return Math.floor(date.getTime() / this.totalTicksInOneDay);
   }
 
-  static get totalTicksInOneDay() {
+  static get totalTicksInOneDay(): number {
     return 24 * 60 * 60 * 1000;
   }
 
-  static get totalTicksInOneHour() {
+  static get totalTicksInOneHour(): number {
     return 60 * 60 * 1000;
   }
 
@@ -72,7 +72,9 @@ export class DatetimeHelper {
   }
 
   static dateToSimpleString(date: Date): string {
-    return `${date.getFullYear()}-${date.getMonth() + 1 < 10 ? '0' : ''}${date.getMonth() + 1}-${date.getDate() < 10 ? '0' : ''}${date.getDate()}`;
+    return `${date.getFullYear()}-${date.getMonth() + 1 < 10 ? '0' : ''}${date.getMonth() + 1}-${
+      date.getDate() < 10 ? '0' : ''
+    }${date.getDate()}`;
   }
 
   static getDaysBetweenRange(from: Date, to: Date): Date[] {
@@ -88,7 +90,9 @@ export class DatetimeHelper {
 
   private static addDayWithoutTimeZone(date: Date): Date {
     let dateCandidate = new Date(
-      `${date.getFullYear()}-${date.getMonth() + 1 < 10 ? '0' : ''}${date.getMonth() + 1}-${date.getDate() + 1 < 10 ? '0' : ''}${date.getDate() + 1}`
+      `${date.getFullYear()}-${date.getMonth() + 1 < 10 ? '0' : ''}${date.getMonth() + 1}-${
+        date.getDate() + 1 < 10 ? '0' : ''
+      }${date.getDate() + 1}`
     );
     if (!Comparator.isDate(dateCandidate)) {
       dateCandidate = new Date(`${date.getFullYear()}-${date.getMonth() + 2 < 10 ? '0' : ''}${date.getMonth() + 2}-01`);

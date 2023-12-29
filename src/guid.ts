@@ -1,6 +1,4 @@
 export class Guid {
-  private guid: string;
-
   static next(): Guid {
     let guid = '';
     let i: string;
@@ -18,6 +16,9 @@ export class Guid {
     }
     return new Guid(guid);
   }
+private guid: string;
+
+
 
   constructor(guid: string) {
     this.guid = guid;

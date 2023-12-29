@@ -1,3 +1,4 @@
+/* eslint-disable no-null/no-null */
 import { Comparator } from './comparator';
 
 describe(`Comparator`, () => {
@@ -9,7 +10,7 @@ describe(`Comparator`, () => {
 
     it('should compare function', () => {
       let arrowFunction = () => {};
-      let functionExpression = function() {};
+      let functionExpression = function () {};
       expect(Comparator.isFunction(arrowFunction)).toEqual(true);
       expect(Comparator.isFunction(functionExpression)).toEqual(true);
     });
@@ -280,7 +281,9 @@ describe(`Comparator`, () => {
 
     it('should compare objects deeply with Maps', () => {
       expect(Comparator.isEqual({ a: { b: new Map([[1, 'one']]) } }, { a: { b: [[1, 'one']] } })).toEqual(false);
-      expect(Comparator.isEqual({ a: { b: new Map([[1, 'one']]) } }, { a: { b: new Map([[1, 'one']]) } })).toEqual(true);
+      expect(Comparator.isEqual({ a: { b: new Map([[1, 'one']]) } }, { a: { b: new Map([[1, 'one']]) } })).toEqual(
+        true
+      );
     });
 
     it('should compare objects deeply with Dates', () => {
