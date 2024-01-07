@@ -1,5 +1,7 @@
 export { Comparator } from './comparator/comparator';
 export { JsonHelper } from './json-helper/json-helper';
 export { FunctionDelayer, Debouncer, Wait } from './delayer/delayer';
-export { Guid } from './guid';
-export { DatetimeHelper } from './datetime-helper';
+export { Guid } from './random/guid';
+export { DatetimeHelper } from './datetime-helper/datetime-helper';
+export { Random } from './random/random';
+export { Vec2 } from './vector/vector';

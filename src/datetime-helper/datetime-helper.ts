@@ -1,4 +1,4 @@
-import { Comparator } from './comparator/comparator';
+import { Comparator } from '../comparator/comparator';
 
 export class DatetimeHelper {
   static getNumberOfDaysInYear(year: number): 365 | 366 {
