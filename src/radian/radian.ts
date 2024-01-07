@@ -4,53 +4,41 @@ const DoublePI = Math.PI * 2;
 const HalfPI = Math.PI / 2;
 
 export class Radian {
-  static fromVector(vector: Vec2): Radian {
-    return new Radian(Math.atan2(-vector.y, vector.x) + HalfPI).normalize();
+  static vectorToRadian(vector: Vec2): number {
+    return Math.atan2(-vector.y, vector.x) + HalfPI;
   }
 
-  get radian(): number {
-    return this._radian;
-  }
-
-  private _radian: number;
-
-  constructor(radian: number) {
-    this._radian = radian;
-    this.normalize();
-  }
-
-  toVector(): Vec2 {
+  static radianToVector(radian: number): Vec2 {
     return {
-      x: Math.cos(this._radian),
-      y: Math.sin(this._radian)
+      x: Math.cos(radian),
+      y: Math.sin(radian)
     };
   }
 
   /*
    * Normalize radian to [-PI, PI]
    */
-  normalize(): Radian {
-    this._radian = this._radian % DoublePI;
-    if (this._radian < -Math.PI) {
-      this._radian += Math.ceil(-this._radian / DoublePI) * DoublePI;
-    } else if (this._radian > Math.PI) {
-      this._radian -= Math.floor(this._radian / DoublePI) * DoublePI;
+  static normalize(radian: number): number {
+    radian = radian % DoublePI;
+    if (radian < -Math.PI) {
+      radian += Math.ceil(-radian / DoublePI) * DoublePI;
+    } else if (radian > Math.PI) {
+      radian -= Math.floor(radian / DoublePI) * DoublePI;
     }
-    this._radian = this.ensurePositiveZero(this._radian);
-    return this;
+    return this.ensurePositiveZero(radian);
   }
 
-  acuteAngle(radian2: Radian): Radian {
-    let result = (radian2.radian - this._radian) % DoublePI;
+  static acuteAngle(radian1: number, radian2: number): number {
+    let result = (radian2 - radian1) % DoublePI;
     if (result > Math.PI) {
       result = result - DoublePI;
     } else if (result < -Math.PI) {
       result = result + DoublePI;
     }
-    return new Radian(result);
+    return result;
   }
 
-  private ensurePositiveZero(value: number): number {
+  private static ensurePositiveZero(value: number): number {
     return value === 0 ? 0 : value;
   }
 }
