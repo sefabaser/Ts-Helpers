@@ -10,8 +10,6 @@ export interface Vec3 {
 }
 
 const GridRotationTop: Vec2 = { x: 1 / Math.pow(2, 1 / 2), y: -1 / Math.pow(2, 1 / 2) };
-const DoublePI = Math.PI * 2;
-const HalfPI = Math.PI / 2;
 
 export class Vector {
   static isEqual(vector1: Vec2 | undefined, vector2: Vec2 | undefined): boolean {
@@ -92,42 +90,11 @@ export class Vector {
     }
   }
 
-  static radianToVector(radian: number): Vec2 {
-    return {
-      x: Math.cos(radian),
-      y: Math.sin(radian)
-    };
-  }
-
   static getLength(vector: Vec2): number {
     return Math.sqrt(Math.pow(vector.x, 2) + Math.pow(vector.y, 2));
   }
 
   static getDistance(position1: Vec2, position2: Vec2): number {
     return Math.abs(this.getLength(this.fromTo(position1, position2)));
-  }
-
-  static getRadian(vector: Vec2): number {
-    return this.normalizeRadian(Math.atan2(-vector.y, vector.x) + HalfPI);
-  }
-
-  static normalizeRadian(radian: number): number {
-    if (radian <= 0) {
-      radian += Math.ceil(-radian / DoublePI) * DoublePI;
-      return radian;
-    } else {
-      return radian % DoublePI;
-    }
-  }
-
-  static acuteAngle(radian1: number, radian2: number): number {
-    let result = (radian2 - radian1) % DoublePI;
-    if (result > Math.PI) {
-      return result - DoublePI;
-    } else if (result < -Math.PI) {
-      return result + DoublePI;
-    } else {
-      return result;
-    }
   }
 }

@@ -1,7 +1,7 @@
 import { Vector } from './vector';
 
-describe('Vector', () => {
-  describe('Rotate', () => {
+describe('Vector: ', () => {
+  describe('Rotate: ', () => {
     it('basic rotation 1', () => {
       let vec1 = { x: 1, y: 0 };
       let vec2 = { x: 1, y: 0 };
@@ -33,7 +33,7 @@ describe('Vector', () => {
     });
   });
 
-  describe('Normalize', () => {
+  describe('Normalize: ', () => {
     it('basic 1', () => {
       let vec = { x: 1, y: 0 };
       expect(Vector.normalize(vec)).toEqual({ x: 1, y: 0 });
@@ -60,45 +60,7 @@ describe('Vector', () => {
     });
   });
 
-  describe('NormalizeRadian', () => {
-    it('basic 1', () => {
-      expect(Vector.normalizeRadian(0)).toEqual(0);
-    });
-
-    it('basic 2', () => {
-      expect(Vector.normalizeRadian(1)).toEqual(1);
-    });
-
-    it('basic 3', () => {
-      expect(Vector.normalizeRadian(Math.PI * 2)).toEqual(0);
-    });
-
-    it('negative 1', () => {
-      expect(Vector.normalizeRadian(-1)).toEqual(Math.PI * 2 - 1);
-    });
-
-    it('negative 2', () => {
-      expect(Vector.normalizeRadian(-0)).toEqual(0);
-    });
-
-    it('negative 3', () => {
-      expect(Vector.normalizeRadian(-Math.PI * 2)).toEqual(0);
-    });
-
-    it('big number 1', () => {
-      expect(Vector.normalizeRadian(Math.PI * 2 + 1)).toEqual(1);
-    });
-
-    it('big number 2', () => {
-      expect(Vector.normalizeRadian(-Math.PI * 2 - 1)).toEqual(Math.PI * 2 - 1);
-    });
-
-    it('big number 3', () => {
-      expect(Vector.normalizeRadian(Math.PI * 4 + 1)).toEqual(1);
-    });
-  });
-
-  describe('GetDistance', () => {
+  describe('GetDistance: ', () => {
     it('basic 1', () => {
       let vec1 = { x: 0, y: 0 };
       let vec2 = { x: 0, y: 0 };

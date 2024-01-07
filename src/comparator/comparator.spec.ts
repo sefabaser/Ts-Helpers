@@ -1,8 +1,8 @@
 /* eslint-disable no-null/no-null */
 import { Comparator } from './comparator';
 
-describe(`Comparator`, () => {
-  describe(`isFunction`, () => {
+describe(`Comparator: `, () => {
+  describe(`IsFunction: `, () => {
     it('should compare non function object', () => {
       let obj = 'str';
       expect(Comparator.isFunction(obj)).toEqual(false);
@@ -16,7 +16,7 @@ describe(`Comparator`, () => {
     });
   });
 
-  describe(`isObject`, () => {
+  describe(`IsObject: `, () => {
     it('should compare non object', () => {
       let obj = 'str';
       expect(Comparator.isObject(obj)).toEqual(false);
@@ -28,14 +28,14 @@ describe(`Comparator`, () => {
     });
   });
 
-  describe(`isObservable`, () => {
+  describe(`IsObservable: `, () => {
     it('should compare non observable object', () => {
       let obj = 'str';
       expect(Comparator.isObservable(obj)).toEqual(false);
     });
   });
 
-  describe(`isString`, () => {
+  describe(`IsString: `, () => {
     it('should compare non string object', () => {
       let obj = 2;
       expect(Comparator.isString(obj)).toEqual(false);
@@ -47,7 +47,7 @@ describe(`Comparator`, () => {
     });
   });
 
-  describe(`isDate`, () => {
+  describe(`IsDate: `, () => {
     it('should compare non date object', () => {
       let obj = 'str';
       expect(Comparator.isDate(obj)).toEqual(false);
@@ -64,7 +64,7 @@ describe(`Comparator`, () => {
     });
   });
 
-  describe(`isInteger`, () => {
+  describe(`IsInteger: `, () => {
     it('should compare non integer object', () => {
       let obj = 'str';
       expect(Comparator.isInteger(obj)).toEqual(false);
@@ -81,7 +81,7 @@ describe(`Comparator`, () => {
     });
   });
 
-  describe(`isNumber`, () => {
+  describe(`IsNumber: `, () => {
     it('should compare non number object', () => {
       let obj = 'str';
       expect(Comparator.isNumber(obj)).toEqual(false);
@@ -98,7 +98,7 @@ describe(`Comparator`, () => {
     });
   });
 
-  describe(`isBoolean`, () => {
+  describe(`IsBoolean: `, () => {
     it('should compare non boolean object', () => {
       let obj = 'str';
       expect(Comparator.isBoolean(obj)).toEqual(false);
@@ -110,7 +110,7 @@ describe(`Comparator`, () => {
     });
   });
 
-  describe(`isArray`, () => {
+  describe(`IsArray: `, () => {
     it('should compare non array object', () => {
       let obj = 'str';
       expect(Comparator.isArray(obj)).toEqual(false);
@@ -122,7 +122,7 @@ describe(`Comparator`, () => {
     });
   });
 
-  describe(`isSet`, () => {
+  describe(`IsSet: `, () => {
     it('should compare empty non Set item', () => {
       expect(Comparator.isSet(new Map())).toEqual(false);
     });
@@ -137,7 +137,7 @@ describe(`Comparator`, () => {
     });
   });
 
-  describe(`isMap`, () => {
+  describe(`IsMap: `, () => {
     it('should compare empty non Map item', () => {
       expect(Comparator.isMap(new Set())).toEqual(false);
     });
@@ -152,7 +152,7 @@ describe(`Comparator`, () => {
     });
   });
 
-  describe(`isEnum`, () => {
+  describe(`IsEnum: `, () => {
     enum SampleEnum {
       a = '1',
       b = '2'
@@ -168,7 +168,7 @@ describe(`Comparator`, () => {
     });
   });
 
-  describe(`isEmptyObject`, () => {
+  describe(`IsEmptyObject: `, () => {
     it('should compare non object variable', () => {
       let obj = 'str';
       expect(Comparator.isEmptyObject(obj)).toEqual(false);
@@ -180,7 +180,7 @@ describe(`Comparator`, () => {
     });
   });
 
-  describe(`isEqual`, () => {
+  describe(`IsEqual: `, () => {
     it('should compare two empty values', () => {
       expect(Comparator.isEqual(undefined, undefined)).toEqual(true);
       expect(Comparator.isEqual(undefined, '')).toEqual(false);

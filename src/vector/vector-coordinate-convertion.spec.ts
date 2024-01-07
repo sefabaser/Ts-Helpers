@@ -1,7 +1,7 @@
 import { Vec2, Vector } from './vector';
 
-describe('Vector', () => {
-  describe('vector to camera perspective', () => {
+describe('Vector: ', () => {
+  describe('CameraPerspectiveToVector: ', () => {
     it('sample 1', () => {
       let vector: Vec2 = { x: 1, y: 0 };
       let cameraPerspective = Vector.vectorToCameraPerspective(vector);

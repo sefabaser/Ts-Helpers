@@ -1,7 +1,7 @@
 import { JsonHelper } from './json-helper';
 
-describe(`Json Helper`, () => {
-  describe(`Deep Find`, () => {
+describe(`Json Helper: `, () => {
+  describe(`Deep Find: `, () => {
     it('should not break with undefined object', () => {
       expect(JsonHelper.deepFind(undefined, 'a.b')).toBeUndefined();
     });
@@ -48,7 +48,7 @@ describe(`Json Helper`, () => {
     });
   });
 
-  describe(`Deep Copy`, () => {
+  describe(`Deep Copy: `, () => {
     it('should work with primitive types', () => {
       // eslint-disable-next-line no-null/no-null
       let primitiveTypeSamples = [undefined, null, NaN, 0, 1, '', '0', 'false', 'true', 'str', true, false];
@@ -119,7 +119,7 @@ describe(`Json Helper`, () => {
     });
   });
 
-  describe(`Merge Maps`, () => {
+  describe(`Merge Maps: `, () => {
     it('should combines all entries of two maps', () => {
       let map1 = new Map<string, string>();
       let map2 = new Map<string, string>();
@@ -137,7 +137,7 @@ describe(`Json Helper`, () => {
     });
   });
 
-  describe(`Get Subset`, () => {
+  describe(`Get Subset: `, () => {
     it('should return the subset of object', () => {
       let result = JsonHelper.getSubset({ a: 1, b: 2, c: 3 }, ['a', 'b']);
       expect(result).toEqual({ a: 1, b: 2 });
