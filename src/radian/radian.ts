@@ -10,8 +10,8 @@ export class Radian {
 
   static radianToVector(radian: number): Vec2 {
     return {
-      x: Math.cos(radian),
-      y: Math.sin(radian)
+      x: this.removeUnderflow(Math.sin(radian)),
+      y: this.removeUnderflow(Math.cos(radian))
     };
   }
 
@@ -40,5 +40,9 @@ export class Radian {
 
   private static ensurePositiveZero(value: number): number {
     return value === 0 ? 0 : value;
+  }
+
+  private static removeUnderflow(num: number): number {
+    return Math.abs(num) < Number.EPSILON ? 0 : Number.parseFloat(num.toFixed(15));
   }
 }

@@ -1,10 +1,6 @@
 import { Radian } from './radian';
 
 describe('Radian: ', () => {
-  describe('ToVector: ', () => {
-    // TODO
-  });
-
   describe('VectorToRadian: ', () => {
     it('sample 1', () => {
       let vec = { x: 1, y: 0 };
@@ -34,6 +30,38 @@ describe('Radian: ', () => {
     it('sample 6', () => {
       let vec = { x: 4, y: 3 };
       expect(Radian.vectorToRadian(vec)).toEqual(0.9272952180016122);
+    });
+  });
+
+  describe('RadianToVector: ', () => {
+    it('sample 1', () => {
+      let vec = { x: 1, y: 0 };
+      expect(Radian.radianToVector(Math.PI / 2)).toEqual(vec);
+    });
+
+    it('sample 2', () => {
+      let vec = { x: -1, y: 0 };
+      expect(Radian.radianToVector(-Math.PI / 2)).toEqual(vec);
+    });
+
+    it('sample 3', () => {
+      let vec = { x: 0, y: 1 };
+      expect(Radian.radianToVector(0)).toEqual(vec);
+    });
+
+    it('sample 4', () => {
+      let vec = { x: 0, y: -1 };
+      expect(Radian.radianToVector(Math.PI)).toEqual(vec);
+    });
+
+    it('sample 5', () => {
+      let vec = { x: 0.8, y: -0.6 };
+      expect(Radian.radianToVector(2.214297435588181)).toEqual(vec);
+    });
+
+    it('sample 6', () => {
+      let vec = { x: 0.8, y: 0.6 };
+      expect(Radian.radianToVector(0.9272952180016122)).toEqual(vec);
     });
   });
 
