@@ -54,7 +54,7 @@ export class Vector {
   }
 
   static normalize(vector: Vec2, value: number = 1): Vec2 {
-    let length = Math.sqrt(Math.pow(vector.x, 2) + Math.pow(vector.y, 2));
+    let length = this.getLength(vector);
     if (length === 0 || value === 0) {
       return { x: 1, y: 0 };
     } else {
@@ -87,5 +87,19 @@ export class Vector {
 
   static getDistance(vector1: Vec2, vector2: Vec2): number {
     return Math.abs(this.getLength(this.fromTo(vector1, vector2)));
+  }
+
+  static ensureMaxLength(vector: Vec2, maxLength: number): Vec2 {
+    let length = this.getLength(vector);
+    if (length > maxLength) {
+      if (length === 0 || maxLength === 0) {
+        return { x: 1, y: 0 };
+      } else {
+        length = length / maxLength;
+        return { x: vector.x / length, y: vector.y / length };
+      }
+    } else {
+      return vector;
+    }
   }
 }

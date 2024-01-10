@@ -327,4 +327,31 @@ describe('Vector: ', () => {
       expect(Vector.getLength(vec)).toEqual(5);
     });
   });
+
+  describe('EnsureMaxLength: ', () => {
+    it('sample 1', () => {
+      let vec = { x: 0, y: 0 };
+      expect(Vector.ensureMaxLength(vec, 1)).toEqual({ x: 0, y: 0 });
+    });
+
+    it('sample 2', () => {
+      let vec = { x: 1, y: 0 };
+      expect(Vector.ensureMaxLength(vec, 1)).toEqual({ x: 1, y: 0 });
+    });
+
+    it('sample 3', () => {
+      let vec = { x: 1, y: 0 };
+      expect(Vector.ensureMaxLength(vec, 2)).toEqual({ x: 1, y: 0 });
+    });
+
+    it('sample 4', () => {
+      let vec = { x: 1, y: 1 };
+      expect(Vector.ensureMaxLength(vec, 2)).toEqual({ x: 1, y: 1 });
+    });
+
+    it('sample 5', () => {
+      let vec = { x: 6, y: 8 };
+      expect(Vector.ensureMaxLength(vec, 5)).toEqual({ x: 3, y: 4 });
+    });
+  });
 });
