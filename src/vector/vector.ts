@@ -9,8 +9,6 @@ export interface Vec3 {
   readonly z: number;
 }
 
-const GridRotationTop: Vec2 = { x: 1 / Math.pow(2, 1 / 2), y: -1 / Math.pow(2, 1 / 2) };
-
 export class Vector {
   static isEqual(vector1: Vec2 | undefined, vector2: Vec2 | undefined): boolean {
     if (!vector1 || !vector2) {
