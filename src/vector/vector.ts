@@ -53,12 +53,13 @@ export class Vector {
     return { x: vector1.x * vector2.x - vector1.y * vector2.y, y: vector1.x * vector2.y + vector1.y * vector2.x };
   }
 
-  static normalize(vector: Vec2): Vec2 {
+  static normalize(vector: Vec2, value: number = 1): Vec2 {
     let length = Math.sqrt(Math.pow(vector.x, 2) + Math.pow(vector.y, 2));
-    if (length !== 0) {
-      return { x: vector.x / length, y: vector.y / length };
-    } else {
+    if (length === 0 || value === 0) {
       return { x: 1, y: 0 };
+    } else {
+      length = length / value;
+      return { x: vector.x / length, y: vector.y / length };
     }
   }
 
