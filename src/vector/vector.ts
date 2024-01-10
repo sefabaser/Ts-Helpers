@@ -48,32 +48,6 @@ export class Vector {
     };
   }
 
-  static getCoordinates(position: Vec2): Vec3 {
-    return {
-      x: position.x * 128 - position.y * 128,
-      y: position.x * 64 + position.y * 64 + 64,
-      z: position.x + position.y
-    };
-  }
-
-  static getWorldSize(gridSize: Vec2): Vec2 {
-    let worldSizeMultiplier = (gridSize.x + gridSize.y) / 2;
-    return {
-      x: worldSizeMultiplier * 256,
-      y: worldSizeMultiplier * 128 + 20
-    };
-  }
-
-  static cameraPerspectiveToVector(coordinates: Vec2): Vec2 {
-    coordinates = { x: coordinates.x, y: -coordinates.y * 2 };
-    return this.rotate(coordinates, { x: GridRotationTop.x, y: GridRotationTop.y }, false);
-  }
-
-  static vectorToCameraPerspective(vector: Vec2): Vec2 {
-    let rotationTop = this.rotate(vector, { x: GridRotationTop.x, y: -GridRotationTop.y }, false);
-    return { x: rotationTop.x, y: -rotationTop.y / 2 };
-  }
-
   static rotate(vector1: Vec2, vector2: Vec2, normalize: boolean = true): Vec2 {
     if (normalize) {
       vector2 = this.normalize(vector2);
@@ -90,11 +64,29 @@ export class Vector {
     }
   }
 
+  static projection(vector1: Vec2, vector2: Vec2): Vec2 {
+    let vector2Length = this.getLength(vector2);
+    if (vector2Length === 0) {
+      return { x: 0, y: 0 };
+    }
+
+    let dotProduct = this.getDotProduct(vector1, vector2);
+    let multiplier = dotProduct / (vector2Length * vector2Length);
+    return {
+      x: multiplier * vector2.x,
+      y: multiplier * vector2.y
+    };
+  }
+
+  static getDotProduct(vector1: Vec2, vector2: Vec2): number {
+    return vector1.x * vector2.x + vector1.y * vector2.y;
+  }
+
   static getLength(vector: Vec2): number {
     return Math.sqrt(Math.pow(vector.x, 2) + Math.pow(vector.y, 2));
   }
 
-  static getDistance(position1: Vec2, position2: Vec2): number {
-    return Math.abs(this.getLength(this.fromTo(position1, position2)));
+  static getDistance(vector1: Vec2, vector2: Vec2): number {
+    return Math.abs(this.getLength(this.fromTo(vector1, vector2)));
   }
 }

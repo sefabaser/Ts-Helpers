@@ -1,3 +1,4 @@
+import { NumberHelper } from '../number-helper/number-helper';
 import { Vec2 } from '../vector/vector';
 
 const DoublePI = Math.PI * 2;
@@ -10,8 +11,8 @@ export class Radian {
 
   static radianToVector(radian: number): Vec2 {
     return {
-      x: this.removeUnderflow(Math.sin(radian)),
-      y: this.removeUnderflow(Math.cos(radian))
+      x: NumberHelper.removeUnderflow(Math.sin(radian)),
+      y: NumberHelper.removeUnderflow(Math.cos(radian))
     };
   }
 
@@ -25,7 +26,7 @@ export class Radian {
     } else if (radian > Math.PI) {
       radian -= Math.floor(radian / DoublePI) * DoublePI;
     }
-    return this.ensurePositiveZero(radian);
+    return NumberHelper.ensurePositiveZero(radian);
   }
 
   static acuteAngle(radian1: number, radian2: number): number {
@@ -36,13 +37,5 @@ export class Radian {
       result = result + DoublePI;
     }
     return result;
-  }
-
-  private static ensurePositiveZero(value: number): number {
-    return value === 0 ? 0 : value;
-  }
-
-  private static removeUnderflow(num: number): number {
-    return Math.abs(num) < Number.EPSILON ? 0 : Number.parseFloat(num.toFixed(15));
   }
 }
