@@ -6,13 +6,14 @@ const HalfPI = Math.PI / 2;
 
 export class Radian {
   static vectorToRadian(vector: Vec2): number {
-    return Math.atan2(-vector.y, vector.x) + HalfPI;
+    let radian = Math.atan2(vector.y, vector.x) + HalfPI;
+    return radian > Math.PI ? radian - DoublePI : radian;
   }
 
   static radianToVector(radian: number): Vec2 {
     return {
       x: NumberHelper.removeUnderflow(Math.sin(radian)),
-      y: NumberHelper.removeUnderflow(Math.cos(radian))
+      y: NumberHelper.removeUnderflow(Math.cos(Math.PI - radian))
     };
   }
 

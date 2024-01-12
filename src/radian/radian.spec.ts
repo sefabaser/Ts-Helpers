@@ -14,22 +14,27 @@ describe('Radian: ', () => {
 
     it('sample 3', () => {
       let vec = { x: 0, y: 1 };
-      expect(Radian.vectorToRadian(vec)).toEqual(0);
+      expect(Radian.vectorToRadian(vec)).toEqual(Math.PI);
     });
 
     it('sample 4', () => {
       let vec = { x: 0, y: -1 };
-      expect(Radian.vectorToRadian(vec)).toEqual(Math.PI);
+      expect(Radian.vectorToRadian(vec)).toEqual(0);
     });
 
     it('sample 5', () => {
       let vec = { x: 4, y: -3 };
-      expect(Radian.vectorToRadian(vec)).toEqual(2.214297435588181);
+      expect(Radian.vectorToRadian(vec)).toEqual(0.9272952180016122);
     });
 
     it('sample 6', () => {
       let vec = { x: 4, y: 3 };
-      expect(Radian.vectorToRadian(vec)).toEqual(0.9272952180016122);
+      expect(Radian.vectorToRadian(vec)).toEqual(2.214297435588181);
+    });
+
+    it('sample 7', () => {
+      let vec = { x: -4, y: 3 };
+      expect(Radian.vectorToRadian(vec)).toEqual(-2.214297435588181);
     });
   });
 
@@ -46,22 +51,27 @@ describe('Radian: ', () => {
 
     it('sample 3', () => {
       let vec = { x: 0, y: 1 };
-      expect(Radian.radianToVector(0)).toEqual(vec);
+      expect(Radian.radianToVector(Math.PI)).toEqual(vec);
     });
 
     it('sample 4', () => {
       let vec = { x: 0, y: -1 };
-      expect(Radian.radianToVector(Math.PI)).toEqual(vec);
+      expect(Radian.radianToVector(0)).toEqual(vec);
     });
 
     it('sample 5', () => {
       let vec = { x: 0.8, y: -0.6 };
-      expect(Radian.radianToVector(2.214297435588181)).toEqual(vec);
+      expect(Radian.radianToVector(0.9272952180016122)).toEqual(vec);
     });
 
     it('sample 6', () => {
       let vec = { x: 0.8, y: 0.6 };
-      expect(Radian.radianToVector(0.9272952180016122)).toEqual(vec);
+      expect(Radian.radianToVector(2.214297435588181)).toEqual(vec);
+    });
+
+    it('sample 7', () => {
+      let vec = { x: -0.8, y: 0.6 };
+      expect(Radian.radianToVector(-2.214297435588181)).toEqual(vec);
     });
   });
 
