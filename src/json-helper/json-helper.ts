@@ -117,4 +117,24 @@ export class JsonHelper {
     });
     return subset;
   }
+
+  static arrayToObject(array: { [key: string]: any }[], keyPath: string): { [key: string]: any } {
+    if (keyPath.length === 0) {
+      throw new Error(`JsonHelper.arrayToObject: keyPath is empty!`);
+    }
+
+    let obj = {};
+    array.forEach(item => {
+      let key = this.deepFind(item, keyPath);
+      if (key === undefined) {
+        throw new Error(`JsonHelper.arrayToObject: key '${keyPath}' not found in item '${JSON.stringify(item)}'`);
+      }
+      if (!Comparator.isString(key)) {
+        throw new Error(`JsonHelper.arrayToObject: key '${keyPath}: ${key}' is not a string!`);
+      }
+      // @ts-ignore
+      obj[key] = item;
+    });
+    return obj;
+  }
 }

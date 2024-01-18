@@ -149,4 +149,52 @@ describe(`Json Helper: `, () => {
       }).toThrow();
     });
   });
+
+  describe(`Array to Object: `, () => {
+    it('should convert empty array to object', () => {
+      let result = JsonHelper.arrayToObject([], 'a');
+      expect(result).toEqual({});
+    });
+
+    it('should convert array to object', () => {
+      let result = JsonHelper.arrayToObject(
+        [
+          { a: { key: 'one' }, val: 1 },
+          { a: { key: 'two' }, val: 2 }
+        ],
+        'a.key'
+      );
+      expect(result).toEqual({ one: { a: { key: 'one' }, val: 1 }, two: { a: { key: 'two' }, val: 2 } });
+    });
+
+    it('should throw error if called by empty string parameter', () => {
+      expect(() => {
+        JsonHelper.arrayToObject([], '');
+      }).toThrow();
+    });
+
+    it('should throw error if key is not found', () => {
+      expect(() => {
+        JsonHelper.arrayToObject(
+          [
+            { a: 'one', val: 1 },
+            { a: 'two', val: 2 }
+          ],
+          'b'
+        );
+      }).toThrow();
+    });
+
+    it('should throw error if key is not a string', () => {
+      expect(() => {
+        JsonHelper.arrayToObject(
+          [
+            { a: 1, val: 1 },
+            { a: 2, val: 2 }
+          ],
+          'a'
+        );
+      }).toThrow();
+    });
+  });
 });
