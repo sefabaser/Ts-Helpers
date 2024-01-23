@@ -150,32 +150,32 @@ describe('Vector: ', () => {
   describe('Rotate: ', () => {
     it('basic rotation 1', () => {
       let vec1 = { x: 1, y: 0 };
-      let vec2 = { x: 1, y: 0 };
+      let vec2 = { x: 0, y: -1 };
       expect(Vector.rotate(vec1, vec2, false)).toEqual({ x: 1, y: 0 });
     });
 
     it('basic rotation 2', () => {
       let vec1 = { x: 1, y: 0 };
-      let vec2 = { x: 0, y: 1 };
-      expect(Vector.rotate(vec1, vec2, false)).toEqual({ x: 0, y: 1 });
+      let vec2 = { x: -1, y: 0 };
+      expect(Vector.rotate(vec1, vec2, false)).toEqual({ x: 0, y: -1 });
     });
 
     it('rotation with normalization', () => {
       let vec1 = { x: 3, y: 0 };
-      let vec2 = { x: 0, y: 2 };
-      expect(Vector.rotate(vec1, vec2)).toEqual({ x: 0, y: 3 });
+      let vec2 = { x: -2, y: 0 };
+      expect(Vector.rotate(vec1, vec2)).toEqual({ x: 0, y: -3 });
     });
 
     it('complex rotation with normalization 1', () => {
-      let vec1 = { x: 3, y: 2 };
-      let vec2 = { x: 2, y: 3 };
-      expect(Vector.rotate(vec1, vec2)).toEqual({ x: 0, y: 3.6055512754639896 });
+      let vec1 = { x: 4, y: -3 };
+      let vec2 = { x: -3, y: -4 };
+      expect(Vector.rotate(vec1, vec2)).toEqual({ x: 1.4000000000000004, y: -4.800000000000001 });
     });
 
     it('complex rotation with normalization 2', () => {
       let vec1 = { x: 3, y: 2 };
-      let vec2 = { x: -1, y: 3 };
-      expect(Vector.rotate(vec1, vec2)).toEqual({ x: -2.846049894151541, y: 2.213594362117865 });
+      let vec2 = { x: -3, y: 1 };
+      expect(Vector.rotate(vec1, vec2)).toEqual({ x: 0.9486832980505138, y: -3.478505426185217 });
     });
   });
 

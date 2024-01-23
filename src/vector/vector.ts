@@ -50,7 +50,7 @@ export class Vector {
     if (normalize) {
       vector2 = this.normalize(vector2);
     }
-    return { x: vector1.x * vector2.x - vector1.y * vector2.y, y: vector1.x * vector2.y + vector1.y * vector2.x };
+    return { x: -vector1.x * vector2.y - vector1.y * vector2.x, y: vector1.x * vector2.x - vector1.y * vector2.y };
   }
 
   static normalize(vector: Vec2, value: number = 1): Vec2 {
