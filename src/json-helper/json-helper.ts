@@ -1,6 +1,14 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { Comparator } from '../comparator/comparator';
 
+export type DeepPartial<T> = {
+  [P in keyof T]?: T[P] extends (infer U)[]
+    ? DeepPartial<U>[]
+    : T[P] extends ReadonlyArray<infer U>
+    ? readonly DeepPartial<U>[]
+    : DeepPartial<T[P]>;
+};
+
 export class JsonHelper {
   static deepFind(obj: any, path: string): any {
     if (!path) {
@@ -121,7 +129,7 @@ export class JsonHelper {
   static arrayToObject<T extends { [key: string]: any }>(
     array: T[],
     keyPath: string,
-    transformFunction?: (item: Partial<T>) => any
+    transformFunction?: (item: DeepPartial<T>) => any
   ): { [key: string]: any } {
     if (keyPath.length === 0) {
       throw new Error(`JsonHelper.arrayToObject: keyPath is empty!`);

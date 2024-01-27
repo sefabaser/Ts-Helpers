@@ -1,5 +1,5 @@
 export { Comparator } from './comparator/comparator';
-export { JsonHelper } from './json-helper/json-helper';
+export { JsonHelper, DeepPartial } from './json-helper/json-helper';
 export { FunctionDelayer, Debouncer, Wait } from './delayer/delayer';
 export { Guid } from './random/guid';
 export { DatetimeHelper } from './datetime-helper/datetime-helper';

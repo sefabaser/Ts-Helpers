@@ -186,10 +186,13 @@ describe(`Json Helper: `, () => {
       ];
 
       JsonHelper.arrayToObject(array, 'a.key', item => {
-        delete item.val;
+        delete item.a?.key;
         return item;
       });
-      expect(array).toEqual([{ a: { key: 'one' } }, { a: { key: 'two' } }]);
+      expect(array).toEqual([
+        { a: {}, val: 1 },
+        { a: {}, val: 2 }
+      ]);
     });
 
     it('should throw error if called by empty string parameter', () => {
