@@ -118,7 +118,11 @@ export class JsonHelper {
     return subset;
   }
 
-  static arrayToObject(array: { [key: string]: any }[], keyPath: string): { [key: string]: any } {
+  static arrayToObject<T extends { [key: string]: any }>(
+    array: T[],
+    keyPath: string,
+    transformFunction?: (item: T) => any
+  ): { [key: string]: any } {
     if (keyPath.length === 0) {
       throw new Error(`JsonHelper.arrayToObject: keyPath is empty!`);
     }
@@ -132,8 +136,14 @@ export class JsonHelper {
       if (!Comparator.isString(key)) {
         throw new Error(`JsonHelper.arrayToObject: key '${keyPath}: ${key}' is not a string!`);
       }
+
+      let outputItem = item;
+      if (transformFunction) {
+        outputItem = transformFunction(item);
+      }
+
       // @ts-ignore
-      obj[key] = item;
+      obj[key] = outputItem;
     });
     return obj;
   }

@@ -167,6 +167,18 @@ describe(`Json Helper: `, () => {
       expect(result).toEqual({ one: { a: { key: 'one' }, val: 1 }, two: { a: { key: 'two' }, val: 2 } });
     });
 
+    it('should convert array to object with transform function', () => {
+      let result = JsonHelper.arrayToObject(
+        [
+          { a: { key: 'one' }, val: 1 },
+          { a: { key: 'two' }, val: 2 }
+        ],
+        'a.key',
+        item => item.val
+      );
+      expect(result).toEqual({ one: 1, two: 2 });
+    });
+
     it('should throw error if called by empty string parameter', () => {
       expect(() => {
         JsonHelper.arrayToObject([], '');
