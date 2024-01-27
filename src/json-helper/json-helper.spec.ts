@@ -186,7 +186,7 @@ describe(`Json Helper: `, () => {
       ];
 
       JsonHelper.arrayToObject(array, 'a.key', item => {
-        delete item.a?.key;
+        delete item.a.key;
         return item;
       });
       expect(array).toEqual([
