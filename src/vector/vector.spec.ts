@@ -354,4 +354,42 @@ describe('Vector: ', () => {
       expect(Vector.ensureMaxLength(vec, 5)).toEqual({ x: 3, y: 4 });
     });
   });
+
+  describe('Lerp: ', () => {
+    it('sample 1', () => {
+      let vec1 = { x: 0, y: 0 };
+      let vec2 = { x: 0, y: 0 };
+      expect(Vector.lerp(vec1, vec2, 0)).toEqual({ x: 0, y: 0 });
+    });
+
+    it('sample 2', () => {
+      let vec1 = { x: 0, y: 0 };
+      let vec2 = { x: 1, y: 0 };
+      expect(Vector.lerp(vec1, vec2, 0)).toEqual({ x: 0, y: 0 });
+    });
+
+    it('sample 3', () => {
+      let vec1 = { x: 0, y: 0 };
+      let vec2 = { x: 1, y: 0 };
+      expect(Vector.lerp(vec1, vec2, 1)).toEqual({ x: 1, y: 0 });
+    });
+
+    it('sample 4', () => {
+      let vec1 = { x: 0, y: 0 };
+      let vec2 = { x: 1, y: 0 };
+      expect(Vector.lerp(vec1, vec2, 0.5)).toEqual({ x: 0.5, y: 0 });
+    });
+
+    it('sample 5', () => {
+      let vec1 = { x: 1, y: 1 };
+      let vec2 = { x: 4, y: 3 };
+      expect(Vector.lerp(vec1, vec2, 0.5)).toEqual({ x: 2.5, y: 2 });
+    });
+
+    it('sample 6', () => {
+      let vec1 = { x: 1, y: 1 };
+      let vec2 = { x: 4, y: 3 };
+      expect(Vector.lerp(vec1, vec2, 0.75)).toEqual({ x: 3.25, y: 2.5 });
+    });
+  });
 });

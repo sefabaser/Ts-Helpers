@@ -102,4 +102,11 @@ export class Vector {
       return vector;
     }
   }
+
+  static lerp(vector1: Vec2, vector2: Vec2, t: number): Vec2 {
+    return {
+      x: vector1.x + (vector2.x - vector1.x) * t,
+      y: vector1.y + (vector2.y - vector1.y) * t
+    };
+  }
 }
