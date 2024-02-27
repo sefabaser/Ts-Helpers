@@ -5,6 +5,10 @@ const DoublePI = Math.PI * 2;
 const HalfPI = Math.PI / 2;
 
 export class Radian {
+  static createRandom(): number {
+    return Math.random() * DoublePI - Math.PI;
+  }
+
   static vectorToRadian(vector: Vec2): number {
     let radian = Math.atan2(vector.y, vector.x) + HalfPI;
     return radian > Math.PI ? radian - DoublePI : radian;
