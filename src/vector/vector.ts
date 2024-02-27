@@ -1,5 +1,3 @@
-import { Radian } from '../radian/radian';
-
 export interface Vec2 {
   readonly x: number;
   readonly y: number;
@@ -12,8 +10,12 @@ export interface Vec3 {
 }
 
 export class Vector {
-  static createRandom(): Vec2 {
-    return Radian.radianToVector(Radian.createRandom());
+  static createRandom(length: number = 1): Vec2 {
+    let randomRadian = Math.random() * 2 * Math.PI;
+    return {
+      x: Math.cos(randomRadian) * length,
+      y: Math.sin(randomRadian) * length
+    };
   }
 
   static isEqual(vector1: Vec2 | undefined, vector2: Vec2 | undefined): boolean {
