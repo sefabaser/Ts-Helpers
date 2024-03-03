@@ -18,7 +18,7 @@ export class Vector {
     };
   }
 
-  static zero(): Vec2 {
+  static get zero(): Vec2 {
     return { x: 0, y: 0 };
   }
 
