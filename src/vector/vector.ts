@@ -18,6 +18,10 @@ export class Vector {
     };
   }
 
+  static zero(): Vec2 {
+    return { x: 0, y: 0 };
+  }
+
   static isEqual(vector1: Vec2 | undefined, vector2: Vec2 | undefined): boolean {
     if (!vector1 || !vector2) {
       return false;
