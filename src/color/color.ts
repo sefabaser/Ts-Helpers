@@ -23,6 +23,6 @@ export class ColorHelper {
     let r = parseInt(colorNumbers.slice(0, 2), 16);
     let g = parseInt(colorNumbers.slice(2, 4), 16);
     let b = parseInt(colorNumbers.slice(4, 6), 16);
-    return { r: r / 255, g: g / 255, b: b / 255 };
+    return { r, g, b };
   }
 }
