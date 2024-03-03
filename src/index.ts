@@ -7,3 +7,4 @@ export { Random } from './random/random';
 export { Vec2, Vec3, Vector } from './vector/vector';
 export { Radian } from './radian/radian';
 export { NumberHelper } from './number-helper/number-helper';
+export { Color, ColorHelper } from './color/color';
