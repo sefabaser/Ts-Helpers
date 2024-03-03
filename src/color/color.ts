@@ -5,6 +5,26 @@ export interface RGBColor {
 }
 
 export class ColorHelper {
+  static get black(): RGBColor {
+    return { r: 0, g: 0, b: 0 };
+  }
+
+  static get white(): RGBColor {
+    return { r: 255, g: 255, b: 255 };
+  }
+
+  static get red(): RGBColor {
+    return { r: 255, g: 0, b: 0 };
+  }
+
+  static get green(): RGBColor {
+    return { r: 0, g: 255, b: 0 };
+  }
+
+  static get blue(): RGBColor {
+    return { r: 0, g: 0, b: 255 };
+  }
+
   static hexColorToRGBColor(hex: number): RGBColor {
     let hexString = hex.toString(16);
     while (hexString.length < 6) {
