@@ -185,13 +185,13 @@ describe(`Json Helper: `, () => {
         { a: { key: 'two' }, val: 2 }
       ];
 
-      JsonHelper.arrayToObject(array, 'a.key', item => {
-        delete item.a.key;
-        return item;
-      });
+      JsonHelper.arrayToObject(array, 'a.key', item => ({
+        a: {},
+        val: item.val
+      }));
       expect(array).toEqual([
-        { a: {}, val: 1 },
-        { a: {}, val: 2 }
+        { a: { key: 'one' }, val: 1 },
+        { a: { key: 'two' }, val: 2 }
       ]);
     });
 
