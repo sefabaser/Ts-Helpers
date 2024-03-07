@@ -129,7 +129,7 @@ export class JsonHelper {
   static arrayToObject<T extends { [key: string]: any }>(
     array: T[],
     keyPath: string,
-    transformFunction?: (item: any) => any
+    transformFunction?: (item: T) => any
   ): { [key: string]: any } {
     if (keyPath.length === 0) {
       throw new Error(`JsonHelper.arrayToObject: keyPath is empty!`);
