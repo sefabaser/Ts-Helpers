@@ -180,6 +180,19 @@ describe(`Comparator: `, () => {
     });
   });
 
+  describe(`HasProperty: `, () => {
+    it('should compare non object variable', () => {
+      let obj = 'str';
+      expect(Comparator.hasProperty(obj, 'test')).toEqual(false);
+    });
+
+    it('should compare is object has properties or not', () => {
+      expect(Comparator.hasProperty({}, 'test')).toEqual(false);
+      expect(Comparator.hasProperty({ test: 1 }, 'test')).toEqual(true);
+      expect(Comparator.hasProperty({ test: undefined }, 'test')).toEqual(true);
+    });
+  });
+
   describe(`IsEqual: `, () => {
     it('should compare two empty values', () => {
       expect(Comparator.isEqual(undefined, undefined)).toEqual(true);

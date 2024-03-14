@@ -53,6 +53,15 @@ export class Comparator {
     return Comparator.isObject(obj) && Object.keys(obj).length === 0;
   }
 
+  static hasProperty(obj: any, property: string): boolean {
+    if (Comparator.isObject(obj)) {
+      // eslint-disable-next-line no-prototype-builtins
+      return obj.hasOwnProperty(property);
+    } else {
+      return false;
+    }
+  }
+
   static isEqual(a: any, b: any): boolean {
     if (a === b) {
       return true;
