@@ -191,6 +191,21 @@ describe(`Comparator: `, () => {
       expect(Comparator.hasProperty({ test: 1 }, 'test')).toEqual(true);
       expect(Comparator.hasProperty({ test: undefined }, 'test')).toEqual(true);
     });
+
+    it('should be able to detect getter setter properties', () => {
+      class Foo {
+        private _x = 10;
+        get x() {
+          return this._x;
+        }
+        set x(value: number) {
+          this._x = value;
+        }
+      }
+
+      let obj = new Foo();
+      expect(Comparator.hasProperty(obj, 'x')).toEqual(true);
+    });
   });
 
   describe(`IsEqual: `, () => {
