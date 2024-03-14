@@ -1,54 +1,55 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 export class Comparator {
-  static isFunction(fn: any): boolean {
+  static isFunction(fn: any): fn is (...args: any[]) => any {
     return typeof fn === 'function';
   }
 
-  static isObject(a: any): boolean {
+  static isObject(a: any): a is { [key: string]: any } {
     return !!a && typeof a === 'object';
   }
 
+  // TODO: this should be decorated in actions-lib
   static isObservable(a: any): boolean {
     return Comparator.isObject(a) && !!a._subscribe;
   }
 
-  static isString(a: any): boolean {
+  static isString(a: any): a is string {
     return typeof a === 'string';
   }
 
-  static isDate(a: any): boolean {
+  static isDate(a: any): a is Date {
     return a instanceof Date && !isNaN(a.getTime());
   }
 
-  static isInteger(a: any): boolean {
+  static isInteger(a: any): a is number {
     return Number.isInteger(a);
   }
 
-  static isNumber(a: any): boolean {
+  static isNumber(a: any): a is number {
     return !isNaN(a) && typeof a === 'number';
   }
 
-  static isBoolean(a: any): boolean {
+  static isBoolean(a: any): a is boolean {
     return typeof a === 'boolean';
   }
 
-  static isArray(a: any): boolean {
+  static isArray(a: any): a is any[] {
     return Array.isArray(a);
   }
 
-  static isSet(a: any): boolean {
+  static isSet(a: any): a is Set<any> {
     return a instanceof Set;
   }
 
-  static isMap(a: any): boolean {
+  static isMap(a: any): a is Map<any, any> {
     return a instanceof Map;
   }
 
-  static isEnum(value: any, enumType: any): boolean {
+  static isEnum(value: any, enumType: any): value is { [key: string]: any } {
     return Object.values(enumType).includes(value);
   }
 
-  static isEmptyObject(obj: any): boolean {
+  static isEmptyObject(obj: any): obj is { [key: string]: any } {
     return Comparator.isObject(obj) && Object.keys(obj).length === 0;
   }
 
