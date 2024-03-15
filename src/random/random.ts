@@ -38,8 +38,8 @@ export class Random {
     return Math.random() < possibility;
   }
 
-  static randomBetween(start: number, to: number): number {
-    return Math.floor(Math.random() * (to - start)) + start;
+  static randomIntegerBetween(start: number, to: number): number {
+    return Math.floor(Math.random() * (to - start) + start);
   }
 
   static pickRandomWeight(weights: number[] | ReadonlyArray<number>): number {

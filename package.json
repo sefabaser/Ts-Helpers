@@ -1,6 +1,6 @@
 {
   "name": "helpers-lib",
-  "version": "1.5.28",
+  "version": "1.5.29",
   "description": "Typescript Helpers Library",
   "main": "dist/index.js",
   "repository": {
