@@ -55,13 +55,7 @@ export class Comparator {
 
   static hasProperty(obj: any, property: string): boolean {
     if (Comparator.isObject(obj)) {
-      // eslint-disable-next-line no-prototype-builtins
-      if (!obj.hasOwnProperty(property)) {
-        let descriptor = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(obj), property);
-        return descriptor && (descriptor.get || descriptor.set) ? true : false;
-      } else {
-        return true;
-      }
+      return property in obj;
     } else {
       return false;
     }

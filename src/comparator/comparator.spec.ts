@@ -206,6 +206,23 @@ describe(`Comparator: `, () => {
       let obj = new Foo();
       expect(Comparator.hasProperty(obj, 'x')).toEqual(true);
     });
+
+    it('should be able to detect inherited getter setter properties', () => {
+      class Parent {
+        private _x = 10;
+        get x() {
+          return this._x;
+        }
+        set x(value: number) {
+          this._x = value;
+        }
+      }
+
+      class Foo extends Parent {}
+
+      let obj = new Foo();
+      expect(Comparator.hasProperty(obj, 'x')).toEqual(true);
+    });
   });
 
   describe(`IsEqual: `, () => {
