@@ -5,7 +5,7 @@ const DoublePI = Math.PI * 2;
 const HalfPI = Math.PI / 2;
 
 export class Radian {
-  static createRandom(): number {
+  static random(): number {
     return Math.random() * DoublePI - Math.PI;
   }
 
