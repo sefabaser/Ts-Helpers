@@ -9,6 +9,11 @@ export interface Vec3 {
   readonly z: number;
 }
 
+export interface Rectangle {
+  topLeft: Vec2;
+  bottomRight: Vec2;
+}
+
 export class Vector {
   static random(length: number = 1): Vec2 {
     let randomRadian = Math.random() * 2 * Math.PI;
