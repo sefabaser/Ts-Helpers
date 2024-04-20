@@ -44,4 +44,26 @@ describe(`Number Helper: `, () => {
       expect(NumberHelper.removeUnderflow(1.2000000000000002)).toEqual(1.2);
     });
   });
+
+  describe(`Clamp: `, () => {
+    it('sample 1', () => {
+      expect(NumberHelper.clamp(0, 0, 1)).toEqual(0);
+    });
+
+    it('sample 2', () => {
+      expect(NumberHelper.clamp(1, 0, 1)).toEqual(1);
+    });
+
+    it('sample 3', () => {
+      expect(NumberHelper.clamp(-1, 0, 1)).toEqual(0);
+    });
+
+    it('sample 4', () => {
+      expect(NumberHelper.clamp(2, 0, 1)).toEqual(1);
+    });
+
+    it('sample 5', () => {
+      expect(NumberHelper.clamp(0.5, 0, 1)).toEqual(0.5);
+    });
+  });
 });

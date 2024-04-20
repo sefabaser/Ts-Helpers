@@ -99,11 +99,11 @@ export class Vector {
   }
 
   static getLength(vector: Vec2): number {
-    return Math.sqrt(Math.pow(vector.x, 2) + Math.pow(vector.y, 2));
+    return Math.hypot(vector.x, vector.y);
   }
 
   static getDistance(vector1: Vec2, vector2: Vec2): number {
-    return Math.abs(this.getLength(this.fromTo(vector1, vector2)));
+    return this.getLength(this.fromTo(vector1, vector2));
   }
 
   static ensureMaxLength(vector: Vec2, maxLength: number): Vec2 {

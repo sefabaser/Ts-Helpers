@@ -18,21 +18,26 @@ describe('Radian: ', () => {
     });
 
     it('sample 4', () => {
+      let vec = { x: 0, y: 2 };
+      expect(Radian.vectorToRadian(vec)).toEqual(Math.PI);
+    });
+
+    it('sample 5', () => {
       let vec = { x: 0, y: -1 };
       expect(Radian.vectorToRadian(vec)).toEqual(0);
     });
 
-    it('sample 5', () => {
+    it('sample 6', () => {
       let vec = { x: 4, y: -3 };
       expect(Radian.vectorToRadian(vec)).toEqual(0.9272952180016122);
     });
 
-    it('sample 6', () => {
+    it('sample 7', () => {
       let vec = { x: 4, y: 3 };
       expect(Radian.vectorToRadian(vec)).toEqual(2.214297435588181);
     });
 
-    it('sample 7', () => {
+    it('sample 8', () => {
       let vec = { x: -4, y: 3 };
       expect(Radian.vectorToRadian(vec)).toEqual(-2.214297435588181);
     });
