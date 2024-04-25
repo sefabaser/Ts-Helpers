@@ -1,4 +1,4 @@
-import { NumberHelper } from '../number-helper/number-helper';
+import { NumberHelper } from '../../number-helper/number-helper';
 import { Vec2 } from '../vector/vector';
 
 const DoublePI = Math.PI * 2;

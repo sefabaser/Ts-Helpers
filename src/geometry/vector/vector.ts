@@ -9,11 +9,6 @@ export interface Vec3 {
   readonly z: number;
 }
 
-export interface Rectangle {
-  topLeft: Vec2;
-  bottomRight: Vec2;
-}
-
 export class Vector {
   static random(length: number = 1): Vec2 {
     let randomRadian = Math.random() * 2 * Math.PI;
@@ -53,6 +48,13 @@ export class Vector {
     return {
       x: vector.x * multiplier,
       y: vector.y * multiplier
+    };
+  }
+
+  static divide(vector: Vec2, divider: number): Vec2 {
+    return {
+      x: vector.x / divider,
+      y: vector.y / divider
     };
   }
 
