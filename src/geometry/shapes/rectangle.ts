@@ -14,4 +14,17 @@ export class RectangleHelper {
       a.bottomRight.y === b.bottomRight.y
     );
   }
+
+  static isInside(rectangle: Rectangle, point: Vec2): boolean {
+    return (
+      point.x >= rectangle.topLeft.x &&
+      point.x <= rectangle.bottomRight.x &&
+      point.y >= rectangle.topLeft.y &&
+      point.y <= rectangle.bottomRight.y
+    );
+  }
+
+  static isValid(rectangle: Rectangle): boolean {
+    return rectangle.topLeft.x <= rectangle.bottomRight.x && rectangle.topLeft.y <= rectangle.bottomRight.y;
+  }
 }
