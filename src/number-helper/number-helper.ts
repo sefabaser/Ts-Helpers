@@ -1,6 +1,3 @@
-const HALF_PI = Math.PI / 2;
-const DOUBLE_PI = Math.PI * 2;
-
 export class NumberHelper {
   public static ensurePositiveZero(value: number): number {
     return value === 0 ? 0 : value;
@@ -24,17 +21,5 @@ export class NumberHelper {
    */
   public static clamp(value: number, min: number, max: number): number {
     return Math.min(Math.max(value, min), max);
-  }
-
-  public static get PI(): number {
-    return Math.PI;
-  }
-
-  public static get DoublePI(): number {
-    return DOUBLE_PI;
-  }
-
-  public static get HalfPI(): number {
-    return HALF_PI;
   }
 }

@@ -29,6 +29,28 @@ describe('Vector: ', () => {
     });
   });
 
+  describe('IsZero: ', () => {
+    it('sample 1', () => {
+      let vec = { x: 0, y: 0 };
+      expect(Vector.isZero(vec)).toEqual(true);
+    });
+
+    it('sample 2', () => {
+      let vec = { x: 1, y: 0 };
+      expect(Vector.isZero(vec)).toEqual(false);
+    });
+
+    it('sample 3', () => {
+      let vec = { x: 0, y: -1 };
+      expect(Vector.isZero(vec)).toEqual(false);
+    });
+
+    it('sample 4', () => {
+      let vec = { x: 1, y: 1 };
+      expect(Vector.isZero(vec)).toEqual(false);
+    });
+  });
+
   describe('Sum: ', () => {
     it('sample 1', () => {
       let vec1 = { x: 0, y: 0 };

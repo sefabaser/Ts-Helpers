@@ -34,7 +34,7 @@ export class Random {
     return items[selectedIndex].value;
   }
 
-  static random(possibility = 0.5): boolean {
+  static chance(possibility: number): boolean {
     return Math.random() < possibility;
   }
 

@@ -30,6 +30,10 @@ export class Vector {
     }
   }
 
+  static isZero(vector: Vec2): boolean {
+    return vector.x === 0 && vector.y === 0;
+  }
+
   static sum(vector1: Vec2, vector2: Vec2): Vec2 {
     return {
       x: vector1.x + vector2.x,
