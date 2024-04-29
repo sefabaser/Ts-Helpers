@@ -1,48 +1,32 @@
 import { NumberHelper } from '../../number-helper/number-helper';
 import { Vec2 } from '../vector/vector';
 
+//
+const DEGREE_30 = Math.PI / 6;
 const DEGREE_45 = Math.PI / 4;
+const DEGREE_60 = Math.PI / 3;
+//
 const DEGREE_90 = Math.PI / 2;
+//
+const DEGREE_120 = (Math.PI * 2) / 3;
 const DEGREE_135 = (Math.PI * 3) / 4;
+const DEGREE_150 = (Math.PI * 5) / 6;
+//
 const DEGREE_180 = Math.PI;
+//
+const DEGREE_210 = (Math.PI * 7) / 6;
 const DEGREE_225 = (Math.PI * 5) / 4;
+const DEGREE_240 = (Math.PI * 4) / 3;
+//
 const DEGREE_270 = (Math.PI * 3) / 2;
+//
+const DEGREE_300 = (Math.PI * 5) / 3;
 const DEGREE_315 = (Math.PI * 7) / 4;
+const DEGREE_330 = (Math.PI * 11) / 6;
+//
 const DEGREE_360 = Math.PI * 2;
 
 export class Radian {
-  public static get get45(): number {
-    return DEGREE_45;
-  }
-
-  public static get get90(): number {
-    return DEGREE_90;
-  }
-
-  public static get get135(): number {
-    return DEGREE_135;
-  }
-
-  public static get get180(): number {
-    return DEGREE_180;
-  }
-
-  public static get get225(): number {
-    return DEGREE_225;
-  }
-
-  public static get get270(): number {
-    return DEGREE_270;
-  }
-
-  public static get get315(): number {
-    return DEGREE_315;
-  }
-
-  public static get get360(): number {
-    return DEGREE_360;
-  }
-
   static random(): number {
     return Math.random() * this.get360 - this.get180;
   }
@@ -80,5 +64,69 @@ export class Radian {
       result = result + this.get360;
     }
     return result;
+  }
+
+  public static get get30(): number {
+    return DEGREE_30;
+  }
+
+  public static get get45(): number {
+    return DEGREE_45;
+  }
+
+  public static get get60(): number {
+    return DEGREE_60;
+  }
+
+  public static get get90(): number {
+    return DEGREE_90;
+  }
+
+  public static get get120(): number {
+    return DEGREE_120;
+  }
+
+  public static get get135(): number {
+    return DEGREE_135;
+  }
+
+  public static get get150(): number {
+    return DEGREE_150;
+  }
+
+  public static get get180(): number {
+    return DEGREE_180;
+  }
+
+  public static get get210(): number {
+    return DEGREE_210;
+  }
+
+  public static get get225(): number {
+    return DEGREE_225;
+  }
+
+  public static get get240(): number {
+    return DEGREE_240;
+  }
+
+  public static get get270(): number {
+    return DEGREE_270;
+  }
+
+  public static get get300(): number {
+    return DEGREE_300;
+  }
+
+  public static get get315(): number {
+    return DEGREE_315;
+  }
+
+  public static get get330(): number {
+    return DEGREE_330;
+  }
+
+  public static get get360(): number {
+    return DEGREE_360;
   }
 }
