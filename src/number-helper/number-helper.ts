@@ -1,8 +1,18 @@
 export class NumberHelper {
+  /**
+   * Returns a number whose value is limited to the given range.
+   * @param num any number with a possiblity of negative zero
+   * @returns number that cannot have negative zero
+   */
   public static ensurePositiveZero(value: number): number {
     return value === 0 ? 0 : value;
   }
 
+  /**
+   * Returns a number whose value is limited to the given range.
+   * @param num floating point number
+   * @returns number that cannot have underflow
+   */
   public static removeUnderflow(num: number): number {
     return Math.abs(num) < Number.EPSILON ? 0 : Number.parseFloat(num.toFixed(15));
   }

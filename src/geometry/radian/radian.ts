@@ -66,6 +66,14 @@ export class Radian {
     return result;
   }
 
+  static isBetweenAngles(radian: number, start: number, end: number): boolean {
+    let total =
+      Math.abs(this.acuteAngle(start, radian)) +
+      Math.abs(this.acuteAngle(radian, end)) -
+      Math.abs(this.acuteAngle(start, end));
+    return total < DEGREE_30;
+  }
+
   public static get get30(): number {
     return DEGREE_30;
   }

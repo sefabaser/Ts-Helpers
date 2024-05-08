@@ -16,9 +16,8 @@ export class Guid {
     }
     return new Guid(guid);
   }
-private guid: string;
 
-
+  private guid: string;
 
   constructor(guid: string) {
     this.guid = guid;
