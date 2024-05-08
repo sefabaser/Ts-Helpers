@@ -228,5 +228,13 @@ describe('Radian: ', () => {
     test('sample 12', () => {
       expect(Radian.isBetweenAngles(-Radian.get90, 0, Radian.get210)).toEqual(true);
     });
+
+    test('sample 13', () => {
+      expect(Radian.isBetweenAngles(0, 0.1, 0.2)).toEqual(false);
+    });
+
+    test('sample 14', () => {
+      expect(Radian.isBetweenAngles(0, -0.1, -0.2)).toEqual(false);
+    });
   });
 });

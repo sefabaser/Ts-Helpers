@@ -26,6 +26,8 @@ const DEGREE_330 = (Math.PI * 11) / 6;
 //
 const DEGREE_360 = Math.PI * 2;
 
+const TRIPLE_EPSILON = Number.EPSILON * 3;
+
 export class Radian {
   static random(): number {
     return Math.random() * this.get360 - this.get180;
@@ -71,7 +73,7 @@ export class Radian {
       Math.abs(this.acuteAngle(start, radian)) +
       Math.abs(this.acuteAngle(radian, end)) -
       Math.abs(this.acuteAngle(start, end));
-    return total < DEGREE_30;
+    return total <= TRIPLE_EPSILON;
   }
 
   public static get get30(): number {
