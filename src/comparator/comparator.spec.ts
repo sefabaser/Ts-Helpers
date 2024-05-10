@@ -9,8 +9,8 @@ describe(`Comparator: `, () => {
     });
 
     test('should compare function', () => {
-      let arrowFunction = () => {};
-      let functionExpression = function () {};
+      let arrowFunction = (): void => {};
+      let functionExpression = function (): void {};
       expect(Comparator.isFunction(arrowFunction)).toEqual(true);
       expect(Comparator.isFunction(functionExpression)).toEqual(true);
     });
@@ -195,7 +195,7 @@ describe(`Comparator: `, () => {
     test('should be able to detect getter setter properties', () => {
       class Foo {
         private _x = 10;
-        get x() {
+        get x(): number {
           return this._x;
         }
         set x(value: number) {
@@ -210,7 +210,7 @@ describe(`Comparator: `, () => {
     test('should be able to detect inherited getter setter properties', () => {
       class Parent {
         private _x = 10;
-        get x() {
+        get x(): number {
           return this._x;
         }
         set x(value: number) {
