@@ -1,3 +1,5 @@
+import { describe, expect, test } from 'vitest';
+
 import { Vector } from './vector';
 
 describe('Vector: ', () => {

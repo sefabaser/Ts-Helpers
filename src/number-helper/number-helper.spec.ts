@@ -1,3 +1,5 @@
+import { describe, test, expect } from 'vitest';
+
 import { NumberHelper } from './number-helper';
 
 describe(`Number Helper: `, () => {

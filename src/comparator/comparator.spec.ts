@@ -1,8 +1,10 @@
 /* eslint-disable no-null/no-null */
+import { describe, expect, test } from 'vitest';
+
 import { Comparator } from './comparator';
 
-describe(`Comparator: `, () => {
-  describe(`IsFunction: `, () => {
+describe('Comparator: ', () => {
+  describe('IsFunction: ', () => {
     test('should compare non function object', () => {
       let obj = 'str';
       expect(Comparator.isFunction(obj)).toEqual(false);
