@@ -30,13 +30,6 @@ describe('Comparator: ', () => {
     });
   });
 
-  describe(`IsObservable: `, () => {
-    test('should compare non observable object', () => {
-      let obj = 'str';
-      expect(Comparator.isObservable(obj)).toEqual(false);
-    });
-  });
-
   describe(`IsString: `, () => {
     test('should compare non string object', () => {
       let obj = 2;
@@ -289,6 +282,7 @@ describe('Comparator: ', () => {
     test('should compare arrays', () => {
       expect(Comparator.isEqual([], [])).toEqual(true);
       expect(Comparator.isEqual([1], [1])).toEqual(true);
+      expect(Comparator.isEqual([1, 2], [2, 1])).toEqual(false);
       expect(Comparator.isEqual([], [1])).toEqual(false);
       expect(Comparator.isEqual(['1'], [1])).toEqual(false);
     });
@@ -326,11 +320,42 @@ describe('Comparator: ', () => {
       expect(Comparator.isEqual({ a: { b: new Set(['a']) } }, { a: { b: new Set(['a']) } })).toEqual(true);
     });
 
+    test('should compare objects deeply with Sets that contains objects', () => {
+      expect(Comparator.isEqual({ a: { b: new Set([{ a: 'a' }]) } }, { a: { b: new Set([{ a: 'b' }]) } })).toEqual(
+        false
+      );
+      expect(Comparator.isEqual({ a: { b: new Set([{ a: 'a' }]) } }, { a: { b: new Set([{ a: 'a' }]) } })).toEqual(
+        true
+      );
+    });
+
     test('should compare objects deeply with Maps', () => {
       expect(Comparator.isEqual({ a: { b: new Map([[1, 'one']]) } }, { a: { b: [[1, 'one']] } })).toEqual(false);
+      expect(
+        Comparator.isEqual(
+          { a: { b: new Map([[1, 'one']]) } },
+          {
+            a: {
+              b: new Map([
+                [1, 'one'],
+                [2, 'two']
+              ])
+            }
+          }
+        )
+      ).toEqual(false);
       expect(Comparator.isEqual({ a: { b: new Map([[1, 'one']]) } }, { a: { b: new Map([[1, 'one']]) } })).toEqual(
         true
       );
+    });
+
+    test('should compare objects deeply with Maps that contains objects', () => {
+      expect(
+        Comparator.isEqual({ a: { b: new Map([[1, { a: 'a' }]]) } }, { a: { b: new Map([[1, { a: 'b' }]]) } })
+      ).toEqual(false);
+      expect(
+        Comparator.isEqual({ a: { b: new Map([[1, { a: 'a' }]]) } }, { a: { b: new Map([[1, { a: 'a' }]]) } })
+      ).toEqual(true);
     });
 
     test('should compare objects deeply with Dates', () => {

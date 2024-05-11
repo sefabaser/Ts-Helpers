@@ -8,11 +8,6 @@ export class Comparator {
     return !!a && typeof a === 'object';
   }
 
-  // TODO: this should be decorated in actions-lib
-  static isObservable(a: any): boolean {
-    return Comparator.isObject(a) && !!a._subscribe;
-  }
-
   static isString(a: any): a is string {
     return typeof a === 'string';
   }
@@ -82,12 +77,28 @@ export class Comparator {
       if (Comparator.isSet(a) && Comparator.isSet(b) && a.size === b.size) {
         let equal = true;
 
-        a.forEach((item: any) => {
-          if (!b.has(item)) {
-            // TODO: this needs to do deep check
-            equal = false;
+        let arrayA = Array.from(a);
+        let arrayB = Array.from(b);
+
+        if (arrayA.length > 0) {
+          if (!Comparator.isObject(arrayA[0])) {
+            if (!Comparator.isObject(arrayB[0])) {
+              a.forEach((item: any) => {
+                if (!b.has(item)) {
+                  equal = false;
+                }
+              });
+            } else {
+              equal = false;
+            }
           }
-        });
+
+          if (equal) {
+            arrayA.sort();
+            arrayB.sort();
+            equal = Comparator.isEqual(arrayA, arrayB);
+          }
+        }
 
         return equal;
       } else {
@@ -108,7 +119,7 @@ export class Comparator {
         return false;
       }
     } else if (Comparator.isDate(a) && Comparator.isDate(b)) {
-      return (<Date>a).getTime() === (<Date>b).getTime();
+      return a.getTime() === b.getTime();
     } else if (Comparator.isObject(a) && Comparator.isObject(b)) {
       if (Object.keys(a).length === Object.keys(b).length) {
         let equal = true;
