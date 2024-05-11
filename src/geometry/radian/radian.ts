@@ -40,8 +40,8 @@ export class Radian {
 
   static radianToVector(radian: number): Vec2 {
     return {
-      x: NumberHelper.removeUnderflow(Math.sin(radian)),
-      y: NumberHelper.removeUnderflow(Math.cos(this.get180 - radian))
+      x: Math.sin(radian),
+      y: Math.cos(this.get180 - radian)
     };
   }
 

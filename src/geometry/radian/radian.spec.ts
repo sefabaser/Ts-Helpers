@@ -45,17 +45,17 @@ describe('Radian: ', () => {
 
   describe('RadianToVector: ', () => {
     test('sample 1', () => {
-      let vec = { x: 1, y: 0 };
+      let vec = { x: 1, y: 6.123233995736766e-17 };
       expect(Radian.radianToVector(Math.PI / 2)).toEqual(vec);
     });
 
     test('sample 2', () => {
-      let vec = { x: -1, y: 0 };
+      let vec = { x: -1, y: -1.8369701987210297e-16 };
       expect(Radian.radianToVector(-Math.PI / 2)).toEqual(vec);
     });
 
     test('sample 3', () => {
-      let vec = { x: 0, y: 1 };
+      let vec = { x: 1.2246467991473532e-16, y: 1 };
       expect(Radian.radianToVector(Math.PI)).toEqual(vec);
     });
 
@@ -65,17 +65,17 @@ describe('Radian: ', () => {
     });
 
     test('sample 5', () => {
-      let vec = { x: 0.8, y: -0.6 };
+      let vec = { x: 0.7999999999999999, y: -0.5999999999999999 };
       expect(Radian.radianToVector(0.9272952180016122)).toEqual(vec);
     });
 
     test('sample 6', () => {
-      let vec = { x: 0.8, y: 0.6 };
+      let vec = { x: 0.8000000000000002, y: 0.6 };
       expect(Radian.radianToVector(2.214297435588181)).toEqual(vec);
     });
 
     test('sample 7', () => {
-      let vec = { x: -0.8, y: 0.6 };
+      let vec = { x: -0.8000000000000002, y: 0.5999999999999998 };
       expect(Radian.radianToVector(-2.214297435588181)).toEqual(vec);
     });
   });
