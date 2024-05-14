@@ -253,7 +253,7 @@ describe('Vector: ', () => {
 
     test('sample 5', () => {
       let vec = { x: 0, y: 0 };
-      expect(Vector.normalize(vec)).toEqual({ x: 1, y: 0 });
+      expect(Vector.normalize(vec)).toEqual({ x: 0, y: 0 });
     });
 
     test('sample 6', () => {
@@ -263,7 +263,7 @@ describe('Vector: ', () => {
 
     test('sample 7', () => {
       let vec = { x: 3, y: 4 };
-      expect(Vector.normalize(vec, 0)).toEqual({ x: 1, y: 0 });
+      expect(Vector.normalize(vec, 0)).toEqual({ x: 0, y: 0 });
     });
   });
 

@@ -79,7 +79,7 @@ export class Vector {
   static normalize(vector: Vec2, value: number = 1): Vec2 {
     let length = this.getLength(vector);
     if (length === 0 || value === 0) {
-      return { x: 1, y: 0 };
+      return { x: 0, y: 0 };
     } else {
       length = length / value;
       return { x: vector.x / length, y: vector.y / length };

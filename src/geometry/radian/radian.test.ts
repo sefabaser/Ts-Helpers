@@ -43,6 +43,11 @@ describe('Radian: ', () => {
       let vec = { x: -4, y: 3 };
       expect(Radian.vectorToRadian(vec)).toEqual(-2.214297435588181);
     });
+
+    test('sample 9', () => {
+      let vec = { x: 0, y: 0 };
+      expect(Radian.vectorToRadian(vec)).toEqual(1.5707963267948966);
+    });
   });
 
   describe('RadianToVector: ', () => {
