@@ -4,6 +4,10 @@ export class Comparator {
     return typeof fn === 'function';
   }
 
+  static isInstanceOf<T>(a: any, b: new (...args: any[]) => T): a is T {
+    return a instanceof b;
+  }
+
   static isObject(a: any): a is { [key: string]: any } {
     return !!a && typeof a === 'object';
   }

@@ -18,6 +18,21 @@ describe('Comparator: ', () => {
     });
   });
 
+  describe('IsInstanceOf: ', () => {
+    test('should compare non object', () => {
+      let obj = 'str';
+      expect(Comparator.isInstanceOf(obj, String)).toEqual(false);
+    });
+
+    test('should compare object', () => {
+      class A {
+        constructor(public name: string) {}
+      }
+      let obj = new A('str');
+      expect(Comparator.isInstanceOf(obj, A)).toEqual(true);
+    });
+  });
+
   describe(`IsObject: `, () => {
     test('should compare non object', () => {
       let obj = 'str';
