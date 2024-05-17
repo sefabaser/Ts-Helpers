@@ -9,3 +9,4 @@ export { Rectangle, RectangleHelper } from './geometry/shapes/rectangle';
 export { Radian } from './geometry/radian/radian';
 export { NumberHelper } from './number-helper/number-helper';
 export { RGBColor, ColorHelper } from './color/color';
+export { ArrayHelper } from './array-helper/array-helper';
