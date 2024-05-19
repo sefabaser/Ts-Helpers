@@ -1,29 +1,28 @@
 import { NumberHelper } from '../../number-helper/number-helper';
-import { Vec2 } from '../vector/vector';
+import { Vector } from '../vector/vector';
 
-//
 const DEGREE_30 = Math.PI / 6;
 const DEGREE_45 = Math.PI / 4;
 const DEGREE_60 = Math.PI / 3;
-//
+// 75
 const DEGREE_90 = Math.PI / 2;
-//
+// 105
 const DEGREE_120 = (Math.PI * 2) / 3;
 const DEGREE_135 = (Math.PI * 3) / 4;
 const DEGREE_150 = (Math.PI * 5) / 6;
-//
+// 165
 const DEGREE_180 = Math.PI;
-//
+// 195
 const DEGREE_210 = (Math.PI * 7) / 6;
 const DEGREE_225 = (Math.PI * 5) / 4;
 const DEGREE_240 = (Math.PI * 4) / 3;
-//
+// 255
 const DEGREE_270 = (Math.PI * 3) / 2;
-//
+// 285
 const DEGREE_300 = (Math.PI * 5) / 3;
 const DEGREE_315 = (Math.PI * 7) / 4;
 const DEGREE_330 = (Math.PI * 11) / 6;
-//
+// 345
 const DEGREE_360 = Math.PI * 2;
 
 const TRIPLE_EPSILON = Number.EPSILON * 3;
@@ -33,16 +32,8 @@ export class Radian {
     return Math.random() * this.get360 - this.get180;
   }
 
-  static vectorToRadian(vector: Vec2): number {
-    let radian = Math.atan2(vector.y, vector.x) + this.get90;
-    return radian > this.get180 ? radian - this.get360 : radian;
-  }
-
-  static radianToVector(radian: number): Vec2 {
-    return {
-      x: Math.sin(radian),
-      y: Math.cos(this.get180 - radian)
-    };
+  static toVector(radian: number): Vector {
+    return new Vector(Math.sin(radian), Math.cos(this.get180 - radian));
   }
 
   /*

@@ -1,3 +1,6 @@
+import { Radian } from '../radian/radian';
+import { Rectangle } from '../shapes/rectangle';
+
 export interface Vec2 {
   readonly x: number;
   readonly y: number;
@@ -10,126 +13,156 @@ export interface Vec3 {
 }
 
 export class Vector {
-  static random(length: number = 1): Vec2 {
+  static zero = new Vector(0, 0);
+
+  static fromVec2(vector: Vec2): Vector {
+    return new Vector(vector.x, vector.y);
+  }
+
+  static random(length: number = 1): Vector {
     let randomRadian = Math.random() * 2 * Math.PI;
-    return {
-      x: Math.cos(randomRadian) * length,
-      y: Math.sin(randomRadian) * length
-    };
+    return new Vector(Math.cos(randomRadian) * length, Math.sin(randomRadian) * length);
   }
 
-  static get zero(): Vec2 {
-    return { x: 0, y: 0 };
-  }
-
-  static isEqual(vector1: Vec2 | undefined, vector2: Vec2 | undefined): boolean {
+  static isEqual(vector1: Vector | undefined, vector2: Vector | undefined): boolean {
     if (!vector1 || !vector2) {
       return false;
     } else {
-      return vector1.x === vector2.x && vector1.y === vector2.y;
+      return vector1.isEqual(vector2);
     }
   }
 
-  static isZero(vector: Vec2): boolean {
-    return vector.x === 0 && vector.y === 0;
+  static fromTo(from: Vector, to: Vector): Vector {
+    return new Vector(to.x - from.x, to.y - from.y);
   }
 
-  static sum(vector1: Vec2, vector2: Vec2): Vec2 {
-    return {
-      x: vector1.x + vector2.x,
-      y: vector1.y + vector2.y
-    };
+  readonly x: number;
+  readonly y: number;
+
+  private _length: number | undefined;
+  get length(): number {
+    if (this._length === undefined) {
+      this._length = Math.hypot(this.x, this.y);
+    }
+    return this._length;
   }
 
-  static fromTo(from: Vec2, to: Vec2): Vec2 {
-    return {
-      x: to.x - from.x,
-      y: to.y - from.y
-    };
+  private _radian: number | undefined;
+  get radian(): number {
+    if (this._radian === undefined) {
+      let radian = Math.atan2(this.y, this.x) + Radian.get90;
+      this._radian = radian > Radian.get180 ? radian - Radian.get360 : radian;
+    }
+    return this._radian;
   }
 
-  static multiply(vector: Vec2, multiplier: number): Vec2 {
-    return {
-      x: vector.x * multiplier,
-      y: vector.y * multiplier
-    };
+  constructor(x: number, y: number) {
+    this.x = x;
+    this.y = y;
   }
 
-  static divide(vector: Vec2, divider: number): Vec2 {
-    return {
-      x: vector.x / divider,
-      y: vector.y / divider
-    };
+  isEqual(vector: Vector | undefined): boolean {
+    if (!vector) {
+      return false;
+    } else {
+      return this.x === vector.x && this.y === vector.y;
+    }
   }
 
-  static round(vector: Vec2): Vec2 {
-    return {
-      x: Math.round(vector.x),
-      y: Math.round(vector.y)
-    };
+  isZero(): boolean {
+    return this.x === 0 && this.y === 0;
   }
 
-  static rotate(vector1: Vec2, vector2: Vec2, normalize: boolean = true): Vec2 {
+  isInsideRectangle(rectangle: Rectangle): boolean {
+    return (
+      this.x >= rectangle.topLeft.x &&
+      this.x <= rectangle.bottomRight.x &&
+      this.y >= rectangle.topLeft.y &&
+      this.y <= rectangle.bottomRight.y
+    );
+  }
+
+  toVec2(): Vec2 {
+    return { x: this.x, y: this.y };
+  }
+
+  add(vector: Vector): Vector {
+    return new Vector(this.x + vector.x, this.y + vector.y);
+  }
+
+  fromTo(vector: Vector): Vector {
+    return Vector.fromTo(this, vector);
+  }
+
+  multiply(multiplier: number): Vector {
+    return new Vector(this.x * multiplier, this.y * multiplier);
+  }
+
+  divide(divider: number): Vector {
+    return new Vector(this.x / divider, this.y / divider);
+  }
+
+  round(): Vector {
+    return new Vector(Math.round(this.x), Math.round(this.y));
+  }
+
+  /**
+   * Rotates vector with the degree that is represented by given vector.
+   * @param vector Rotation vector
+   * @param normalize If it is known that the given vector is already normalized, this option skips the normalization process.
+   * @returns Rotation result
+   */
+  rotate(vector: Vector, normalize: boolean = true): Vector {
     if (normalize) {
-      vector2 = this.normalize(vector2);
+      vector = vector.normalize();
     }
-    return { x: -vector1.x * vector2.y - vector1.y * vector2.x, y: vector1.x * vector2.x - vector1.y * vector2.y };
+    return new Vector(-this.x * vector.y - this.y * vector.x, this.x * vector.x - this.y * vector.y);
   }
 
-  static normalize(vector: Vec2, value: number = 1): Vec2 {
-    let length = this.getLength(vector);
+  normalize(value: number = 1): Vector {
+    let length = this.length;
     if (length === 0 || value === 0) {
-      return { x: 0, y: 0 };
+      return Vector.zero;
     } else {
       length = length / value;
-      return { x: vector.x / length, y: vector.y / length };
+      return new Vector(this.x / length, this.y / length);
     }
   }
 
-  static projection(vector1: Vec2, vector2: Vec2): Vec2 {
-    let vector2Length = this.getLength(vector2);
-    if (vector2Length === 0) {
-      return { x: 0, y: 0 };
+  projection(vector: Vector): Vector {
+    let vectorLength = vector.length;
+    if (vectorLength === 0) {
+      return Vector.zero;
     }
 
-    let dotProduct = this.getDotProduct(vector1, vector2);
-    let multiplier = dotProduct / (vector2Length * vector2Length);
-    return {
-      x: multiplier * vector2.x,
-      y: multiplier * vector2.y
-    };
+    let dotProduct = this.dotProduct(vector);
+    let multiplier = dotProduct / (vectorLength * vectorLength);
+    return new Vector(vector.x * multiplier, vector.y * multiplier);
   }
 
-  static getDotProduct(vector1: Vec2, vector2: Vec2): number {
-    return vector1.x * vector2.x + vector1.y * vector2.y;
+  dotProduct(vector: Vector): number {
+    return this.x * vector.x + this.y * vector.y;
   }
 
-  static getLength(vector: Vec2): number {
-    return Math.hypot(vector.x, vector.y);
+  getDistance(vector: Vector): number {
+    return this.fromTo(vector).length;
   }
 
-  static getDistance(vector1: Vec2, vector2: Vec2): number {
-    return this.getLength(this.fromTo(vector1, vector2));
-  }
-
-  static ensureMaxLength(vector: Vec2, maxLength: number): Vec2 {
-    let length = this.getLength(vector);
+  ensureMaxLength(maxLength: number): Vector {
+    let length = this.length;
     if (length > maxLength) {
       if (length === 0 || maxLength === 0) {
-        return { x: 1, y: 0 };
+        return Vector.zero;
       } else {
         length = length / maxLength;
-        return { x: vector.x / length, y: vector.y / length };
+        return new Vector(this.x / length, this.y / length);
       }
     } else {
-      return vector;
+      return this;
     }
   }
 
-  static lerp(vector1: Vec2, vector2: Vec2, t: number): Vec2 {
-    return {
-      x: vector1.x + (vector2.x - vector1.x) * t,
-      y: vector1.y + (vector2.y - vector1.y) * t
-    };
+  lerp(vector: Vector, ratio: number): Vector {
+    return new Vector(this.x + (vector.x - this.x) * ratio, this.y + (vector.y - this.y) * ratio);
   }
 }

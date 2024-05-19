@@ -5,7 +5,7 @@ export { Guid } from './random/guid';
 export { DatetimeHelper } from './datetime-helper/datetime-helper';
 export { Random } from './random/random';
 export { Vec2, Vec3, Vector } from './geometry/vector/vector';
-export { Rectangle, RectangleHelper } from './geometry/shapes/rectangle';
+export { Rect, Rectangle } from './geometry/shapes/rectangle';
 export { Radian } from './geometry/radian/radian';
 export { NumberHelper } from './number-helper/number-helper';
 export { RGBColor, ColorHelper } from './color/color';

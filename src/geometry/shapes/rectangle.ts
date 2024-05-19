@@ -1,30 +1,28 @@
-import { Vec2 } from '../vector/vector';
+import { Vec2, Vector } from '../vector/vector';
 
-export interface Rectangle {
+export interface Rect {
   topLeft: Vec2;
   bottomRight: Vec2;
 }
 
-export class RectangleHelper {
-  static isEqual(a: Rectangle, b: Rectangle): boolean {
-    return (
-      a.topLeft.x === b.topLeft.x &&
-      a.topLeft.y === b.topLeft.y &&
-      a.bottomRight.x === b.bottomRight.x &&
-      a.bottomRight.y === b.bottomRight.y
-    );
+export class Rectangle {
+  static fromRect(rect: Rect): Rectangle {
+    return new Rectangle(Vector.fromVec2(rect.topLeft), Vector.fromVec2(rect.bottomRight));
   }
 
-  static isInside(rectangle: Rectangle, point: Vec2): boolean {
-    return (
-      point.x >= rectangle.topLeft.x &&
-      point.x <= rectangle.bottomRight.x &&
-      point.y >= rectangle.topLeft.y &&
-      point.y <= rectangle.bottomRight.y
-    );
+  readonly topLeft: Vector;
+  readonly bottomRight: Vector;
+
+  constructor(topLeft: Vector, bottomRight: Vector) {
+    this.topLeft = topLeft;
+    this.bottomRight = bottomRight;
   }
 
-  static isValid(rectangle: Rectangle): boolean {
-    return rectangle.topLeft.x <= rectangle.bottomRight.x && rectangle.topLeft.y <= rectangle.bottomRight.y;
+  isEqual(rectangle: Rectangle): boolean {
+    return this.topLeft.isEqual(rectangle.topLeft) && this.bottomRight.isEqual(rectangle.bottomRight);
+  }
+
+  isValid(): boolean {
+    return this.topLeft.x <= this.bottomRight.x && this.topLeft.y <= this.bottomRight.y;
   }
 }
