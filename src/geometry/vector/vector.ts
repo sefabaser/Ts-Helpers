@@ -106,6 +106,14 @@ export class Vector {
     return new Vector(Math.round(this.x), Math.round(this.y));
   }
 
+  floor(): Vector {
+    return new Vector(Math.floor(this.x), Math.floor(this.y));
+  }
+
+  ceil(): Vector {
+    return new Vector(Math.ceil(this.x), Math.ceil(this.y));
+  }
+
   /**
    * Rotates vector with the degree that is represented by given vector.
    * @param vector Rotation vector

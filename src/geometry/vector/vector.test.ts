@@ -219,6 +219,20 @@ describe('Vector: ', () => {
     });
   });
 
+  describe('Floor: ', () => {
+    test('sample 1', () => {
+      let vec = new Vector(1.6, -1.1);
+      expect(vec.floor().toVec2()).toEqual({ x: 1, y: -2 });
+    });
+  });
+
+  describe('Ceil: ', () => {
+    test('sample 1', () => {
+      let vec = new Vector(1.6, -1.1);
+      expect(vec.ceil().toVec2()).toEqual({ x: 2, y: -1 });
+    });
+  });
+
   describe('Rotate: ', () => {
     test('basic rotation 1', () => {
       let vec1 = new Vector(1, 0);
