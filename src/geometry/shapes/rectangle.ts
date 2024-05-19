@@ -13,6 +13,14 @@ export class Rectangle {
   readonly topLeft: Vector;
   readonly bottomRight: Vector;
 
+  private _size: Vector | undefined;
+  get size(): Vector {
+    if (this._size === undefined) {
+      this._size = Vector.fromTo(this.topLeft, this.bottomRight);
+    }
+    return this._size;
+  }
+
   constructor(topLeft: Vector, bottomRight: Vector) {
     this.topLeft = topLeft;
     this.bottomRight = bottomRight;

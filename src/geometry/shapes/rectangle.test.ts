@@ -12,6 +12,12 @@ describe('Rectangle: ', () => {
     });
   });
 
+  describe('size: ', () => {
+    test('sample 1', () => {
+      expect(new Rectangle(new Vector(1, 2), new Vector(3, 4)).size).toEqual(new Vector(2, 2));
+    });
+  });
+
   describe('isEqual: ', () => {
     test('sample 1', () => {
       expect(
