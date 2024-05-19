@@ -26,6 +26,10 @@ export class Rectangle {
     this.bottomRight = bottomRight;
   }
 
+  toRect(): Rect {
+    return { topLeft: this.topLeft.toVec2(), bottomRight: this.bottomRight.toVec2() };
+  }
+
   isEqual(rectangle: Rectangle): boolean {
     return this.topLeft.isEqual(rectangle.topLeft) && this.bottomRight.isEqual(rectangle.bottomRight);
   }
