@@ -67,67 +67,72 @@ export class Radian {
     return total <= TRIPLE_EPSILON;
   }
 
-  public static get get30(): number {
+  static lerp(radianA: number, radianB: number, ratio: number): number {
+    let acuteAngle = this.acuteAngle(radianA, radianB);
+    return radianA + acuteAngle * ratio;
+  }
+
+  static get get30(): number {
     return DEGREE_30;
   }
 
-  public static get get45(): number {
+  static get get45(): number {
     return DEGREE_45;
   }
 
-  public static get get60(): number {
+  static get get60(): number {
     return DEGREE_60;
   }
 
-  public static get get90(): number {
+  static get get90(): number {
     return DEGREE_90;
   }
 
-  public static get get120(): number {
+  static get get120(): number {
     return DEGREE_120;
   }
 
-  public static get get135(): number {
+  static get get135(): number {
     return DEGREE_135;
   }
 
-  public static get get150(): number {
+  static get get150(): number {
     return DEGREE_150;
   }
 
-  public static get get180(): number {
+  static get get180(): number {
     return DEGREE_180;
   }
 
-  public static get get210(): number {
+  static get get210(): number {
     return DEGREE_210;
   }
 
-  public static get get225(): number {
+  static get get225(): number {
     return DEGREE_225;
   }
 
-  public static get get240(): number {
+  static get get240(): number {
     return DEGREE_240;
   }
 
-  public static get get270(): number {
+  static get get270(): number {
     return DEGREE_270;
   }
 
-  public static get get300(): number {
+  static get get300(): number {
     return DEGREE_300;
   }
 
-  public static get get315(): number {
+  static get get315(): number {
     return DEGREE_315;
   }
 
-  public static get get330(): number {
+  static get get330(): number {
     return DEGREE_330;
   }
 
-  public static get get360(): number {
+  static get get360(): number {
     return DEGREE_360;
   }
 }

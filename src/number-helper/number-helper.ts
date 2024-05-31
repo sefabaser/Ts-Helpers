@@ -4,7 +4,7 @@ export class NumberHelper {
    * @param num any number with a possiblity of negative zero
    * @returns number that cannot have negative zero
    */
-  public static ensurePositiveZero(value: number): number {
+  static ensurePositiveZero(value: number): number {
     return value === 0 ? 0 : value;
   }
 
@@ -13,7 +13,7 @@ export class NumberHelper {
    * @param num floating point number
    * @returns number that cannot have underflow
    */
-  public static removeUnderflow(num: number): number {
+  static removeUnderflow(num: number): number {
     return Math.abs(num) < Number.EPSILON ? 0 : Number.parseFloat(num.toFixed(15));
   }
 
@@ -29,7 +29,7 @@ export class NumberHelper {
    * @returns A number in the range [min, max]
    * @type Number
    */
-  public static clamp(value: number, min: number, max: number): number {
+  static clamp(value: number, min: number, max: number): number {
     return Math.min(Math.max(value, min), max);
   }
 }

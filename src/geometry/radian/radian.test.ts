@@ -197,4 +197,22 @@ describe('Radian: ', () => {
       expect(Radian.isBetweenAngles(0, -0.1, -0.2)).toEqual(false);
     });
   });
+
+  describe('Lerp', () => {
+    test('sample 1', () => {
+      expect(Radian.lerp(0, 1, 0.5)).toEqual(0.5);
+    });
+
+    test('sample 2', () => {
+      expect(Radian.lerp(0, 1, 0)).toEqual(0);
+    });
+
+    test('sample 3', () => {
+      expect(Radian.lerp(0, 1, 1)).toEqual(1);
+    });
+
+    test('sample 4', () => {
+      expect(Radian.lerp(Radian.get30, Radian.get330, 0.5)).toEqual(-3.3306690738754696e-16);
+    });
+  });
 });
