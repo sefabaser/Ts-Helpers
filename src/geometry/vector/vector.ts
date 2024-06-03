@@ -14,8 +14,8 @@ export interface VectorCache {
 // Each "new Vector()" should consider the cache and have "Cache" comments.
 export class Vector {
   // Cache - length: Known, equals to zero.
-  // Cache - radian: Known, by definition, it is accepted zero length vector's radian is PI/2.
-  static zero = new Vector(0, 0, { length: 0, radian: Radian.get90 });
+  // Cache - radion: If anyone gets the radion of the vector, it will set the cache for all requests. There is no need to cache beforehand.
+  static zero = new Vector(0, 0, { length: 0, radian: undefined });
 
   static fromVec2(vector: Vec2): Vector {
     // Cache - length: Unknown, requires calculation.
