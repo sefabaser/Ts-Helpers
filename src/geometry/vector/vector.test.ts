@@ -2,6 +2,7 @@ import { describe, expect, test } from 'vitest';
 
 import { Vector } from './vector';
 import { Rectangle } from '../shapes/rectangle';
+import { Radian } from '../radian/radian';
 
 describe('Vector: ', () => {
   describe('IsEqual: ', () => {
@@ -51,6 +52,14 @@ describe('Vector: ', () => {
     test('sample 4', () => {
       let vec = new Vector(1, 1);
       expect(vec.isZero()).toEqual(false);
+    });
+  });
+
+  describe('Random: ', () => {
+    test('cache', () => {
+      let vec = Vector.random(2);
+      expect(vec['cache'].length).toStrictEqual(2);
+      expect(Radian.acuteAngle(vec['cache'].radian ?? 0, vec['getRadian']())).toBeLessThan(Number.EPSILON);
     });
   });
 
@@ -522,7 +531,7 @@ describe('Vector: ', () => {
 
     test('sample 9', () => {
       let vec = new Vector(0, 0);
-      expect(vec.radian).toEqual(1.5707963267948966);
+      expect(vec.radian).toEqual(Radian.get90);
     });
   });
 });
