@@ -151,7 +151,9 @@ export class Vector {
 
   normalize(value: number = 1): Vector {
     let length = this.length;
-    if (length === 0 || value === 0) {
+    if (length === value) {
+      return this;
+    } else if (length === 0 || value === 0) {
       return Vector.zero;
     } else {
       length = length / value;
