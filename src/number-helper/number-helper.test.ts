@@ -67,5 +67,9 @@ describe(`Number Helper: `, () => {
     test('sample 5', () => {
       expect(NumberHelper.clamp(0.5, 0, 1)).toEqual(0.5);
     });
+
+    test('sample 6', () => {
+      expect(NumberHelper.clamp(1, 0.5, 0)).toEqual(0.5);
+    });
   });
 });

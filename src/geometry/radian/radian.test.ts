@@ -291,4 +291,66 @@ describe('Radian: ', () => {
       expect(vector['getRadian']().value).toStrictEqual(0);
     });
   });
+
+  describe('Clamp: ', () => {
+    test('sample 1', () => {
+      expect(new Radian(0).clamp(Radian.get330, Radian.get30).value).toEqual(0);
+    });
+
+    test('sample 2', () => {
+      expect(new Radian(PI_360).clamp(Radian.get330, Radian.get30).value).toEqual(0);
+    });
+
+    test('sample 3', () => {
+      expect(new Radian(PI_360 + 1).clamp(Radian.get330, Radian.get30).value).toEqual(Radian.get30.value);
+    });
+
+    test('sample 4', () => {
+      expect(new Radian(-1).clamp(Radian.get330, Radian.get30).value).toEqual(Radian.get330.value);
+    });
+
+    test('sample 5', () => {
+      expect(new Radian(-PI_360).clamp(Radian.get330, Radian.get30).value).toEqual(0);
+    });
+
+    test('sample 6', () => {
+      expect(new Radian(-PI_360 - 1).clamp(Radian.get30, Radian.get330).value).toEqual(Radian.get330.value);
+    });
+  });
+
+  describe('NoLowerThan: ', () => {
+    test('sample 1', () => {
+      expect(new Radian(0).noLowerThan(Radian.get30).value).toEqual(Radian.get30.value);
+    });
+
+    test('sample 2', () => {
+      expect(new Radian(PI_360).noLowerThan(Radian.get30).value).toEqual(Radian.get30.value);
+    });
+
+    test('sample 3', () => {
+      expect(new Radian(-1).noLowerThan(Radian.get30).value).toEqual(Radian.get30.value);
+    });
+
+    test('sample 4', () => {
+      expect(new Radian(-PI_360).noLowerThan(Radian.get30).value).toEqual(Radian.get30.value);
+    });
+  });
+
+  describe('NoHigherThan: ', () => {
+    test('sample 1', () => {
+      expect(new Radian(0).noHigherThan(Radian.get30).value).toEqual(0);
+    });
+
+    test('sample 2', () => {
+      expect(new Radian(PI_360).noHigherThan(Radian.get30).value).toEqual(0);
+    });
+
+    test('sample 3', () => {
+      expect(new Radian(-1).noHigherThan(Radian.get30).value).toEqual(-1);
+    });
+
+    test('sample 4', () => {
+      expect(new Radian(-PI_360).noHigherThan(Radian.get30).value).toEqual(0);
+    });
+  });
 });

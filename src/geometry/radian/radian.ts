@@ -108,16 +108,19 @@ export class Radian {
     return new Radian(Math.abs(this.value), { alreadyNormalized: true });
   }
 
-  min(radian: Radian): Radian {
+  noHigherThan(radian: Radian): Radian {
     return this.value <= radian.value ? this : radian;
   }
 
-  max(radian: Radian): Radian {
+  noLowerThan(radian: Radian): Radian {
     return this.value >= radian.value ? this : radian;
   }
 
   clamp(min: Radian, max: Radian): Radian {
-    return this.min(max).max(min);
+    if (min.value > max.value) {
+      [min, max] = [max, min];
+    }
+    return this.noHigherThan(max).noLowerThan(min);
   }
 
   toVector(): Vector {
