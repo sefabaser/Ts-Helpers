@@ -68,6 +68,7 @@ export class Radian {
   get value(): number {
     if (!this.cache.alreadyNormalized) {
       this._value = this.normalize(this._value);
+      this.cache.alreadyNormalized = true;
     }
     return this._value;
   }
@@ -99,6 +100,12 @@ export class Radian {
     // Cache - vector: Unknown, requires calculation.
     // Cache - alreadyNormalized: Unknown, requires calculation.
     return new Radian(this.value / value);
+  }
+
+  abs(): Radian {
+    // Cache - vector: Unknown, requires calculation.
+    // Cache - alreadyNormalized: During the calculation, the value will be normalized.
+    return new Radian(Math.abs(this.value), { alreadyNormalized: true });
   }
 
   toVector(): Vector {

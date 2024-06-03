@@ -55,78 +55,6 @@ describe('Vector: ', () => {
     });
   });
 
-  describe('Cache: ', () => {
-    test('random', () => {
-      let vec = Vector.random(2);
-
-      console.log((vec['cache'].length ?? 0) - 2);
-      expect((vec['cache'].length ?? 0) - 2).toBeLessThanOrEqual(Number.EPSILON);
-      expect(vec['getLength']() - 2).toBeLessThanOrEqual(Number.EPSILON);
-
-      expect(vec['getRadian']().acuteAngle(vec['cache'].radian ?? Radian.get0).value).toBeLessThanOrEqual(
-        Number.EPSILON
-      );
-    });
-
-    test('multiply', () => {
-      let vec = new Vector(3, 4);
-      let radian = vec.radian;
-      vec.multiply(2);
-
-      expect(vec['cache'].radian).toStrictEqual(radian);
-      expect(vec['getRadian']()).toStrictEqual(radian);
-    });
-
-    test('divide', () => {
-      let vec = new Vector(3, 4);
-      let radian = vec.radian;
-      vec.divide(2);
-
-      expect(vec['cache'].radian).toStrictEqual(radian);
-      expect(vec['getRadian']()).toStrictEqual(radian);
-    });
-
-    test('normalize', () => {
-      let vec = new Vector(3, 4);
-      let radian = vec.radian;
-      let result = vec.normalize(2);
-
-      expect(result['cache'].length).toStrictEqual(2);
-      expect(result['getLength']()).toStrictEqual(2);
-
-      expect(result['cache'].radian).toStrictEqual(radian);
-      expect(result['getRadian']()['_value']).toStrictEqual(radian['_value']);
-    });
-
-    test('projection', () => {
-      let vec1 = new Vector(1, 1);
-      let vec2 = new Vector(3, 0);
-      let radian = vec2.radian;
-      let result = vec1.projection(vec2);
-
-      expect(result['cache'].radian).toStrictEqual(radian);
-      expect(result['getRadian']()['_value']).toStrictEqual(radian['_value']);
-    });
-
-    test('ensureMaxLength - bigger than max length', () => {
-      let vec = new Vector(6, 8);
-      let radian = vec.radian;
-      let result = vec.ensureMaxLength(5);
-
-      expect(result['cache'].radian).toStrictEqual(radian);
-      expect(result['getRadian']()['_value']).toStrictEqual(radian['_value']);
-    });
-
-    test('ensureMaxLength - smaller than max length', () => {
-      let vec = new Vector(3, 4);
-      let radian = vec.radian;
-      let result = vec.ensureMaxLength(10);
-
-      expect(result['cache'].radian).toStrictEqual(radian);
-      expect(result['getRadian']()['_value']).toStrictEqual(radian['_value']);
-    });
-  });
-
   describe('isInside: ', () => {
     test('sample 1', () => {
       let vector = new Vector(0, 0);
@@ -596,6 +524,77 @@ describe('Vector: ', () => {
     test('sample 9', () => {
       let vec = new Vector(0, 0);
       expect(vec.radian.value).toEqual(PI_90);
+    });
+  });
+
+  describe('Cache: ', () => {
+    test('random', () => {
+      let vec = Vector.random(2);
+
+      expect((vec['cache'].length ?? 0) - 2).toBeLessThanOrEqual(Number.EPSILON);
+      expect(vec['getLength']() - 2).toBeLessThanOrEqual(Number.EPSILON);
+
+      expect(vec['getRadian']().acuteAngle(vec['cache'].radian ?? Radian.get0).value).toBeLessThanOrEqual(
+        Number.EPSILON
+      );
+    });
+
+    test('multiply', () => {
+      let vec = new Vector(3, 4);
+      let radian = vec.radian;
+      vec.multiply(2);
+
+      expect(vec['cache'].radian).toStrictEqual(radian);
+      expect(vec['getRadian']()).toStrictEqual(radian);
+    });
+
+    test('divide', () => {
+      let vec = new Vector(3, 4);
+      let radian = vec.radian;
+      vec.divide(2);
+
+      expect(vec['cache'].radian).toStrictEqual(radian);
+      expect(vec['getRadian']()).toStrictEqual(radian);
+    });
+
+    test('normalize', () => {
+      let vec = new Vector(3, 4);
+      let radian = vec.radian;
+      let result = vec.normalize(2);
+
+      expect(result['cache'].length).toStrictEqual(2);
+      expect(result['getLength']()).toStrictEqual(2);
+
+      expect(result['cache'].radian).toStrictEqual(radian);
+      expect(result['getRadian']()['_value']).toStrictEqual(radian['_value']);
+    });
+
+    test('projection', () => {
+      let vec1 = new Vector(1, 1);
+      let vec2 = new Vector(3, 0);
+      let radian = vec2.radian;
+      let result = vec1.projection(vec2);
+
+      expect(result['cache'].radian).toStrictEqual(radian);
+      expect(result['getRadian']()['_value']).toStrictEqual(radian['_value']);
+    });
+
+    test('ensureMaxLength - bigger than max length', () => {
+      let vec = new Vector(6, 8);
+      let radian = vec.radian;
+      let result = vec.ensureMaxLength(5);
+
+      expect(result['cache'].radian).toStrictEqual(radian);
+      expect(result['getRadian']()['_value']).toStrictEqual(radian['_value']);
+    });
+
+    test('ensureMaxLength - smaller than max length', () => {
+      let vec = new Vector(3, 4);
+      let radian = vec.radian;
+      let result = vec.ensureMaxLength(10);
+
+      expect(result['cache'].radian).toStrictEqual(radian);
+      expect(result['getRadian']()['_value']).toStrictEqual(radian['_value']);
     });
   });
 });
