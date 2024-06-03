@@ -1,4 +1,4 @@
-import { DOUBLE_PI, HALF_PI, PI, Radian } from '../radian/radian';
+import { PI_360, PI_90, PI_180, Radian } from '../radian/radian';
 import { Rectangle } from '../shapes/rectangle';
 
 export interface Vec2 {
@@ -214,7 +214,7 @@ export class Vector {
   }
 
   private getRadian(): Radian {
-    let radian = Math.atan2(this.y, this.x) + HALF_PI;
+    let radian = Math.atan2(this.y, this.x) + PI_90;
     // Cache - vector: Known, equal to this vector.
     // Cache - alreadyNormalized: Unknown, requires calculation.
     return new Radian(radian, { vector: this, alreadyNormalized: false });

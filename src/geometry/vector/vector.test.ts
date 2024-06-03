@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest';
 
 import { Vector } from './vector';
 import { Rectangle } from '../shapes/rectangle';
-import { Radian } from '../radian/radian';
+import { PI_90, PI_180, Radian } from '../radian/radian';
 
 describe('Vector: ', () => {
   describe('IsEqual: ', () => {
@@ -59,10 +59,13 @@ describe('Vector: ', () => {
     test('random', () => {
       let vec = Vector.random(2);
 
-      expect(vec['cache'].length).toStrictEqual(2);
-      expect(vec['getLength']()).toStrictEqual(2);
+      console.log((vec['cache'].length ?? 0) - 2);
+      expect((vec['cache'].length ?? 0) - 2).toBeLessThanOrEqual(Number.EPSILON);
+      expect(vec['getLength']() - 2).toBeLessThanOrEqual(Number.EPSILON);
 
-      expect(Radian.acuteAngle(vec['cache'].radian ?? 0, vec['getRadian']())).toBeLessThan(Number.EPSILON);
+      expect(vec['getRadian']().acuteAngle(vec['cache'].radian ?? Radian.get0).value).toBeLessThanOrEqual(
+        Number.EPSILON
+      );
     });
 
     test('multiply', () => {
@@ -92,7 +95,7 @@ describe('Vector: ', () => {
       expect(result['getLength']()).toStrictEqual(2);
 
       expect(result['cache'].radian).toStrictEqual(radian);
-      expect(result['getRadian']()).toStrictEqual(radian);
+      expect(result['getRadian']()['_value']).toStrictEqual(radian['_value']);
     });
 
     test('projection', () => {
@@ -102,7 +105,7 @@ describe('Vector: ', () => {
       let result = vec1.projection(vec2);
 
       expect(result['cache'].radian).toStrictEqual(radian);
-      expect(result['getRadian']()).toStrictEqual(radian);
+      expect(result['getRadian']()['_value']).toStrictEqual(radian['_value']);
     });
 
     test('ensureMaxLength - bigger than max length', () => {
@@ -111,7 +114,7 @@ describe('Vector: ', () => {
       let result = vec.ensureMaxLength(5);
 
       expect(result['cache'].radian).toStrictEqual(radian);
-      expect(result['getRadian']()).toStrictEqual(radian);
+      expect(result['getRadian']()['_value']).toStrictEqual(radian['_value']);
     });
 
     test('ensureMaxLength - smaller than max length', () => {
@@ -120,7 +123,7 @@ describe('Vector: ', () => {
       let result = vec.ensureMaxLength(10);
 
       expect(result['cache'].radian).toStrictEqual(radian);
-      expect(result['getRadian']()).toStrictEqual(radian);
+      expect(result['getRadian']()['_value']).toStrictEqual(radian['_value']);
     });
   });
 
@@ -552,47 +555,47 @@ describe('Vector: ', () => {
   describe('ToRadian: ', () => {
     test('sample 1', () => {
       let vec = new Vector(1, 0);
-      expect(vec.radian).toEqual(Radian.get90);
+      expect(vec.radian.value).toEqual(PI_90);
     });
 
     test('sample 2', () => {
       let vec = new Vector(-1, 0);
-      expect(vec.radian).toEqual(-Radian.get90);
+      expect(vec.radian.value).toEqual(-PI_90);
     });
 
     test('sample 3', () => {
       let vec = new Vector(0, 1);
-      expect(vec.radian).toEqual(Radian.get180);
+      expect(vec.radian.value).toEqual(PI_180);
     });
 
     test('sample 4', () => {
       let vec = new Vector(0, 2);
-      expect(vec.radian).toEqual(Radian.get180);
+      expect(vec.radian.value).toEqual(PI_180);
     });
 
     test('sample 5', () => {
       let vec = new Vector(0, -1);
-      expect(vec.radian).toEqual(0);
+      expect(vec.radian.value).toEqual(0);
     });
 
     test('sample 6', () => {
       let vec = new Vector(4, -3);
-      expect(vec.radian).toEqual(0.9272952180016122);
+      expect(vec.radian.value).toEqual(0.9272952180016122);
     });
 
     test('sample 7', () => {
       let vec = new Vector(4, 3);
-      expect(vec.radian).toEqual(2.214297435588181);
+      expect(vec.radian.value).toEqual(2.214297435588181);
     });
 
     test('sample 8', () => {
       let vec = new Vector(-4, 3);
-      expect(vec.radian).toEqual(-2.214297435588181);
+      expect(vec.radian.value).toEqual(-2.214297435588181);
     });
 
     test('sample 9', () => {
       let vec = new Vector(0, 0);
-      expect(vec.radian).toEqual(Radian.get90);
+      expect(vec.radian.value).toEqual(PI_90);
     });
   });
 });

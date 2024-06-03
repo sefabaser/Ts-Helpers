@@ -24,9 +24,9 @@ const DEGREE_315 = -DEGREE_45;
 const DEGREE_330 = -DEGREE_30;
 // 345
 
-export const HALF_PI = Math.PI / 2;
-export const PI = Math.PI;
-export const DOUBLE_PI = Math.PI * 2;
+export const PI_90 = Math.PI / 2;
+export const PI_180 = Math.PI;
+export const PI_360 = Math.PI * 2;
 
 const TRIPLE_EPSILON = Number.EPSILON * 3;
 
@@ -38,6 +38,7 @@ export interface RadianCache {
 export class Radian {
   // Normalize - skip: The values are always in normalized range.
   // Cache - vector: If anyone gets the vector of the radian, it will set the cache for all requests. There is no need to cache beforehand.
+  static readonly get0 = new Radian(0, { vector: undefined, alreadyNormalized: true });
   static readonly get30 = new Radian(DEGREE_30, { vector: undefined, alreadyNormalized: true });
   static readonly get45 = new Radian(DEGREE_45, { vector: undefined, alreadyNormalized: true });
   static readonly get60 = new Radian(DEGREE_60, { vector: undefined, alreadyNormalized: true });
@@ -55,7 +56,7 @@ export class Radian {
   static readonly get330 = new Radian(DEGREE_330, { vector: undefined, alreadyNormalized: true });
 
   static random(): Radian {
-    let radian = Math.random() * DOUBLE_PI - PI;
+    let radian = Math.random() * PI_360 - PI_180;
     // Cache - vector: Unknown, requires calculation.
     // Cache - alreadyNormalized: The value is always in normalized range.
     return new Radian(radian, { vector: undefined, alreadyNormalized: true });
@@ -108,11 +109,11 @@ export class Radian {
   }
 
   acuteAngle(radian: Radian): Radian {
-    let result = (radian.value - this.value) % DOUBLE_PI;
-    if (result > PI) {
-      result = result - DOUBLE_PI;
-    } else if (result < -PI) {
-      result = result + DOUBLE_PI;
+    let result = (radian.value - this.value) % PI_360;
+    if (result > PI_180) {
+      result = result - PI_360;
+    } else if (result < -PI_180) {
+      result = result + PI_360;
     }
     // Cache - vector: Unknown, requires calculation.
     // Cache - alreadyNormalized: The value is always in normalized range.
@@ -138,11 +139,11 @@ export class Radian {
    * @returns Normalizes radian to [-PI, PI]
    */
   private normalize(radian: number): number {
-    radian = radian % DOUBLE_PI;
-    if (radian < -PI) {
-      radian += Math.ceil(-radian / DOUBLE_PI) * DOUBLE_PI;
-    } else if (radian > PI) {
-      radian -= Math.floor(radian / DOUBLE_PI) * DOUBLE_PI;
+    radian = radian % PI_360;
+    if (radian < -PI_180) {
+      radian += Math.ceil(-radian / PI_360) * PI_360;
+    } else if (radian > PI_180) {
+      radian -= Math.ceil(radian / PI_360) * PI_360;
     }
     return NumberHelper.ensurePositiveZero(radian);
   }
@@ -150,6 +151,6 @@ export class Radian {
   private getVector(): Vector {
     // Cache - length: Known, equals to this radian.
     // Cache - radian: Known, equals to one.
-    return new Vector(Math.sin(this.value), Math.cos(PI - this.value), { radian: this, length: 1 });
+    return new Vector(Math.sin(this.value), Math.cos(PI_180 - this.value), { radian: this, length: 1 });
   }
 }

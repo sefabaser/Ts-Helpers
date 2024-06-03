@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import { Radian } from './radian';
+import { PI_360, PI_90, Radian } from './radian';
 
 describe('Radian: ', () => {
   describe('RadianToVector: ', () => {
@@ -83,6 +83,10 @@ describe('Radian: ', () => {
 
     test('sample 11', () => {
       expect(Radian.normalize(-Math.PI * 2)).toEqual(0);
+    });
+
+    test('sample 12', () => {
+      expect(new Radian(PI_360 - PI_90).value).toEqual(-PI_90);
     });
   });
 
