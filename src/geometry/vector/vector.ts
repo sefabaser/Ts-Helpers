@@ -215,7 +215,6 @@ export class Vector {
 
   private getRadian(): number {
     let radian = Math.atan2(this.y, this.x) + Radian.get90;
-    this.cache.radian = radian > Radian.get180 ? radian - Radian.get360 : radian;
-    return radian;
+    return radian > Radian.get180 ? radian - Radian.get360 : radian;
   }
 }
