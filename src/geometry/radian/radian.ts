@@ -27,49 +27,23 @@ const DEGREE_360 = Math.PI * 2;
 
 const TRIPLE_EPSILON = Number.EPSILON * 3;
 
+export interface RadianCache {
+  vector?: Vector;
+}
+
+export interface RadianOptions {
+  skipNormalization?: boolean;
+  cache?: RadianCache;
+}
+
 export class Radian {
-  static random(): number {
-    return Math.random() * this.get360 - this.get180;
-  }
-
-  static toVector(radian: number): Vector {
-    return new Vector(Math.sin(radian), Math.cos(this.get180 - radian));
-  }
-
-  /*
-   * Normalize radian to [-PI, PI]
-   */
-  static normalize(radian: number): number {
-    radian = radian % this.get360;
-    if (radian < -this.get180) {
-      radian += Math.ceil(-radian / this.get360) * this.get360;
-    } else if (radian > this.get180) {
-      radian -= Math.floor(radian / this.get360) * this.get360;
-    }
-    return NumberHelper.ensurePositiveZero(radian);
-  }
-
-  static acuteAngle(radian1: number, radian2: number): number {
-    let result = (radian2 - radian1) % this.get360;
-    if (result > this.get180) {
-      result = result - this.get360;
-    } else if (result < -this.get180) {
-      result = result + this.get360;
-    }
-    return result;
-  }
-
-  static isBetweenAngles(radian: number, start: number, end: number): boolean {
-    let total =
-      Math.abs(this.acuteAngle(start, radian)) +
-      Math.abs(this.acuteAngle(radian, end)) -
-      Math.abs(this.acuteAngle(start, end));
-    return total <= TRIPLE_EPSILON;
-  }
-
-  static lerp(radianA: number, radianB: number, ratio: number): number {
-    let acuteAngle = this.acuteAngle(radianA, radianB);
-    return radianA + acuteAngle * ratio;
+  static random(): Radian {
+    // Normalize - skip: The value is always in normalized range.
+    // Cache - vector: Unknown, requires calculation.
+    return new Radian(Math.random() * this.get360 - this.get180, {
+      skipNormalization: true,
+      cache: { vector: undefined }
+    });
   }
 
   static get get30(): number {
@@ -134,5 +108,66 @@ export class Radian {
 
   static get get360(): number {
     return DEGREE_360;
+  }
+
+  readonly value: number;
+
+  private cache: RadianCache;
+
+  constructor(value: number, options?: RadianOptions) {
+    this.value = options?.skipNormalization ? value : this.normalize(value);
+    this.cache = options?.cache ?? { vector: undefined };
+  }
+
+  toVector(): Vector {
+    if (!this.cache.vector) {
+      this.cache.vector = this.getVector();
+    }
+    return this.cache.vector;
+  }
+
+  acuteAngle(radian: Radian): Radian {
+    let result = (radian.value - this.value) % Radian.get360;
+    if (result > Radian.get180) {
+      result = result - Radian.get360;
+    } else if (result < -Radian.get180) {
+      result = result + Radian.get360;
+    }
+    // Normalize - skip: The value is always in normalized range.
+    // Cache - vector: Unknown, requires calculation.
+    return new Radian(result, { skipNormalization: true, cache: { vector: undefined } });
+  }
+
+  isBetweenAngles(start: Radian, end: Radian): boolean {
+    let total =
+      Math.abs(start.acuteAngle(this).value) +
+      Math.abs(this.acuteAngle(end).value) -
+      Math.abs(start.acuteAngle(end).value);
+    return total <= TRIPLE_EPSILON;
+  }
+
+  lerp(radian: Radian, ratio: number): Radian {
+    let acuteAngle = this.acuteAngle(radian);
+    // Normalize - do not skip: The value is not guaranteed to be in normalized range.
+    return new Radian(this.value + acuteAngle.value * ratio);
+  }
+
+  /**
+   * @returns Normalizes radian to [-PI, PI]
+   */
+  private normalize(radian: number): number {
+    radian = radian % Radian.get360;
+    if (radian < -Radian.get180) {
+      radian += Math.ceil(-radian / Radian.get360) * Radian.get360;
+    } else if (radian > Radian.get180) {
+      radian -= Math.floor(radian / Radian.get360) * Radian.get360;
+    }
+    return NumberHelper.ensurePositiveZero(radian);
+  }
+
+  private getVector(): Vector {
+    // Cache - length: Known, equals to this radian.
+    // Cache - radian: Known, equals to one.
+    return new Vector(Math.sin(this.value), Math.cos(Radian.get180 - this.value), { radian: this.value, length: 1 });
   }
 }
