@@ -1,4 +1,4 @@
-import { Radian } from '../radian/radian';
+import { DOUBLE_PI, HALF_PI, PI, Radian } from '../radian/radian';
 import { Rectangle } from '../shapes/rectangle';
 
 export interface Vec2 {
@@ -8,7 +8,7 @@ export interface Vec2 {
 
 export interface VectorCache {
   length?: number;
-  radian?: number;
+  radian?: Radian;
 }
 
 // Each "new Vector()" should consider the cache and have "Cache" comments.
@@ -24,10 +24,10 @@ export class Vector {
   }
 
   static random(length: number = 1): Vector {
-    let radian = Math.random() * Radian.get360 - Radian.get180;
+    let radian = Radian.random();
     // Cache - length: Known, it is assigned.
     // Cache - radian: Known, it is assigned.
-    return new Vector(Math.sin(radian) * length, -Math.cos(radian) * length, { length, radian });
+    return new Vector(Math.sin(radian.value) * length, -Math.cos(radian.value) * length, { length, radian });
   }
 
   static isEqual(vector1: Vector | undefined, vector2: Vector | undefined): boolean {
@@ -56,7 +56,7 @@ export class Vector {
     return this.cache.length;
   }
 
-  get radian(): number {
+  get radian(): Radian {
     if (this.cache.radian === undefined) {
       this.cache.radian = this.getRadian();
     }
@@ -213,8 +213,10 @@ export class Vector {
     return Math.hypot(this.x, this.y);
   }
 
-  private getRadian(): number {
-    let radian = Math.atan2(this.y, this.x) + Radian.get90;
-    return radian > Radian.get180 ? radian - Radian.get360 : radian;
+  private getRadian(): Radian {
+    let radian = Math.atan2(this.y, this.x) + HALF_PI;
+    // Cache - vector: Known, equal to this vector.
+    // Cache - alreadyNormalized: Unknown, requires calculation.
+    return new Radian(radian, { vector: this, alreadyNormalized: false });
   }
 }
