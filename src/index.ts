@@ -11,3 +11,4 @@ export { Radian, PI_90, PI_180, PI_360, RadianCache } from './geometry/radian/ra
 export { NumberHelper } from './number-helper/number-helper';
 export { RGBColor, ColorHelper } from './color/color';
 export { ArrayHelper } from './array-helper/array-helper';
+export { ConsoleHelper, ConsoleColor } from './console-helper/console.helper';
