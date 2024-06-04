@@ -1,4 +1,4 @@
-const FOR_THE_REST = '%s\x1b[0m';
+const DEFAULT = '\x1b[0m';
 
 const YELLOW = '\x1b[33m';
 const CYAN = '\x1b[36m';
@@ -13,7 +13,7 @@ export type ConsoleColor = 'yellow' | 'cyan' | 'magenta' | 'red' | 'green' | 'bl
 
 export class ConsoleHelper {
   static log(message: string, color: ConsoleColor): void {
-    console.log(ConsoleHelper.colorToAnsi(color) + FOR_THE_REST, message);
+    console.log(ConsoleHelper.colorToAnsi(color) + '%s' + DEFAULT, message);
   }
 
   static newLine(): void {
@@ -41,31 +41,39 @@ export class ConsoleHelper {
     }
   }
 
-  static yellow(): string {
+  static get yellow(): string {
     return YELLOW;
   }
 
-  static cyan(): string {
+  static get cyan(): string {
     return CYAN;
   }
 
-  static magenta(): string {
+  static get magenta(): string {
     return MAGENTA;
   }
 
-  static red(): string {
+  static get red(): string {
     return RED;
   }
 
-  static green(): string {
+  static get green(): string {
     return GREEN;
   }
 
-  static blue(): string {
+  static get blue(): string {
     return BLUE;
   }
 
-  static gray(): string {
+  static get gray(): string {
     return GRAY;
+  }
+
+  static get white(): string {
+    return WHITE;
+  }
+
+  static get default(): string {
+    return DEFAULT;
   }
 }
