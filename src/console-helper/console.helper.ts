@@ -5,8 +5,9 @@ const RED = '\x1b[31m%s\x1b[0m';
 const GREEN = '\x1b[32m%s\x1b[0m';
 const BLUE = '\x1b[34m%s\x1b[0m';
 const GRAY = '\x1b[90m%s\x1b[0m';
+const WHITE = '\x1b[37m%s\x1b[0m';
 
-export type ConsoleColor = 'yellow' | 'cyan' | 'magenta' | 'red' | 'green' | 'blue' | 'gray';
+export type ConsoleColor = 'yellow' | 'cyan' | 'magenta' | 'red' | 'green' | 'blue' | 'gray' | 'white';
 
 export class ConsoleHelper {
   static log(message: string, color: ConsoleColor): void {
@@ -33,6 +34,8 @@ export class ConsoleHelper {
         return BLUE;
       case 'gray':
         return GRAY;
+      case 'white':
+        return WHITE;
     }
   }
 }
