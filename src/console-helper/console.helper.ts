@@ -13,6 +13,10 @@ export class ConsoleHelper {
     console.log(ConsoleHelper.colorToAnsi(color), message);
   }
 
+  static newLine(): void {
+    console.log();
+  }
+
   private static colorToAnsi(color: ConsoleColor): string {
     switch (color) {
       case 'yellow':
