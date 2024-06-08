@@ -72,4 +72,30 @@ describe(`Number Helper: `, () => {
       expect(NumberHelper.clamp(1, 0.5, 0)).toEqual(0.5);
     });
   });
+
+  describe(`PascalTriangleRow: `, () => {
+    test('sample 1', () => {
+      expect(NumberHelper.pascalTriangleRow(0)).toEqual([1]);
+    });
+
+    test('sample 2', () => {
+      expect(NumberHelper.pascalTriangleRow(1)).toEqual([1, 1]);
+    });
+
+    test('sample 3', () => {
+      expect(NumberHelper.pascalTriangleRow(2)).toEqual([1, 2, 1]);
+    });
+
+    test('sample 4', () => {
+      expect(NumberHelper.pascalTriangleRow(3)).toEqual([1, 3, 3, 1]);
+    });
+
+    test('sample 5', () => {
+      expect(NumberHelper.pascalTriangleRow(4)).toEqual([1, 4, 6, 4, 1]);
+    });
+
+    test('sample 6', () => {
+      expect(NumberHelper.pascalTriangleRow(5)).toEqual([1, 5, 10, 10, 5, 1]);
+    });
+  });
 });

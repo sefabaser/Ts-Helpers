@@ -1,3 +1,5 @@
+import { Comparator } from '../comparator/comparator';
+
 export class NumberHelper {
   /**
    * Returns a number whose value is limited to the given range.
@@ -34,5 +36,36 @@ export class NumberHelper {
       [min, max] = [max, min];
     }
     return Math.min(Math.max(value, min), max);
+  }
+
+  /**
+   * @param row number of the desired row of the pascal triangle
+   * @returns Row's values of the pascal triangle
+   */
+  static pascalTriangleRow(row: number): number[] {
+    if (row < 0) {
+      throw new Error('NumberHelper: Row number must be greater than or equal to 0');
+    } else if (Comparator.isInteger(row) === false) {
+      throw new Error('NumberHelper: Row number must be an integer');
+    } else if (row > 50) {
+      throw new Error('NumberHelper: Row number must be less than or equal to 50');
+    }
+
+    return NumberHelper.getPascalTriangleRow(row);
+  }
+
+  private static pascalTriangleCache = new Map<number, number[]>();
+  private static getPascalTriangleRow(row: number): number[] {
+    if (NumberHelper.pascalTriangleCache.has(row)) {
+      return NumberHelper.pascalTriangleCache.get(row) as number[];
+    }
+
+    let result = [1];
+    for (let i = 0; i < row; i++) {
+      result.push((result[i] * (row - i)) / (i + 1));
+    }
+
+    NumberHelper.pascalTriangleCache.set(row, result);
+    return result;
   }
 }
