@@ -97,5 +97,9 @@ describe(`Number Helper: `, () => {
     test('sample 6', () => {
       expect(NumberHelper.pascalTriangleRow(5)).toEqual([1, 5, 10, 10, 5, 1]);
     });
+
+    test('sample 7', () => {
+      expect(NumberHelper.pascalTriangleRow(6)).toEqual([1, 6, 15, 20, 15, 6, 1]);
+    });
   });
 });

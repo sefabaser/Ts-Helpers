@@ -51,7 +51,7 @@ export class NumberHelper {
       throw new Error('NumberHelper: Row number must be less than or equal to 50');
     }
 
-    return NumberHelper.getPascalTriangleRow(row);
+    return [...NumberHelper.getPascalTriangleRow(row)];
   }
 
   private static pascalTriangleCache = new Map<number, number[]>();
@@ -61,8 +61,14 @@ export class NumberHelper {
     }
 
     let result = [1];
-    for (let i = 0; i < row; i++) {
+    for (let i = 0; i < row / 2; i++) {
       result.push((result[i] * (row - i)) / (i + 1));
+    }
+
+    if (row % 2 === 0) {
+      result = result.concat(result.slice(0, -1).reverse());
+    } else {
+      result = result.concat(result.slice(0, -2).reverse());
     }
 
     NumberHelper.pascalTriangleCache.set(row, result);
