@@ -20,7 +20,7 @@ export class Comparator {
     return a instanceof Date && !isNaN(a.getTime());
   }
 
-  static isInteger(a: any): a is number {
+  static isInteger(a: any): boolean {
     return Number.isInteger(a);
   }
 
