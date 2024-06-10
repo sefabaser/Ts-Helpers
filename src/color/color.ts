@@ -39,6 +39,10 @@ export class ColorHelper {
     return ColorHelper.colorNumbersToRGBColor(color);
   }
 
+  static normalize(color: RGBColor): RGBColor {
+    return { r: color.r / 255, g: color.g / 255, b: color.b / 255 };
+  }
+
   private static colorNumbersToRGBColor(colorNumbers: string): RGBColor {
     let r = parseInt(colorNumbers.slice(0, 2), 16);
     let g = parseInt(colorNumbers.slice(2, 4), 16);
