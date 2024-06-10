@@ -20,6 +20,18 @@ export class NumberHelper {
   }
 
   /**
+   * @param number number to be converted to string
+   * @returns returns the string representation of the number, which always have a decimal point
+   */
+  static toFloatString(number: number): string {
+    if (Number.isInteger(number)) {
+      return number.toFixed(1);
+    } else {
+      return number.toString();
+    }
+  }
+
+  /**
    * Returns a number whose value is limited to the given range.
    *
    * Example: limit the output of this computation to between 0 and 255

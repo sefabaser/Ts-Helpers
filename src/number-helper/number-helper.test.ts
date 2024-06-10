@@ -47,6 +47,32 @@ describe(`Number Helper: `, () => {
     });
   });
 
+  describe(`ToFloatString: `, () => {
+    test('sample 1', () => {
+      expect(NumberHelper.toFloatString(0)).toEqual('0.0');
+    });
+
+    test('sample 2', () => {
+      expect(NumberHelper.toFloatString(1)).toEqual('1.0');
+    });
+
+    test('sample 3', () => {
+      expect(NumberHelper.toFloatString(-1)).toEqual('-1.0');
+    });
+
+    test('sample 4', () => {
+      expect(NumberHelper.toFloatString(0.5)).toEqual('0.5');
+    });
+
+    test('sample 5', () => {
+      expect(NumberHelper.toFloatString(1.5)).toEqual('1.5');
+    });
+
+    test('sample 6', () => {
+      expect(NumberHelper.toFloatString(-1.5)).toEqual('-1.5');
+    });
+  });
+
   describe(`Clamp: `, () => {
     test('sample 1', () => {
       expect(NumberHelper.clamp(0, 0, 1)).toEqual(0);
