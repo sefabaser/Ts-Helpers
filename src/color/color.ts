@@ -4,6 +4,12 @@ export interface RGBColor {
   b: number;
 }
 
+export interface NormalizedColor {
+  red: number;
+  green: number;
+  blue: number;
+}
+
 export class ColorHelper {
   static get black(): RGBColor {
     return { r: 0, g: 0, b: 0 };
@@ -39,8 +45,8 @@ export class ColorHelper {
     return ColorHelper.colorNumbersToRGBColor(color);
   }
 
-  static normalize(color: RGBColor): RGBColor {
-    return { r: color.r / 255, g: color.g / 255, b: color.b / 255 };
+  static normalize(color: RGBColor): NormalizedColor {
+    return { red: color.r / 255, green: color.g / 255, blue: color.b / 255 };
   }
 
   private static colorNumbersToRGBColor(colorNumbers: string): RGBColor {
