@@ -62,6 +62,11 @@ export class Radian {
     return new Radian(radian, { vector: undefined, alreadyNormalized: true });
   }
 
+  static getAverage(...radians: Radian[]): Radian {
+    let sum = radians.reduce((acc, radian) => acc.add(radian.vector), Vector.zero);
+    return sum.normalize().radian;
+  }
+
   private cache: RadianCache;
 
   private _value: number;
@@ -71,6 +76,13 @@ export class Radian {
       this.cache.alreadyNormalized = true;
     }
     return this._value;
+  }
+
+  get vector(): Vector {
+    if (!this.cache.vector) {
+      this.cache.vector = this.getVector();
+    }
+    return this.cache.vector;
   }
 
   constructor(value: number, cache?: RadianCache) {
@@ -121,13 +133,6 @@ export class Radian {
       [min, max] = [max, min];
     }
     return this.noHigherThan(max).noLowerThan(min);
-  }
-
-  toVector(): Vector {
-    if (!this.cache.vector) {
-      this.cache.vector = this.getVector();
-    }
-    return this.cache.vector;
   }
 
   acuteAngle(radian: Radian): Radian {

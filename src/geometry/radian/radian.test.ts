@@ -3,40 +3,66 @@ import { describe, expect, test } from 'vitest';
 import { PI_360, PI_90, Radian } from './radian';
 
 describe('Radian: ', () => {
+  describe('GetAverage', () => {
+    test('sample 1', () => {
+      let radians = [Radian.get0, Radian.get60];
+      let expectation = Radian.get30;
+      expect(Radian.getAverage(...radians).value - expectation.value).lessThanOrEqual(Number.EPSILON);
+    });
+
+    test('sample 2', () => {
+      let radians = [Radian.get60, Radian.get0];
+      let expectation = Radian.get30;
+      expect(Radian.getAverage(...radians).value - expectation.value).lessThanOrEqual(Number.EPSILON);
+    });
+
+    test('sample 3', () => {
+      let radians = [Radian.get330, Radian.get30];
+      let expectation = Radian.get0;
+      expect(Radian.getAverage(...radians).value - expectation.value).lessThanOrEqual(Number.EPSILON);
+    });
+
+    test('sample 4', () => {
+      let radians = [Radian.get330, Radian.get90, Radian.get270];
+      let expectation = Radian.get330;
+      expect(Radian.getAverage(...radians).value - expectation.value).lessThanOrEqual(Number.EPSILON);
+    });
+  });
+
   describe('RadianToVector: ', () => {
     test('sample 1', () => {
       let vec = { x: 1, y: 6.123233995736766e-17 };
-      expect(new Radian(Math.PI / 2).toVector().toVec2()).toEqual(vec);
+      expect(new Radian(Math.PI / 2).vector.toVec2()).toEqual(vec);
     });
 
     test('sample 2', () => {
       let vec = { x: -1, y: -1.8369701987210297e-16 };
-      expect(new Radian(-Math.PI / 2).toVector().toVec2()).toEqual(vec);
+      expect(new Radian(-Math.PI / 2).vector.toVec2()).toEqual(vec);
     });
 
     test('sample 3', () => {
       let vec = { x: 1.2246467991473532e-16, y: 1 };
-      expect(new Radian(Math.PI).toVector().toVec2()).toEqual(vec);
+      expect(new Radian(Math.PI).vector.toVec2()).toEqual(vec);
     });
 
     test('sample 4', () => {
       let vec = { x: 0, y: -1 };
-      expect(new Radian(0).toVector().toVec2()).toEqual(vec);
+      expect(new Radian(0).vector.toVec2()).toEqual(vec);
     });
 
     test('sample 5', () => {
       let vec = { x: 0.7999999999999999, y: -0.5999999999999999 };
-      expect(new Radian(0.9272952180016122).toVector().toVec2()).toEqual(vec);
+      expect(new Radian(0.9272952180016122).vector.toVec2()).toEqual(vec);
     });
 
     test('sample 6', () => {
       let vec = { x: 0.8000000000000002, y: 0.6 };
-      expect(new Radian(2.214297435588181).toVector().toVec2()).toEqual(vec);
+      expect(new Radian(2.214297435588181).vector.toVec2()).toEqual(vec);
     });
 
     test('sample 7', () => {
       let vec = { x: -0.8000000000000002, y: 0.5999999999999998 };
-      expect(new Radian(-2.214297435588181).toVector().toVec2()).toEqual(vec);
+      expect(new Radian(-2.214297435588181).vector.toVec2()).toEqual(vec);
     });
   });
 
@@ -283,7 +309,7 @@ describe('Radian: ', () => {
     });
 
     test('getVector', () => {
-      let vector = new Radian(PI_360).toVector();
+      let vector = new Radian(PI_360).vector;
       expect(vector['cache'].length).toStrictEqual(1);
       expect(vector['getLength']()).toStrictEqual(1);
 
