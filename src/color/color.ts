@@ -4,6 +4,12 @@ export interface RGBColor {
   b: number;
 }
 
+export interface NormalizedColor {
+  red: number;
+  green: number;
+  blue: number;
+}
+
 export class ColorHelper {
   static get black(): RGBColor {
     return { r: 0, g: 0, b: 0 };
@@ -25,6 +31,18 @@ export class ColorHelper {
     return { r: 0, g: 0, b: 255 };
   }
 
+  static get yellow(): RGBColor {
+    return { r: 255, g: 255, b: 0 };
+  }
+
+  static get cyan(): RGBColor {
+    return { r: 0, g: 255, b: 255 };
+  }
+
+  static get magenta(): RGBColor {
+    return { r: 255, g: 0, b: 255 };
+  }
+
   static hexColorToRGBColor(hex: number): RGBColor {
     let hexString = hex.toString(16);
     while (hexString.length < 6) {
@@ -37,6 +55,10 @@ export class ColorHelper {
   static stringColorToRGBColor(color: string): RGBColor {
     color = color.replace('#', '');
     return ColorHelper.colorNumbersToRGBColor(color);
+  }
+
+  static normalize(color: RGBColor): NormalizedColor {
+    return { red: color.r / 255, green: color.g / 255, blue: color.b / 255 };
   }
 
   private static colorNumbersToRGBColor(colorNumbers: string): RGBColor {
