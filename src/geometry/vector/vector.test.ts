@@ -75,7 +75,7 @@ describe('Vector: ', () => {
     });
   });
 
-  describe('Sum: ', () => {
+  describe('Add: ', () => {
     test('sample 1', () => {
       let vec1 = new Vector(0, 0);
       let vec2 = new Vector(0, 0);
@@ -104,6 +104,38 @@ describe('Vector: ', () => {
       let vec1 = new Vector(1, 2);
       let vec2 = new Vector(4, 3);
       expect(vec1.add(vec2).toVec2()).toEqual({ x: 5, y: 5 });
+    });
+  });
+
+  describe('Subtract: ', () => {
+    test('sample 1', () => {
+      let vec1 = new Vector(0, 0);
+      let vec2 = new Vector(0, 0);
+      expect(vec2.subtract(vec1).toVec2()).toEqual({ x: 0, y: 0 });
+    });
+
+    test('sample 2', () => {
+      let vec1 = new Vector(1, 0);
+      let vec2 = new Vector(0, 0);
+      expect(vec2.subtract(vec1).toVec2()).toEqual({ x: -1, y: 0 });
+    });
+
+    test('sample 3', () => {
+      let vec1 = new Vector(1, 0);
+      let vec2 = new Vector(1, 0);
+      expect(vec2.subtract(vec1).toVec2()).toEqual({ x: 0, y: 0 });
+    });
+
+    test('sample 4', () => {
+      let vec1 = new Vector(1, 1);
+      let vec2 = new Vector(3, 0);
+      expect(vec2.subtract(vec1).toVec2()).toEqual({ x: 2, y: -1 });
+    });
+
+    test('sample 5', () => {
+      let vec1 = new Vector(1, 2);
+      let vec2 = new Vector(4, 3);
+      expect(vec2.subtract(vec1).toVec2()).toEqual({ x: 3, y: 1 });
     });
   });
 

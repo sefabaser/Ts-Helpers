@@ -104,6 +104,12 @@ export class Vector {
     return Vector.fromTo(this, vector);
   }
 
+  subtract(vector: Vector): Vector {
+    // Cache - length: Unknown, requires calculation.
+    // Cache - radian: Unknown, requires calculation.
+    return new Vector(this.x - vector.x, this.y - vector.y);
+  }
+
   multiply(multiplier: number): Vector {
     // Cache - length: Unknown, requires calculation.
     // Cache - radian: Known, stays the same.
