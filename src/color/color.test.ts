@@ -15,6 +15,18 @@ describe('Color', () => {
     });
   });
 
+  describe('rgbToHex', () => {
+    test('sample 1', () => {
+      let color = ColorHelper.rgbToHex({ r: 0, g: 255, b: 0 });
+      expect(color).toBe(0x00ff00);
+    });
+
+    test('sample 2', () => {
+      let color = ColorHelper.rgbToHex({ r: 28, g: 204, b: 162 });
+      expect(color).toBe(0x1ccca2);
+    });
+  });
+
   describe('stringColorToRGBColor', () => {
     test('sample 1', () => {
       let color = ColorHelper.stringColorToRGBColor('#00ff00');

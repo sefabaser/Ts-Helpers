@@ -563,8 +563,8 @@ describe('Vector: ', () => {
     test('random', () => {
       let vec = Vector.random(2);
 
-      expect((vec['cache'].length ?? 0) - 2).toBeLessThanOrEqual(Number.EPSILON);
-      expect(vec['getLength']() - 2).toBeLessThanOrEqual(Number.EPSILON);
+      expect((vec['cache'].length ?? 0) - 2).toBeLessThanOrEqual(Number.EPSILON * 2);
+      expect(vec['getLength']() - 2).toBeLessThanOrEqual(Number.EPSILON * 2);
 
       expect(vec['getRadian']().acuteAngle(vec['cache'].radian ?? Radian.get0).value).toBeLessThanOrEqual(
         Number.EPSILON

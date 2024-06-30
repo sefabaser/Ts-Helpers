@@ -57,6 +57,11 @@ export class ColorHelper {
     return ColorHelper.colorNumbersToRGBColor(color);
   }
 
+  static rgbToHex(color: RGBColor): number {
+    // eslint-disable-next-line no-bitwise
+    return (color.r << 16) + (color.g << 8) + color.b;
+  }
+
   static normalize(color: RGBColor): NormalizedColor {
     return { red: color.r / 255, green: color.g / 255, blue: color.b / 255 };
   }
