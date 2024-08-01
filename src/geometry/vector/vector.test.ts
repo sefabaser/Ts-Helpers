@@ -173,55 +173,83 @@ describe('Vector: ', () => {
 
   describe('Multiply: ', () => {
     test('sample 1', () => {
+      let vec1 = new Vector(0, 0);
+      let vec2 = new Vector(0, 0);
+      expect(vec1.multiply(vec2).toVec2()).toEqual({ x: 0, y: 0 });
+    });
+
+    test('sample 2', () => {
+      let vec1 = new Vector(2, 2);
+      let vec2 = new Vector(4, 3);
+      expect(vec1.multiply(vec2).toVec2()).toEqual({ x: 8, y: 6 });
+    });
+  });
+
+  describe('Multiply Number: ', () => {
+    test('sample 1', () => {
       let vec = new Vector(0, 0);
-      expect(vec.multiply(1).toVec2()).toEqual({ x: 0, y: 0 });
+      expect(vec.multiplyNumber(1).toVec2()).toEqual({ x: 0, y: 0 });
     });
 
     test('sample 2', () => {
       let vec = new Vector(1, 0);
-      expect(vec.multiply(1).toVec2()).toEqual({ x: 1, y: 0 });
+      expect(vec.multiplyNumber(1).toVec2()).toEqual({ x: 1, y: 0 });
     });
 
     test('sample 3', () => {
       let vec = new Vector(1, 0);
-      expect(vec.multiply(2).toVec2()).toEqual({ x: 2, y: 0 });
+      expect(vec.multiplyNumber(2).toVec2()).toEqual({ x: 2, y: 0 });
     });
 
     test('sample 4', () => {
       let vec = new Vector(1, 1);
-      expect(vec.multiply(2).toVec2()).toEqual({ x: 2, y: 2 });
+      expect(vec.multiplyNumber(2).toVec2()).toEqual({ x: 2, y: 2 });
     });
 
     test('sample 5', () => {
       let vec = new Vector(1, 2);
-      expect(vec.multiply(2).toVec2()).toEqual({ x: 2, y: 4 });
+      expect(vec.multiplyNumber(2).toVec2()).toEqual({ x: 2, y: 4 });
     });
   });
 
   describe('Divide: ', () => {
     test('sample 1', () => {
+      let vec1 = new Vector(0, 0);
+      let vec2 = new Vector(1, 1);
+      expect(vec1.divide(vec2).toVec2()).toEqual({ x: 0, y: 0 });
+    });
+
+    test('sample 2', () => {
+      let vec1 = new Vector(2, 2);
+      let vec2 = new Vector(4, 3);
+      expect(vec1.divide(vec2).toVec2()).toEqual({ x: 2 / 4, y: 2 / 3 });
+    });
+  });
+
+  describe('Divide Number: ', () => {
+    test('sample 1', () => {
       let vec = new Vector(0, 0);
-      expect(vec.divide(1).toVec2()).toEqual({ x: 0, y: 0 });
+      expect(vec.divideNumber(1).toVec2()).toEqual({ x: 0, y: 0 });
     });
 
     test('sample 2', () => {
       let vec = new Vector(1, 0);
-      expect(vec.divide(1).toVec2()).toEqual({ x: 1, y: 0 });
+      expect(vec.divideNumber(1).toVec2()).toEqual({ x: 1, y: 0 });
     });
 
     test('sample 3', () => {
       let vec = new Vector(1, 0);
-      expect(vec.divide(2).toVec2()).toEqual({ x: 0.5, y: 0 });
+      expect(vec.divideNumber(2).toVec2()).toEqual({ x: 0.5, y: 0 });
     });
 
     test('sample 4', () => {
       let vec = new Vector(1, 1);
-      expect(vec.divide(2).toVec2()).toEqual({ x: 0.5, y: 0.5 });
+      expect(vec.divideNumber(2).toVec2()).toEqual({ x: 0.5, y: 0.5 });
     });
 
     test('sample 5', () => {
       let vec = new Vector(1, 2);
-      expect(vec.divide(2).toVec2()).toEqual({ x: 0.5, y: 1 });
+      expect(vec.divideNumber(2).toVec2()).toEqual({ x: 0.5, y: 1 });
     });
   });
 
@@ -571,19 +599,19 @@ describe('Vector: ', () => {
       );
     });
 
-    test('multiply', () => {
+    test('multiply number', () => {
       let vec = new Vector(3, 4);
       let radian = vec.radian;
-      vec.multiply(2);
+      vec.multiplyNumber(2);
 
       expect(vec['cache'].radian).toStrictEqual(radian);
       expect(vec['getRadian']()).toStrictEqual(radian);
     });
 
-    test('divide', () => {
+    test('divide number', () => {
       let vec = new Vector(3, 4);
       let radian = vec.radian;
-      vec.divide(2);
+      vec.divideNumber(2);
 
       expect(vec['cache'].radian).toStrictEqual(radian);
       expect(vec['getRadian']()).toStrictEqual(radian);

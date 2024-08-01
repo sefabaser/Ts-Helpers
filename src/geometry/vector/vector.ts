@@ -110,13 +110,25 @@ export class Vector {
     return new Vector(this.x - vector.x, this.y - vector.y);
   }
 
-  multiply(multiplier: number): Vector {
+  multiply(vector: Vector): Vector {
+    // Cache - length: Unknown, requires calculation.
+    // Cache - radian: Unknown, requires calculation.
+    return new Vector(this.x * vector.x, this.y * vector.y);
+  }
+
+  multiplyNumber(multiplier: number): Vector {
     // Cache - length: Unknown, requires calculation.
     // Cache - radian: Known, stays the same.
     return new Vector(this.x * multiplier, this.y * multiplier, { radian: this.cache.radian });
   }
 
-  divide(divider: number): Vector {
+  divide(vector: Vector): Vector {
+    // Cache - length: Unknown, requires calculation.
+    // Cache - radian: Unknown, requires calculation.
+    return new Vector(this.x / vector.x, this.y / vector.y);
+  }
+
+  divideNumber(divider: number): Vector {
     // Cache - length: Unknown, requires calculation.
     // Cache - radian: Known, stays the same.
     return new Vector(this.x / divider, this.y / divider, { radian: this.cache.radian });
