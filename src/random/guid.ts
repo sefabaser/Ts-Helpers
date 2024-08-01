@@ -1,5 +1,15 @@
 export class Guid {
-  static next(): Guid {
+  private guid: string;
+
+  constructor() {
+    this.guid = this.next();
+  }
+
+  toString(): string {
+    return this.guid;
+  }
+
+  private next(): string {
     let guid = '';
     let i: string;
     let j: number;
@@ -14,16 +24,6 @@ export class Guid {
         .toUpperCase();
       guid += i;
     }
-    return new Guid(guid);
-  }
-
-  private guid: string;
-
-  constructor(guid: string) {
-    this.guid = guid;
-  }
-
-  toString(): string {
-    return this.guid;
+    return guid;
   }
 }
