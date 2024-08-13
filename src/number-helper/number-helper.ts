@@ -21,7 +21,7 @@ export class NumberHelper {
 
   /**
    * @param number number to be converted to string
-   * @returns returns the string representation of the number, which always have a decimal point
+   * @returns the string representation of the number, which always have a decimal point
    */
   static toFloatString(number: number): string {
     if (Number.isInteger(number)) {
@@ -29,6 +29,25 @@ export class NumberHelper {
     } else {
       return number.toString();
     }
+  }
+
+  /**
+   * @param number number to be converted to string
+   * @param limit number of decimal digits
+   * @returns the string representation of the number, which have a decial digit limited by the limit
+   */
+  static toLimitedFixed(number: number, limit: number = 2): string {
+    let numStr = number.toString();
+    let [integerPart, decimalPart] = numStr.split('.');
+
+    if (!decimalPart || decimalPart.length <= limit) {
+      return numStr;
+    } else {
+      return number.toFixed(limit);
+    }
+
+    // Otherwise, limit the decimal part to 2 digits
+    return `${integerPart}.${decimalPart.substring(0, 2)}`;
   }
 
   /**

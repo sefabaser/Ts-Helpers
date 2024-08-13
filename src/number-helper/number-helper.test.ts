@@ -73,6 +73,40 @@ describe(`Number Helper: `, () => {
     });
   });
 
+  describe(`ToLimitedFixed: `, () => {
+    test('sample 1', () => {
+      expect(NumberHelper.toLimitedFixed(0)).toEqual('0');
+    });
+
+    test('sample 2', () => {
+      expect(NumberHelper.toLimitedFixed(1.1)).toEqual('1.1');
+    });
+
+    test('sample 3', () => {
+      expect(NumberHelper.toLimitedFixed(1.12)).toEqual('1.12');
+    });
+
+    test('sample 4', () => {
+      expect(NumberHelper.toLimitedFixed(1.123)).toEqual('1.12');
+    });
+
+    test('sample 5', () => {
+      expect(NumberHelper.toLimitedFixed(1.123)).toEqual('1.12');
+    });
+
+    test('sample 6', () => {
+      expect(NumberHelper.toLimitedFixed(1.127)).toEqual('1.13');
+    });
+
+    test('sample 7', () => {
+      expect(NumberHelper.toLimitedFixed(1.12, 1)).toEqual('1.1');
+    });
+
+    test('sample 8', () => {
+      expect(NumberHelper.toLimitedFixed(1.17, 1)).toEqual('1.2');
+    });
+  });
+
   describe(`Clamp: `, () => {
     test('sample 1', () => {
       expect(NumberHelper.clamp(0, 0, 1)).toEqual(0);
