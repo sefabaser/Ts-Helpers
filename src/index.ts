@@ -10,5 +10,6 @@ export { Rect, Rectangle } from './geometry/shapes/rectangle';
 export { Radian, PI_90, PI_180, PI_360, RadianCache } from './geometry/radian/radian';
 export { NumberHelper } from './number-helper/number-helper';
 export { RGBColor, NormalizedColor, ColorHelper } from './color/color';
-export { ArrayHelper, FixedArray, ReadonlyFixedArray } from './array-helper/array-helper';
+export { ArrayHelper } from './array-helper/array-helper';
 export { ConsoleHelper, ConsoleColor } from './console-helper/console.helper';
+export { Mutable, FixedArray, ReadonlyFixedArray } from './utility-types/utility-types';
