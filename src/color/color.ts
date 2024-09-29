@@ -1,3 +1,5 @@
+import { NumberHelper } from '../number-helper/number-helper';
+
 export interface RGBColor {
   r: number;
   g: number;
@@ -64,6 +66,22 @@ export class ColorHelper {
 
   static normalize(color: RGBColor): NormalizedColor {
     return { red: color.r / 255, green: color.g / 255, blue: color.b / 255 };
+  }
+
+  static addNumber(color: RGBColor, number: number): RGBColor {
+    return {
+      r: NumberHelper.clamp(color.r + number, 0, 255),
+      g: NumberHelper.clamp(color.g + number, 0, 255),
+      b: NumberHelper.clamp(color.b + number, 0, 255)
+    };
+  }
+
+  static multiplyNumber(color: RGBColor, number: number): RGBColor {
+    return {
+      r: NumberHelper.clamp(color.r * number, 0, 255),
+      g: NumberHelper.clamp(color.g * number, 0, 255),
+      b: NumberHelper.clamp(color.b * number, 0, 255)
+    };
   }
 
   private static colorNumbersToRGBColor(colorNumbers: string): RGBColor {

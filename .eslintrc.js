@@ -24,31 +24,10 @@ module.exports = {
     node: true,
     jest: true
   },
-  plugins: ['@typescript-eslint', '@typescript-eslint/eslint-plugin', 'no-null', 'sort-class-members'],
+  plugins: ['@typescript-eslint', '@typescript-eslint/eslint-plugin', 'no-null'],
   ignorePatterns: ['**/*.js', 'vite.config.ts', 'out/**/*', 'dist/**/*', 'node_modules/**/*'],
   rules: {
     'no-null/no-null': 2,
-    'sort-class-members/sort-class-members': [
-      2,
-      {
-        order: [
-          '[static-properties]',
-          '[static-private-properties]',
-          '[static-methods]',
-          '[static-properties]',
-          '[static-private-properties]',
-          '[getters]',
-          '[setters]',
-          '[properties]',
-          '[conventional-private-properties]',
-          'constructor',
-          '[methods]',
-          '[conventional-private-properties]',
-          '[conventional-private-methods]'
-        ],
-        accessorPairPositioning: 'getThenSet'
-      }
-    ],
     '@typescript-eslint/adjacent-overload-signatures': 'error',
     '@typescript-eslint/ban-ts-comment': 'off',
     '@typescript-eslint/ban-types': 'error',
