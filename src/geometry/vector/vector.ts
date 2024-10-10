@@ -1,4 +1,4 @@
-import { PI_360, PI_90, PI_180, Radian } from '../radian/radian';
+import { PI_90, Radian } from '../radian/radian';
 import { Rectangle } from '../shapes/rectangle';
 
 export interface Vec2 {
@@ -16,6 +16,10 @@ export class Vector {
   // Cache - length: Known, equals to zero.
   // Cache - radion: If anyone gets the radion of the vector, it will set the cache for all requests. There is no need to cache beforehand.
   static zero = new Vector(0, 0, { length: 0, radian: undefined });
+
+  // Cache - length: Known
+  // Cache - radion: If anyone gets the radion of the vector, it will set the cache for all requests. There is no need to cache beforehand.
+  static half = new Vector(0.5, 0.5, { length: 0.7071068, radian: undefined });
 
   static fromVec2(vector: Vec2): Vector {
     // Cache - length: Unknown, requires calculation.
