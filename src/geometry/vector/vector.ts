@@ -104,14 +104,26 @@ export class Vector {
     return new Vector(this.x + vector.x, this.y + vector.y);
   }
 
-  fromTo(vector: Vector): Vector {
-    return Vector.fromTo(this, vector);
+  addNumber(value: number): Vector {
+    // Cache - length: Unknown, requires calculation.
+    // Cache - radian: Unknown, requires calculation.
+    return new Vector(this.x + value, this.y + value);
   }
 
   subtract(vector: Vector): Vector {
     // Cache - length: Unknown, requires calculation.
     // Cache - radian: Unknown, requires calculation.
     return new Vector(this.x - vector.x, this.y - vector.y);
+  }
+
+  subtractNumber(value: number): Vector {
+    // Cache - length: Unknown, requires calculation.
+    // Cache - radian: Unknown, requires calculation.
+    return new Vector(this.x - value, this.y - value);
+  }
+
+  fromTo(vector: Vector): Vector {
+    return Vector.fromTo(this, vector);
   }
 
   multiply(vector: Vector): Vector {
