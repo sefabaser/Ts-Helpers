@@ -129,7 +129,10 @@ export class JsonHelper {
   static arrayToObject<T extends { [key: string]: any }>(
     array: T[],
     keyPath: string,
-    transformFunction?: (item: T) => any
+    options?: {
+      transformFunction?: (item: T) => any;
+      removeKey?: boolean;
+    }
   ): { [key: string]: any } {
     if (keyPath.length === 0) {
       throw new Error(`JsonHelper.arrayToObject: keyPath is empty!`);
@@ -146,8 +149,32 @@ export class JsonHelper {
       }
 
       let outputItem = item;
-      if (transformFunction) {
-        outputItem = transformFunction(item);
+      if (options?.transformFunction) {
+        outputItem = options.transformFunction(item);
+      }
+
+      if (options?.removeKey) {
+        let parentObject: any;
+        let keyToRemove: string;
+
+        if (keyPath.indexOf('.') >= 0) {
+          let parentKeyPath = keyPath.substring(0, keyPath.lastIndexOf('.'));
+          parentObject = this.deepFind(outputItem, parentKeyPath);
+          keyToRemove = keyPath.substring(keyPath.lastIndexOf('.') + 1);
+        } else {
+          parentObject = outputItem;
+          keyToRemove = keyPath;
+        }
+
+        if (!parentObject) {
+          throw new Error(
+            `JsonHelper.arrayToObject: parent object not found for keyPath '${keyPath}', object: ${JSON.stringify(
+              outputItem
+            )}`
+          );
+        }
+
+        delete parentObject[keyToRemove];
       }
 
       // @ts-ignore

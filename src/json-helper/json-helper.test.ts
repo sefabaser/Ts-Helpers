@@ -176,7 +176,7 @@ describe(`Json Helper: `, () => {
           { a: { key: 'two' }, val: 2 }
         ],
         'a.key',
-        item => item.val
+        { transformFunction: item => item.val }
       );
       expect(result).toEqual({ one: 1, two: 2 });
     });
@@ -187,10 +187,12 @@ describe(`Json Helper: `, () => {
         { a: { key: 'two' }, val: 2 }
       ];
 
-      JsonHelper.arrayToObject(array, 'a.key', item => ({
-        a: {},
-        val: item.val
-      }));
+      JsonHelper.arrayToObject(array, 'a.key', {
+        transformFunction: item => ({
+          a: {},
+          val: item.val
+        })
+      });
       expect(array).toEqual([
         { a: { key: 'one' }, val: 1 },
         { a: { key: 'two' }, val: 2 }
@@ -225,6 +227,18 @@ describe(`Json Helper: `, () => {
           'a'
         );
       }).toThrow();
+    });
+
+    test('should remove key option', () => {
+      let result = JsonHelper.arrayToObject(
+        [
+          { a: { key: 'one', b: 1 }, val: 1 },
+          { a: { key: 'two', b: 2 }, val: 2 }
+        ],
+        'a.key',
+        { removeKey: true }
+      );
+      expect(result).toEqual({ one: { a: { b: 1 }, val: 1 }, two: { a: { b: 2 }, val: 2 } });
     });
   });
 });
