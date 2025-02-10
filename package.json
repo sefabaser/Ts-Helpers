@@ -1,6 +1,6 @@
 {
   "name": "helpers-lib",
-  "version": "1.10.8",
+  "version": "1.10.9",
   "description": "Typescript Helpers Library",
   "main": "dist/index.js",
   "repository": {
@@ -38,6 +38,8 @@
     "eslint-plugin-import": "2.29.1",
     "eslint-plugin-no-null": "1.0.2",
     "typescript": "5.3.3",
-    "vitest": "1.6.0"
+    "vitest": "1.6.0",
+    "reflect-metadata": "0.2.2",
+    "joi": "17.11.0"
   }
 }

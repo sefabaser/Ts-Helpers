@@ -33,8 +33,8 @@ export class NumberHelper {
 
   /**
    * @param number number to be converted to string
-   * @param limit number of decimal digits
-   * @returns the string representation of the number, which have a decial digit limited by the limit
+   * @param limit number of decimal digits, default is 2
+   * @returns the string representation of the number, which have a decial digit limited by the limit and it will not show decimal digits if there is none
    */
   static toLimitedFixed(number: number, limit: number = 2): string {
     let numStr = number.toString();
