@@ -78,18 +78,25 @@ describe('AutoValidate', () => {
         );
       });
 
-      test('sample 4 - not existing variable', () => {
+      test('sample 4 - setting not existing properties', () => {
         @AutoValidate()
-        class Variables {
-          @Schema(Joi.string().min(2).max(50).required()) name: string = 'initial';
-        }
+        class Variables {}
 
         let variables = new Variables();
 
         expect(() => ((variables as any).new = 'a')).toThrow('The property "new" do not exists.');
       });
 
-      test('sample 5 - setting different type', () => {
+      test('sample 5 - reading not existing properties', () => {
+        @AutoValidate()
+        class Variables {}
+
+        let variables = new Variables();
+
+        expect(() => (variables as any).new).toThrow('The property "new" do not exists.');
+      });
+
+      test('sample 6 - setting different type', () => {
         @AutoValidate()
         class Variables {
           name: string = 'initial';
@@ -102,8 +109,45 @@ describe('AutoValidate', () => {
         );
       });
 
-      test('sample 6 - setting new properties', () => {
-        @AutoValidate({ allowDynamicProperties: true })
+      test('sample 7 - setting undefined to optional property', () => {
+        @AutoValidate()
+        class Variables {
+          @Schema(Joi.string().min(2).max(50).optional()) name: string | undefined = 'initial';
+        }
+
+        let variables = new Variables();
+        variables.name = undefined;
+
+        expect(variables.name).toEqual(undefined);
+      });
+
+      test('sample 8 - reading not existing optional property', () => {
+        @AutoValidate()
+        class Variables {
+          @Schema(Joi.string().min(2).max(50).optional()) name: string | undefined;
+        }
+
+        let variables = new Variables();
+
+        expect(variables.name).toEqual(undefined);
+      });
+
+      test('sample 9 - deleting optional property', () => {
+        @AutoValidate()
+        class Variables {
+          @Schema(Joi.string().min(2).max(50).optional()) name: string = 'initial';
+        }
+
+        let variables = new Variables();
+        delete (variables as any).name;
+
+        expect(variables.name).toEqual(undefined);
+      });
+    });
+
+    describe('Options', () => {
+      test('sample 1 - setting new properties', () => {
+        @AutoValidate({ allowNewProperties: true })
         class Variables {}
 
         let variables = new Variables();
@@ -112,13 +156,49 @@ describe('AutoValidate', () => {
         expect((variables as any).name).toEqual('new');
       });
 
-      test('sample 7 - trying to read non existant properties', () => {
-        @AutoValidate({ allowDynamicProperties: true })
+      test('sample 2 - reading not existing properties', () => {
+        @AutoValidate({ allowReadingNonExistantProperties: true })
         class Variables {}
 
         let variables = new Variables();
 
+        expect((variables as any).new).toEqual(undefined);
+      });
+
+      test('sample 3 - setting undefined to existing properties', () => {
+        @AutoValidate({ allowUnsettingProperties: true })
+        class Variables {
+          name = 'initial';
+        }
+
+        let variables = new Variables();
+        (variables as any).name = undefined;
+
         expect((variables as any).name).toEqual(undefined);
+      });
+
+      test('sample 4 - deleting an existing properties', () => {
+        @AutoValidate({ allowUnsettingProperties: true, allowReadingNonExistantProperties: true })
+        class Variables {
+          name = 'initial';
+        }
+
+        let variables = new Variables();
+        delete (variables as any).name;
+
+        expect((variables as any).name).toEqual(undefined);
+      });
+
+      test('sample 5 - type change', () => {
+        @AutoValidate({ allowTypeChanges: true })
+        class Variables {
+          name = 'initial';
+        }
+
+        let variables = new Variables();
+        (variables as any).name = 1;
+
+        expect((variables as any).name).toEqual(1);
       });
     });
   });

@@ -19,7 +19,24 @@ function doesExists(target: any, property: string): boolean {
   return Object.prototype.hasOwnProperty.call(target, property) || target[property] !== undefined;
 }
 
-export function AutoValidate(options?: { allowDynamicProperties?: boolean }) {
+function doesSchemaAllowUndefined<T extends new (...args: any[]) => object>(constructor: T, property: string): boolean {
+  let schema = Reflect.getOwnMetadata('propertySchema', constructor.prototype, property);
+  if (schema) {
+    let { error } = schema.validate(undefined);
+    if (!error) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+export function AutoValidate(options?: {
+  allowNewProperties?: boolean;
+  allowReadingNonExistantProperties?: boolean;
+  allowUnsettingProperties?: boolean;
+  allowTypeChanges?: boolean;
+}) {
   return function <T extends new (...args: any[]) => object>(constructor: T): T {
     return class extends constructor {
       constructor(...args: any[]) {
@@ -27,7 +44,11 @@ export function AutoValidate(options?: { allowDynamicProperties?: boolean }) {
 
         return new Proxy(this, {
           get(target: any, property: string) {
-            if (!options?.allowDynamicProperties && !doesExists(target, property)) {
+            if (
+              !options?.allowReadingNonExistantProperties &&
+              !doesExists(target, property) &&
+              !doesSchemaAllowUndefined(constructor, property)
+            ) {
               throw new Error(`The property "${property}" do not exists.`);
             }
 
@@ -69,27 +90,48 @@ export function AutoValidate(options?: { allowDynamicProperties?: boolean }) {
             return target[property];
           },
           set(target: any, property: string, value: any) {
-            if (doesExists(target, property)) {
-              if (typeof target[property] !== typeof value) {
-                throw new Error(
-                  `Cannot change the type of the property "${property}". Current type "${typeof target[
-                    property
-                  ]}", value type "${typeof value}".`
-                );
-              }
-            } else if (!options?.allowDynamicProperties) {
-              throw new Error(`The property "${property}" do not exists.`);
-            }
-
             let schema = Reflect.getOwnMetadata('propertySchema', constructor.prototype, property);
+            let validatedBySchema = false;
             if (schema) {
               let { error } = schema.validate(value);
               if (error) {
                 throw new Error(`Validation failed for property "${property}": ${error.message}`);
+              } else {
+                validatedBySchema = true;
+              }
+            }
+
+            if (!validatedBySchema) {
+              if (doesExists(target, property)) {
+                if (
+                  !options?.allowTypeChanges &&
+                  !(options?.allowUnsettingProperties && value === undefined) &&
+                  typeof target[property] !== typeof value
+                ) {
+                  throw new Error(
+                    `Cannot change the type of the property "${property}". Current type "${typeof target[
+                      property
+                    ]}", value type "${typeof value}".`
+                  );
+                }
+              } else if (!options?.allowNewProperties) {
+                throw new Error(`The property "${property}" do not exists.`);
               }
             }
 
             target[property] = value;
+            return true;
+          },
+          deleteProperty(target: any, property: string) {
+            if (doesExists(target, property)) {
+              if (!options?.allowUnsettingProperties && !doesSchemaAllowUndefined(constructor, property)) {
+                throw new Error(`Cannot unset the property "${property}".`);
+              }
+            } else {
+              throw new Error(`The property "${property}" do not exists.`);
+            }
+
+            delete target[property];
             return true;
           }
         });
