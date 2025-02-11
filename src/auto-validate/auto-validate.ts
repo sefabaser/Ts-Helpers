@@ -4,7 +4,7 @@ import 'reflect-metadata';
 export function Schema(schema: Joi.Schema) {
   return function (target: object, propertyKey: string | symbol, parameterIndex?: number): void {
     if (parameterIndex !== undefined) {
-      // Method parameter decorator
+      // Function parameter decorator
       let existingSchemas = Reflect.getOwnMetadata('schemas', target, propertyKey) || [];
       existingSchemas[parameterIndex] = schema;
       Reflect.defineMetadata('schemas', existingSchemas, target, propertyKey);
@@ -19,7 +19,7 @@ function doesExists(target: any, property: string): boolean {
   return Object.prototype.hasOwnProperty.call(target, property) || target[property] !== undefined;
 }
 
-export function AutoValidate() {
+export function AutoValidate(options?: { allowDynamicProperties?: boolean }) {
   return function <T extends new (...args: any[]) => object>(constructor: T): T {
     return class extends constructor {
       constructor(...args: any[]) {
@@ -27,7 +27,7 @@ export function AutoValidate() {
 
         return new Proxy(this, {
           get(target: any, property: string) {
-            if (!doesExists(target, property)) {
+            if (!options?.allowDynamicProperties && !doesExists(target, property)) {
               throw new Error(`The property "${property}" do not exists.`);
             }
 
@@ -55,7 +55,9 @@ export function AutoValidate() {
                   schemas.forEach((functionArgumentSchema: Joi.Schema, index: number) => {
                     let { error } = functionArgumentSchema.validate(functionArgs[index]);
                     if (error) {
-                      throw new Error(`Validation failed for argument at position ${index + 1} in ${property}: ${error.message}`);
+                      throw new Error(
+                        `Validation failed for argument at position ${index + 1} in ${property}: ${error.message}`
+                      );
                     }
                   });
                 }
@@ -67,7 +69,15 @@ export function AutoValidate() {
             return target[property];
           },
           set(target: any, property: string, value: any) {
-            if (!doesExists(target, property)) {
+            if (doesExists(target, property)) {
+              if (typeof target[property] !== typeof value) {
+                throw new Error(
+                  `Cannot change the type of the property "${property}". Current type "${typeof target[
+                    property
+                  ]}", value type "${typeof value}".`
+                );
+              }
+            } else if (!options?.allowDynamicProperties) {
               throw new Error(`The property "${property}" do not exists.`);
             }
 

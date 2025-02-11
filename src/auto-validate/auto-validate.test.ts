@@ -88,6 +88,38 @@ describe('AutoValidate', () => {
 
         expect(() => ((variables as any).new = 'a')).toThrow('The property "new" do not exists.');
       });
+
+      test('sample 5 - setting different type', () => {
+        @AutoValidate()
+        class Variables {
+          name: string = 'initial';
+        }
+
+        let variables = new Variables();
+
+        expect(() => ((variables as any).name = 1)).toThrow(
+          'Cannot change the type of the property "name". Current type "string", value type "number".'
+        );
+      });
+
+      test('sample 6 - setting new properties', () => {
+        @AutoValidate({ allowDynamicProperties: true })
+        class Variables {}
+
+        let variables = new Variables();
+        (variables as any).name = 'new';
+
+        expect((variables as any).name).toEqual('new');
+      });
+
+      test('sample 7 - trying to read non existant properties', () => {
+        @AutoValidate({ allowDynamicProperties: true })
+        class Variables {}
+
+        let variables = new Variables();
+
+        expect((variables as any).name).toEqual(undefined);
+      });
     });
   });
 
@@ -168,7 +200,9 @@ describe('AutoValidate', () => {
 
         let functions = new Functions();
 
-        expect(() => (functions as any).sayHello()).toThrow('Missing arguments in function "sayHello". Expected: 1, received: 0');
+        expect(() => (functions as any).sayHello()).toThrow(
+          'Missing arguments in function "sayHello". Expected: 1, received: 0'
+        );
       });
 
       test('sample 7 - more argument has been sent', () => {
