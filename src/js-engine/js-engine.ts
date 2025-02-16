@@ -2,7 +2,7 @@ const ReservedWords = new Set(['Boolean']);
 
 export class JSEngine<FunctionsType extends object> {
   readonly variables: { [key: string]: any } = {};
-  private functions: FunctionsType;
+  readonly functions: FunctionsType;
 
   private readonly variablesProxy = new Proxy(
     {},
@@ -22,7 +22,9 @@ export class JSEngine<FunctionsType extends object> {
         if (ReservedWords.has(property)) {
           throw new Error(`JSEngine: Reserved word "${property}" cannot be assigned.`);
         } else if (Object.prototype.hasOwnProperty.call(this.functions, property)) {
-          throw new Error(`JSEngine: Cannot set a value to the property "${property}". It is already in use as a function.`);
+          throw new Error(
+            `JSEngine: Cannot set a value to the property "${property}". It is already in use as a function.`
+          );
         } else {
           this.variables[property] = value;
           return true;
