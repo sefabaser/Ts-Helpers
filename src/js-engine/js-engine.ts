@@ -1,3 +1,5 @@
+import { JsonHelper } from '../json-helper/json-helper';
+
 const ReservedWords = new Set(['Boolean']);
 
 export class JSEngine<FunctionsType extends object> {
@@ -81,6 +83,12 @@ export class JSEngine<FunctionsType extends object> {
     } catch (e) {
       throw new Error(`${e}`.replace('Error: ', ''));
     }
+  }
+
+  duplicate(): JSEngine<FunctionsType> {
+    let variables = JsonHelper.deepCopy(this.variables);
+    let functions = JsonHelper.deepCopy(this.functions);
+    return new JSEngine(functions, variables);
   }
 
   private validateArguments(functions: FunctionsType, variables: { [key: string]: any }): void {

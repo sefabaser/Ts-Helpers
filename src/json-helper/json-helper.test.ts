@@ -112,12 +112,22 @@ describe(`Json Helper: `, () => {
       expect(copy.a.b.get('a')).toEqual('b');
     });
 
+    test('should respect "Function" type', () => {
+      let obj = { a: { b: (value: number) => value * 2 } };
+      let copy = JsonHelper.deepCopy(obj);
+
+      expect(JSON.stringify(obj)).toEqual(JSON.stringify(JsonHelper.deepCopy(copy)));
+      expect(obj !== copy).toEqual(true);
+      expect(obj.a !== copy.a).toEqual(true);
+      expect(obj.a.b(123)).toEqual(copy.a.b(123));
+    });
+
     test('should throw error for looped object', () => {
       let obj: any = {};
       obj.obj = obj;
       expect(() => {
         JsonHelper.deepCopy(obj);
-      }).toThrow();
+      }).toThrow('Deep copy attempt on circularly dependent object!');
     });
   });
 

@@ -37,49 +37,36 @@ export class JsonHelper {
     }
   }
 
-  static deepCopy<T>(target: T): T {
+  static deepCopy<T>(instance: T): T {
     try {
       // eslint-disable-next-line no-null/no-null
-      if (target === null) {
-        return target;
+      if (instance === null) {
+        return instance;
       }
 
-      if (target instanceof Date) {
-        return new Date(target.getTime()) as any;
+      if (Array.isArray(instance)) {
+        return instance.map(item => this.deepCopy(item)) as T;
       }
 
-      if (target instanceof Array) {
-        let targetClone = [] as any[];
-        (target as any[]).forEach(v => {
-          targetClone.push(v);
-        });
-        return targetClone.map((n: any) => JsonHelper.deepCopy<any>(n)) as any;
+      if (instance instanceof Set) {
+        return new Set([...instance].map(item => this.deepCopy(item))) as T;
       }
 
-      if (target instanceof Set) {
-        let targetClone = new Set<any>();
-        (target as Set<any>).forEach(v => {
-          targetClone.add(JsonHelper.deepCopy<any>(v));
-        });
-        return targetClone as any;
+      if (instance instanceof Map) {
+        return new Map([...instance].map(([key, value]) => [this.deepCopy(key), this.deepCopy(value)])) as T;
       }
 
-      if (target instanceof Map) {
-        let targetClone = new Map<any, any>();
-        (target as Map<any, any>).forEach((v, k) => {
-          targetClone.set(k, JsonHelper.deepCopy<any>(v));
-        });
-        return targetClone as any;
+      if (typeof instance === 'object') {
+        let clone = Object.create(Object.getPrototypeOf(instance));
+
+        for (let key of Object.keys(instance)) {
+          let value = (instance as any)[key];
+          (clone as any)[key] = this.deepCopy(value);
+        }
+        return clone;
       }
 
-      if (typeof target === 'object') {
-        let targetClone = { ...(target as { [key: string]: any }) } as { [key: string]: any };
-        Object.keys(targetClone).forEach(k => {
-          targetClone[k] = JsonHelper.deepCopy<any>(targetClone[k]);
-        });
-        return targetClone as T;
-      }
-      return target;
+      return instance;
     } catch (e) {
       if (e instanceof RangeError) {
         throw new Error('Deep copy attempt on circularly dependent object!');

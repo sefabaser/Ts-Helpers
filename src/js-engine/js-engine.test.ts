@@ -116,6 +116,31 @@ describe('JSEngine', () => {
     });
   });
 
+  describe('Duplicate', () => {
+    test('sample 1', () => {
+      let storyEngine = new JSEngine({}, { a: 1 });
+      let copy = storyEngine.duplicate();
+
+      expect(storyEngine.variables !== copy.variables).toEqual(true);
+      expect(storyEngine.variables.a).toEqual(copy.variables.a);
+    });
+
+    test('sample 2', () => {
+      let functions = {
+        a: 1,
+        test: () => functions.a++
+      };
+
+      let storyEngine = new JSEngine(functions, {});
+      let copy = storyEngine.duplicate();
+
+      storyEngine.execute('test()');
+
+      expect(storyEngine.functions.a).toEqual(2);
+      expect(copy.functions.a).toEqual(1);
+    });
+  });
+
   describe('Error Cases', () => {
     test('reserved word cannot be used - function', () => {
       expect(() => new JSEngine({ Boolean: () => undefined }, {})).toThrow(
@@ -131,7 +156,9 @@ describe('JSEngine', () => {
 
     test('reserved word cannot be deleted', () => {
       let storyEngine = new JSEngine({}, {});
-      expect(() => storyEngine.execute('delete Boolean')).toThrow('JSEngine: Reserved word "Boolean" cannot be deleted.');
+      expect(() => storyEngine.execute('delete Boolean')).toThrow(
+        'JSEngine: Reserved word "Boolean" cannot be deleted.'
+      );
     });
 
     test('reserved word cannot be assigned', () => {
