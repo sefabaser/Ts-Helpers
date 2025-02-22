@@ -1,12 +1,13 @@
 import { JsonHelper } from '../json-helper/json-helper';
-import { VariableTypes } from '../utility-types/utility-types';
+import { JSVariableType } from '../utility-types/utility-types';
 
 const ReservedWords = new Set(['Boolean']);
 
 export class JSEngine<FunctionsType extends object> {
   readonly variables: { [key: string]: any } = {};
   readonly functions: FunctionsType;
-  readonly globalNameSpace: Map<string, VariableTypes> | undefined = new Map();
+
+  globalNameSpace: Map<string, JSVariableType> | undefined;
 
   private readonly variablesProxy = new Proxy(
     {},
@@ -64,7 +65,7 @@ export class JSEngine<FunctionsType extends object> {
   constructor(
     functions: FunctionsType,
     variables: { [key: string]: any },
-    globalNameSpace?: Map<string, VariableTypes>
+    globalNameSpace?: Map<string, JSVariableType>
   ) {
     this.validateArguments(functions, variables);
     this.variables = variables;

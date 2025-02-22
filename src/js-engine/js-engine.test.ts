@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import { VariableTypes } from '../utility-types/utility-types';
+import { JSVariableType } from '../utility-types/utility-types';
 import { JSEngine } from './js-engine';
 
 /*
@@ -142,7 +142,7 @@ describe('JSEngine', () => {
     });
 
     test('sample 3 - Keeping the global namespace the same', () => {
-      let namespace = new Map<string, VariableTypes>();
+      let namespace = new Map<string, JSVariableType>();
       let storyEngine = new JSEngine({}, {}, namespace);
       let copy = storyEngine.duplicate();
 
@@ -192,7 +192,7 @@ describe('JSEngine', () => {
     });
 
     test('type changes of globally defined variables', () => {
-      let namespace = new Map<string, VariableTypes>();
+      let namespace = new Map<string, JSVariableType>();
       let engine1 = new JSEngine({}, {}, namespace);
       let engine2 = new JSEngine({}, {}, namespace);
 

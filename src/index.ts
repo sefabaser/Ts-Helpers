@@ -14,4 +14,4 @@ export { DeepPartial, JsonHelper } from './json-helper/json-helper';
 export { NumberHelper } from './number-helper/number-helper';
 export { Guid } from './random/guid';
 export { Random } from './random/random';
-export { FixedArray, Mutable, ReadonlyFixedArray, VariableTypes } from './utility-types/utility-types';
+export { FixedArray, JSVariableType, Mutable, ReadonlyFixedArray } from './utility-types/utility-types';
