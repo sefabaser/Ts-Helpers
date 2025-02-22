@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
+import { VariableTypes } from '../utility-types/utility-types';
 import { JSEngine } from './js-engine';
 
 /*
@@ -139,6 +140,17 @@ describe('JSEngine', () => {
       expect(storyEngine.functions.a).toEqual(2);
       expect(copy.functions.a).toEqual(1);
     });
+
+    test('sample 3 - Keeping the global namespace the same', () => {
+      let namespace = new Map<string, VariableTypes>();
+      let storyEngine = new JSEngine({}, {}, namespace);
+      let copy = storyEngine.duplicate();
+
+      storyEngine.execute('a = 1');
+
+      expect(storyEngine.globalNameSpace!.get('a')).toEqual('number');
+      expect(copy.globalNameSpace!.get('a')).toEqual('number');
+    });
   });
 
   describe('Error Cases', () => {
@@ -176,6 +188,18 @@ describe('JSEngine', () => {
     test('variables cannot share the same name with functions', () => {
       expect(() => new JSEngine({ foo: () => undefined }, { foo: undefined })).toThrow(
         'JSEngine: Reserved word "foo" cannot be used as a variable.'
+      );
+    });
+
+    test('type changes of globally defined variables', () => {
+      let namespace = new Map<string, VariableTypes>();
+      let engine1 = new JSEngine({}, {}, namespace);
+      let engine2 = new JSEngine({}, {}, namespace);
+
+      engine1.execute('a = 1');
+
+      expect(() => engine2.execute('a = "str"')).toThrow(
+        'JSEngine: Type mismatch during variable set. The type of "a" is "string", and it is tried to set to "number".'
       );
     });
   });

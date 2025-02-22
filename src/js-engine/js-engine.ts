@@ -1,10 +1,12 @@
 import { JsonHelper } from '../json-helper/json-helper';
+import { VariableTypes } from '../utility-types/utility-types';
 
 const ReservedWords = new Set(['Boolean']);
 
 export class JSEngine<FunctionsType extends object> {
   readonly variables: { [key: string]: any } = {};
   readonly functions: FunctionsType;
+  readonly globalNameSpace: Map<string, VariableTypes> | undefined = new Map();
 
   private readonly variablesProxy = new Proxy(
     {},
@@ -27,8 +29,21 @@ export class JSEngine<FunctionsType extends object> {
           throw new Error(
             `JSEngine: Cannot set a value to the property "${property}". It is already in use as a function.`
           );
+        } else if (
+          this.globalNameSpace &&
+          this.globalNameSpace.has(property) &&
+          typeof value !== this.globalNameSpace.get(property)
+        ) {
+          throw new Error(
+            `JSEngine: Type mismatch during variable set. The type of "${property}" is "${typeof value}", and it is tried to set to "${this.globalNameSpace.get(
+              property
+            )}".`
+          );
         } else {
           this.variables[property] = value;
+          if (this.globalNameSpace) {
+            this.globalNameSpace.set(property, typeof value);
+          }
           return true;
         }
       },
@@ -46,10 +61,15 @@ export class JSEngine<FunctionsType extends object> {
     }
   );
 
-  constructor(functions: FunctionsType, variables: { [key: string]: any }) {
+  constructor(
+    functions: FunctionsType,
+    variables: { [key: string]: any },
+    globalNameSpace?: Map<string, VariableTypes>
+  ) {
     this.validateArguments(functions, variables);
     this.variables = variables;
     this.functions = functions;
+    this.globalNameSpace = globalNameSpace;
   }
 
   execute(code: string): void {
@@ -88,7 +108,7 @@ export class JSEngine<FunctionsType extends object> {
   duplicate(): JSEngine<FunctionsType> {
     let variables = JsonHelper.deepCopy(this.variables);
     let functions = JsonHelper.deepCopy(this.functions);
-    return new JSEngine(functions, variables);
+    return new JSEngine(functions, variables, this.globalNameSpace);
   }
 
   private validateArguments(functions: FunctionsType, variables: { [key: string]: any }): void {
