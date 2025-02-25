@@ -36,7 +36,7 @@ describe('AutoValidate', () => {
 
         let variables = new Variables();
 
-        expect(() => (variables as any).new).toThrow('The property "new" do not exists.');
+        expect(() => (variables as any).new).toThrow('The property "new" does not exist.');
       });
     });
 
@@ -84,7 +84,7 @@ describe('AutoValidate', () => {
 
         let variables = new Variables();
 
-        expect(() => ((variables as any).new = 'a')).toThrow('The property "new" do not exists.');
+        expect(() => ((variables as any).new = 'a')).toThrow('The property "new" does not exist.');
       });
 
       test('sample 5 - reading not existing properties', () => {
@@ -93,7 +93,7 @@ describe('AutoValidate', () => {
 
         let variables = new Variables();
 
-        expect(() => (variables as any).new).toThrow('The property "new" do not exists.');
+        expect(() => (variables as any).new).toThrow('The property "new" does not exist.');
       });
 
       test('sample 6 - setting different type', () => {
@@ -267,7 +267,7 @@ describe('AutoValidate', () => {
 
         let functions = new Functions();
 
-        expect(() => (functions as any).new()).toThrow('The property "new" do not exists.');
+        expect(() => (functions as any).new()).toThrow('The property "new" does not exist.');
       });
 
       test('sample 6 - less argument has been sent', () => {
@@ -354,6 +354,39 @@ describe('AutoValidate', () => {
         expect(() => functions.sayHello('Hello', 'a')).toThrow(
           'Validation failed for argument at position 2 in sayHello: "value" length must be at least 2 characters long'
         );
+      });
+
+      test('sample 4- should preserve metadata on properties', () => {
+        function ActionBeforeTesting() {
+          return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+            let originalMethod = descriptor.value;
+
+            descriptor.value = function (...args: any[]) {
+              let hasFlag = Reflect.getOwnMetadata('actionsBeforeTesting', this);
+              if (hasFlag) {
+                return originalMethod.apply(this, args);
+              } else {
+                throw new Error(`Flag not found.`);
+              }
+            };
+
+            Object.defineProperty(descriptor.value, 'length', {
+              value: originalMethod.length,
+              writable: false
+            });
+          };
+        }
+
+        @AutoValidate({ allowNewProperties: true })
+        class EventSimulator {
+          @ActionBeforeTesting()
+          setPlayerShipSubSystemType(): void {}
+        }
+
+        let instance = new EventSimulator();
+        Reflect.defineMetadata('actionsBeforeTesting', true, instance);
+
+        expect(() => instance.setPlayerShipSubSystemType()).not.toThrow();
       });
     });
   });

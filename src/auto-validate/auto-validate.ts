@@ -49,7 +49,7 @@ export function AutoValidate(options?: {
               !doesExists(target, property) &&
               !doesSchemaAllowUndefined(constructor, property)
             ) {
-              throw new Error(`The property "${property}" do not exists.`);
+              throw new Error(`The property "${property}" does not exist.`);
             }
 
             // Function parameter validation
@@ -83,7 +83,9 @@ export function AutoValidate(options?: {
                   });
                 }
 
-                return originalFunction.apply(target, functionArgs);
+                // @ts-ignore
+                // Use the "proxy" object instead of "target". So the "this" keyword will target the proxy not the original object.
+                return originalFunction.apply(this, functionArgs);
               };
             }
 
@@ -115,7 +117,7 @@ export function AutoValidate(options?: {
                   );
                 }
               } else if (!options?.allowNewProperties) {
-                throw new Error(`The property "${property}" do not exists.`);
+                throw new Error(`The property "${property}" does not exist.`);
               }
             }
 
@@ -128,7 +130,7 @@ export function AutoValidate(options?: {
                 throw new Error(`Cannot unset the property "${property}".`);
               }
             } else {
-              throw new Error(`The property "${property}" do not exists.`);
+              throw new Error(`The property "${property}" does not exist.`);
             }
 
             delete target[property];
