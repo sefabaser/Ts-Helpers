@@ -1,6 +1,6 @@
 {
   "name": "helpers-lib",
-  "version": "1.10.19",
+  "version": "1.11.0",
   "description": "Typescript Helpers Library",
   "main": "dist/index.js",
   "repository": {
@@ -8,7 +8,7 @@
     "url": "git+https://github.com/sefabaser/Ts-Helpers.git"
   },
   "author": "sefabaser",
-  "license": "MIT",
+  "license": "UNLICENSED",
   "bugs": {
     "url": "https://github.com/sefabaser/Ts-Helpers/issues"
   },
