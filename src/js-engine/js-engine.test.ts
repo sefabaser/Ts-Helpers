@@ -202,5 +202,12 @@ describe('JSEngine', () => {
         'JSEngine: Type mismatch during variable set. The type of "a" is "string", and it is tried to set to "number".'
       );
     });
+
+    test('type error message', () => {
+      let namespace = new Map<string, JSVariableType>();
+      let engine = new JSEngine({}, { a: 1 }, namespace);
+
+      expect(() => engine.execute('a.forEach(() => {})')).toThrowError(/^a\.forEach is not a function$/);
+    });
   });
 });

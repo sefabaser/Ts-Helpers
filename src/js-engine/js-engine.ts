@@ -86,7 +86,7 @@ export class JSEngine<FunctionsType extends object> {
     try {
       fn(this.variablesProxy);
     } catch (e) {
-      throw new Error(`${e}`.replace('Error: ', ''));
+      throw new Error(`${e}`.replace(/^.*Error: /, ''));
     }
   }
 
@@ -102,7 +102,7 @@ export class JSEngine<FunctionsType extends object> {
       );
       return fn(this.variablesProxy);
     } catch (e) {
-      throw new Error(`${e}`.replace('Error: ', ''));
+      throw new Error(`${e}`.replace(/^.*Error: /, ''));
     }
   }
 
