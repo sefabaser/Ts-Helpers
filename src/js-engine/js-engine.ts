@@ -86,7 +86,7 @@ export class JSEngine<FunctionsType extends object> {
     try {
       fn(this.variablesProxy);
     } catch (e) {
-      throw new Error(`${e}`.replace(/^.*Error: /, ''));
+      this.handleError(e);
     }
   }
 
@@ -102,7 +102,8 @@ export class JSEngine<FunctionsType extends object> {
       );
       return fn(this.variablesProxy);
     } catch (e) {
-      throw new Error(`${e}`.replace(/^.*Error: /, ''));
+      this.handleError(e);
+      return false;
     }
   }
 
@@ -127,5 +128,14 @@ export class JSEngine<FunctionsType extends object> {
         throw new Error(`JSEngine: Reserved word "${functionName}" cannot be used as a variable.`);
       }
     });
+  }
+
+  private handleError(e: unknown): void {
+    if (e instanceof Error) {
+      e.message = e.message.replace(/^.*Error: /, '');
+      throw e; // Preserve original stack trace
+    } else {
+      throw new Error(`${e}`.replace(/^.*Error: /, ''));
+    }
   }
 }

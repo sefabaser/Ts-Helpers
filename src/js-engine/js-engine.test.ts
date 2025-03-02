@@ -209,5 +209,23 @@ describe('JSEngine', () => {
 
       expect(() => engine.execute('a.forEach(() => {})')).toThrowError(/^a\.forEach is not a function$/);
     });
+
+    test('given function throws error', () => {
+      let errorFunction = (): void => {
+        let a = 0;
+        for (let item of a as any) {
+          console.log(item);
+        }
+      };
+
+      let storyEngine = new JSEngine({ foo: errorFunction }, {});
+      try {
+        storyEngine.execute('foo()');
+      } catch (e) {
+        expect(e).toBeInstanceOf(Error);
+        let error: Error = e as Error;
+        expect(error.stack).toContain('errorFunction');
+      }
+    });
   });
 });
