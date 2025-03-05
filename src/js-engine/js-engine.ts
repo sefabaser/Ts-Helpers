@@ -12,7 +12,7 @@ const JSEngineFunctionFlag = Symbol('JSEngineFunctionFlag');
 export function JSEngineFunction() {
   return function (_: unknown, propertyKey: string, descriptor: PropertyDescriptor): void {
     let originalFunction = descriptor.value;
-    Reflect.defineMetadata(JSEngineFunctionFlag, true, originalFunction);
+    JSEngine.setAsJSEngineFunction(originalFunction);
 
     descriptor.value = function (...args: any[]) {
       let hasFlag = Reflect.getOwnMetadata(JSEngineExecutionFlag, this);
@@ -30,6 +30,10 @@ export function JSEngineFunction() {
 export class JSEngine<FunctionsType extends object> {
   static isJSEngineFunction(fn: (...args: any[]) => any): boolean {
     return Reflect.getOwnMetadata(JSEngineFunctionFlag, fn) === true;
+  }
+
+  static setAsJSEngineFunction(fn: (...args: any[]) => any): void {
+    Reflect.defineMetadata(JSEngineFunctionFlag, true, fn);
   }
 
   readonly variables: { [key: string]: any } = {};
