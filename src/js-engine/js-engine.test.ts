@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
 
 import { JSVariableType } from '../utility-types/utility-types';
-import { JSEngine } from './js-engine';
+import { JSEngine, JSEngineFunction } from './js-engine';
 
 /*
   Untested areas:
@@ -81,9 +81,13 @@ describe('JSEngine', () => {
 
   describe('Function Calls', () => {
     test('sample 1', () => {
-      let functions = {
-        test: () => 1
-      };
+      class Functions {
+        @JSEngineFunction()
+        test(): number {
+          return 1;
+        }
+      }
+      let functions = new Functions();
 
       let storyEngine = new JSEngine(functions, { a: undefined });
 
@@ -93,9 +97,13 @@ describe('JSEngine', () => {
     });
 
     test('sample 2', () => {
-      let functions = {
-        test: (param: number) => param
-      };
+      class Functions {
+        @JSEngineFunction()
+        test(param: number): number {
+          return param;
+        }
+      }
+      let functions = new Functions();
 
       let storyEngine = new JSEngine(functions, { a: undefined });
 
@@ -105,9 +113,13 @@ describe('JSEngine', () => {
     });
 
     test('sample 3', () => {
-      let functions = {
-        test: (param1: number, param2: number) => param1 + param2
-      };
+      class Functions {
+        @JSEngineFunction()
+        test(param1: number, param2: number): number {
+          return param1 + param2;
+        }
+      }
+      let functions = new Functions();
 
       let storyEngine = new JSEngine(functions, { a: undefined });
 
@@ -127,10 +139,15 @@ describe('JSEngine', () => {
     });
 
     test('sample 2', () => {
-      let functions = {
-        a: 1,
-        test: () => functions.a++
-      };
+      class Functions {
+        a = 1;
+
+        @JSEngineFunction()
+        test(param1: number, param2: number): number {
+          return this.a++;
+        }
+      }
+      let functions = new Functions();
 
       let storyEngine = new JSEngine(functions, {});
       let copy = storyEngine.duplicate();
@@ -160,7 +177,7 @@ describe('JSEngine', () => {
       );
     });
 
-    test('reserved word cannot be usedn - variable', () => {
+    test('reserved word cannot be used - variable', () => {
       expect(() => new JSEngine({}, { Boolean: undefined })).toThrow(
         'JSEngine: Reserved word "Boolean" cannot be used as a variable.'
       );
@@ -218,9 +235,17 @@ describe('JSEngine', () => {
         }
       };
 
-      let storyEngine = new JSEngine({ foo: errorFunction }, {});
+      class Functions {
+        @JSEngineFunction()
+        test(): void {
+          errorFunction();
+        }
+      }
+      let functions = new Functions();
+
+      let storyEngine = new JSEngine(functions, {});
       try {
-        storyEngine.execute('foo()');
+        storyEngine.execute('test()');
       } catch (e) {
         expect(e).toBeInstanceOf(Error);
         let error: Error = e as Error;

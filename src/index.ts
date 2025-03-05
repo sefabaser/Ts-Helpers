@@ -11,6 +11,7 @@ export { Rect, Rectangle } from './geometry/shapes/rectangle';
 export { Vec2, Vector, VectorCache } from './geometry/vector/vector';
 export { JSEngine } from './js-engine/js-engine';
 export { DeepPartial, JsonHelper } from './json-helper/json-helper';
+export { MetaDataHelper } from './meta-data-helper/meta-data.helper';
 export { NumberHelper } from './number-helper/number-helper';
 export { Guid } from './random/guid';
 export { Random } from './random/random';

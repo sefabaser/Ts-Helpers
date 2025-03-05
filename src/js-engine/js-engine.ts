@@ -1,9 +1,37 @@
+import 'reflect-metadata';
+
 import { JsonHelper } from '../json-helper/json-helper';
+import { MetaDataHelper } from '../meta-data-helper/meta-data.helper';
 import { JSVariableType } from '../utility-types/utility-types';
 
 const ReservedWords = new Set(['Boolean']);
 
+const JSEngineExecutionFlag = Symbol('jsEngineExecutionFlag');
+const JSEngineFunctionFlag = Symbol('JSEngineFunctionFlag');
+
+export function JSEngineFunction() {
+  return function (_: unknown, propertyKey: string, descriptor: PropertyDescriptor): void {
+    let originalFunction = descriptor.value;
+    Reflect.defineMetadata(JSEngineFunctionFlag, true, originalFunction);
+
+    descriptor.value = function (...args: any[]) {
+      let hasFlag = Reflect.getOwnMetadata(JSEngineExecutionFlag, this);
+      if (hasFlag) {
+        return originalFunction.apply(this, args);
+      } else {
+        throw new Error(`"${String(propertyKey)}(...)" can only be usable by JSEngine.`);
+      }
+    };
+
+    MetaDataHelper.carryMetaDataOfFunction(originalFunction, descriptor.value);
+  };
+}
+
 export class JSEngine<FunctionsType extends object> {
+  static isJSEngineFunction(fn: (...args: any[]) => any): boolean {
+    return Reflect.getOwnMetadata(JSEngineFunctionFlag, fn) === true;
+  }
+
   readonly variables: { [key: string]: any } = {};
   readonly functions: FunctionsType;
 
@@ -18,6 +46,12 @@ export class JSEngine<FunctionsType extends object> {
         } else if (property === 'Boolean') {
           return Boolean;
         } else if (typeof (this.functions as any)[property] === 'function') {
+          if (!JSEngine.isJSEngineFunction((this.functions as any)[property])) {
+            throw new Error(
+              `"${property}(...)" is not a JSEngine function, it cannot be called during the executions.`
+            );
+          }
+
           return (...args: any[]) => (this.functions as any)[property](...args);
         } else if (Object.hasOwn(this.variables, property)) {
           return this.variables[property];
@@ -74,6 +108,8 @@ export class JSEngine<FunctionsType extends object> {
   }
 
   execute(code: string): void {
+    Reflect.defineMetadata(JSEngineExecutionFlag, true, this.functions);
+
     let fn = new Function(
       'vars',
       `
@@ -88,9 +124,14 @@ export class JSEngine<FunctionsType extends object> {
     } catch (e) {
       this.handleError(e);
     }
+
+    Reflect.defineMetadata(JSEngineExecutionFlag, false, this.functions);
   }
 
   conditionCheck(expression: string): boolean {
+    Reflect.defineMetadata(JSEngineExecutionFlag, true, this.functions);
+
+    let result: boolean;
     try {
       let fn = new Function(
         'vars',
@@ -100,11 +141,14 @@ export class JSEngine<FunctionsType extends object> {
         }
       `
       );
-      return fn(this.variablesProxy);
+      result = fn(this.variablesProxy);
     } catch (e) {
       this.handleError(e);
       return false;
     }
+
+    Reflect.defineMetadata(JSEngineExecutionFlag, false, this.functions);
+    return result;
   }
 
   duplicate(): JSEngine<FunctionsType> {

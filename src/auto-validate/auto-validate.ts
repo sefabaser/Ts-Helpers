@@ -1,16 +1,21 @@
 import Joi from 'joi';
 import 'reflect-metadata';
 
+import { MetaDataHelper } from '../meta-data-helper/meta-data.helper';
+
+const FunctionParameterSchemasKey = Symbol('AutoValidateFunctionParameterSchemas');
+const PropertySchemaKey = Symbol('AutoValidatePropertySchema');
+
 export function Schema(schema: Joi.Schema) {
   return function (target: object, propertyKey: string | symbol, parameterIndex?: number): void {
     if (parameterIndex !== undefined) {
       // Function parameter decorator
-      let existingSchemas = Reflect.getOwnMetadata('schemas', target, propertyKey) || [];
+      let existingSchemas = Reflect.getOwnMetadata(FunctionParameterSchemasKey, target, propertyKey) || [];
       existingSchemas[parameterIndex] = schema;
-      Reflect.defineMetadata('schemas', existingSchemas, target, propertyKey);
+      Reflect.defineMetadata(FunctionParameterSchemasKey, existingSchemas, target, propertyKey);
     } else {
       // Property decorator
-      Reflect.defineMetadata('propertySchema', schema, target, propertyKey);
+      Reflect.defineMetadata(PropertySchemaKey, schema, target, propertyKey);
     }
   };
 }
@@ -20,7 +25,7 @@ function doesExists(target: any, property: string): boolean {
 }
 
 function doesSchemaAllowUndefined<T extends new (...args: any[]) => object>(constructor: T, property: string): boolean {
-  let schema = Reflect.getOwnMetadata('propertySchema', constructor.prototype, property);
+  let schema = Reflect.getOwnMetadata(PropertySchemaKey, constructor.prototype, property);
   if (schema) {
     let { error } = schema.validate(undefined);
     if (!error) {
@@ -55,8 +60,8 @@ export function AutoValidate(options?: {
             // Function parameter validation
             let originalFunction = target[property];
             if (typeof originalFunction === 'function') {
-              return function (...functionArgs: any[]) {
-                let schemas = Reflect.getOwnMetadata('schemas', constructor.prototype, property);
+              let wrappedFunction = function (...functionArgs: any[]): void {
+                let schemas = Reflect.getOwnMetadata(FunctionParameterSchemasKey, constructor.prototype, property);
                 if (originalFunction.length < functionArgs.length) {
                   throw new Error(
                     `Unexpected argument has sent to ${property}. Expected: ${originalFunction.length}, Received: ${functionArgs.length}`
@@ -84,15 +89,18 @@ export function AutoValidate(options?: {
                 }
 
                 // @ts-ignore
-                // Use the "proxy" object instead of "target". So the "this" keyword will target the proxy not the original object.
+                // Use the "proxy" object instead of "target". So the "this" keyword will target the proxy not the original object in function decorators.
                 return originalFunction.apply(this, functionArgs);
               };
-            }
 
-            return target[property];
+              MetaDataHelper.carryMetaDataOfFunction(originalFunction, wrappedFunction);
+              return wrappedFunction;
+            } else {
+              return target[property];
+            }
           },
           set(target: any, property: string, value: any) {
-            let schema = Reflect.getOwnMetadata('propertySchema', constructor.prototype, property);
+            let schema = Reflect.getOwnMetadata(PropertySchemaKey, constructor.prototype, property);
             let validatedBySchema = false;
             if (schema) {
               let { error } = schema.validate(value);

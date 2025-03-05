@@ -1,6 +1,7 @@
 import Joi from 'joi';
 import { describe, expect, test } from 'vitest';
 
+import { MetaDataHelper } from '../meta-data-helper/meta-data.helper';
 import { AutoValidate, Schema } from './auto-validate';
 
 describe('AutoValidate', () => {
@@ -356,37 +357,98 @@ describe('AutoValidate', () => {
         );
       });
 
-      test('sample 4- should preserve metadata on properties', () => {
-        function ActionBeforeTesting() {
+      test('sample 4 - "this" should point the original class', () => {
+        @AutoValidate()
+        class Functions {
+          private value = 2;
+
+          multiply(@Schema(Joi.number().min(2).max(50)) multiplier: number): number {
+            return this.value * multiplier;
+          }
+        }
+
+        let functions = new Functions();
+
+        expect(functions.multiply(4)).toEqual(8);
+      });
+    });
+
+    describe('Preserving Meta Data', () => {
+      test('sample 1 - should preserve metadata on class', () => {
+        function TestDecorator() {
           return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-            let originalMethod = descriptor.value;
+            let originalFunction = descriptor.value;
 
             descriptor.value = function (...args: any[]) {
-              let hasFlag = Reflect.getOwnMetadata('actionsBeforeTesting', this);
+              let hasFlag = Reflect.getOwnMetadata('testMetaDataKey', this);
               if (hasFlag) {
-                return originalMethod.apply(this, args);
+                return originalFunction.apply(this, args);
               } else {
                 throw new Error(`Flag not found.`);
               }
             };
+          };
+        }
 
-            Object.defineProperty(descriptor.value, 'length', {
-              value: originalMethod.length,
-              writable: false
-            });
+        @AutoValidate()
+        class EventSimulator {
+          @TestDecorator()
+          foo(): void {}
+        }
+
+        let instance = new EventSimulator();
+        Reflect.defineMetadata('testMetaDataKey', true, instance);
+
+        expect(() => instance.foo()).not.toThrow();
+      });
+
+      test('sample 2 - should preserve metadata that other decorators added on functions', () => {
+        function TestDecorator() {
+          return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+            let originalFunction = descriptor.value;
+
+            descriptor.value = function (...args: any[]) {
+              return originalFunction.apply(this, args);
+            };
+
+            Reflect.defineMetadata('testMetaDataKey', true, descriptor.value);
           };
         }
 
         @AutoValidate({ allowNewProperties: true })
         class EventSimulator {
-          @ActionBeforeTesting()
-          setPlayerShipSubSystemType(): void {}
+          @TestDecorator()
+          foo(): void {}
         }
 
         let instance = new EventSimulator();
-        Reflect.defineMetadata('actionsBeforeTesting', true, instance);
 
-        expect(() => instance.setPlayerShipSubSystemType()).not.toThrow();
+        expect(Reflect.getMetadata('testMetaDataKey', instance.foo)).toEqual(true);
+      });
+
+      test('sample 3 - should preserve length of the functions', () => {
+        function TestDecorator() {
+          return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+            let originalFunction = descriptor.value;
+            Reflect.defineMetadata('testMetaDataKey', true, originalFunction);
+
+            descriptor.value = function (...args: any[]) {
+              return originalFunction.apply(this, args);
+            };
+
+            MetaDataHelper.carryMetaDataOfFunction(originalFunction, descriptor.value);
+          };
+        }
+
+        @AutoValidate({ allowNewProperties: true })
+        class EventSimulator {
+          @TestDecorator()
+          foo(a: string): void {}
+        }
+
+        let instance = new EventSimulator();
+
+        expect(instance.foo.length).toEqual(1);
       });
     });
   });
