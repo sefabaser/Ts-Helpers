@@ -9,7 +9,7 @@ export { Line } from './geometry/line/line';
 export { PI_180, PI_360, PI_90, Radian, RadianCache } from './geometry/radian/radian';
 export { Rect, Rectangle } from './geometry/shapes/rectangle';
 export { Vec2, Vector, VectorCache } from './geometry/vector/vector';
-export { JSEngine } from './js-engine/js-engine';
+export { JSEngine, JSEngineFunction } from './js-engine/js-engine';
 export { DeepPartial, JsonHelper } from './json-helper/json-helper';
 export { MetaDataHelper } from './meta-data-helper/meta-data.helper';
 export { NumberHelper } from './number-helper/number-helper';
