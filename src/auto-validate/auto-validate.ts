@@ -3,8 +3,8 @@ import 'reflect-metadata';
 
 import { MetaDataHelper } from '../meta-data-helper/meta-data.helper';
 
-const FunctionParameterSchemasKey = Symbol('AutoValidateFunctionParameterSchemas');
-const PropertySchemaKey = Symbol('AutoValidatePropertySchema');
+const FunctionParameterSchemasKey = 'AutoValidateFunctionParameterSchemas';
+const PropertySchemaKey = 'AutoValidatePropertySchema';
 
 export function Schema(schema: Joi.Schema) {
   return function (target: object, propertyKey: string | symbol, parameterIndex?: number): void {

@@ -6,8 +6,8 @@ import { JSVariableType } from '../utility-types/utility-types';
 
 const ReservedWords = new Set(['Boolean']);
 
-const JSEngineExecutionFlag = Symbol('jsEngineExecutionFlag');
-const JSEngineFunctionFlag = Symbol('JSEngineFunctionFlag');
+const JSEngineExecutionFlag = 'jsEngineExecutionFlag';
+const JSEngineFunctionFlag = 'JSEngineFunctionFlag';
 
 export function JSEngineFunction() {
   return function (_: unknown, propertyKey: string, descriptor: PropertyDescriptor): void {
