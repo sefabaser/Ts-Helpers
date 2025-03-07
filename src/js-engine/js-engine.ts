@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 
+import { Comparator } from '../comparator/comparator';
 import { JsonHelper } from '../json-helper/json-helper';
 import { MetaDataHelper } from '../meta-data-helper/meta-data.helper';
 import { JSVariableType } from '../utility-types/utility-types';
@@ -29,7 +30,7 @@ export function JSEngineFunction() {
 
 export class JSEngine<FunctionsType extends object> {
   static isJSEngineFunction(fn: (...args: any[]) => any): boolean {
-    return Reflect.getOwnMetadata(JSEngineFunctionFlag, fn) === true;
+    return Comparator.isFunction(fn) ? Reflect.getOwnMetadata(JSEngineFunctionFlag, fn) === true : false;
   }
 
   static setAsJSEngineFunction(fn: (...args: any[]) => any): void {
