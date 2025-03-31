@@ -5,7 +5,7 @@ import { JsonHelper } from '../json-helper/json-helper';
 import { MetaDataHelper } from '../meta-data-helper/meta-data.helper';
 import { JSVariableType } from '../utility-types/utility-types';
 
-const ReservedWords = new Set(['Boolean']);
+const ReservedWords = new Set(['Boolean', 'Number', 'String']);
 
 const JSEngineExecutionFlag = 'jsEngineExecutionFlag';
 const JSEngineFunctionFlag = 'JSEngineFunctionFlag';
@@ -50,6 +50,10 @@ export class JSEngine<FunctionsType extends object> {
           return undefined;
         } else if (property === 'Boolean') {
           return Boolean;
+        } else if (property === 'Number') {
+          return Number;
+        } else if (property === 'String') {
+          return String;
         } else if (typeof (this.functions as any)[property] === 'function') {
           if (!JSEngine.isJSEngineFunction((this.functions as any)[property])) {
             throw new Error(
@@ -127,13 +131,13 @@ export class JSEngine<FunctionsType extends object> {
     try {
       fn(this.variablesProxy);
     } catch (e) {
-      this.handleError(e);
+      this.reThrowError(e);
     }
 
     Reflect.defineMetadata(JSEngineExecutionFlag, false, this.functions);
   }
 
-  conditionCheck(expression: string): boolean {
+  boolean(expression: string): boolean {
     Reflect.defineMetadata(JSEngineExecutionFlag, true, this.functions);
 
     let result: boolean;
@@ -148,8 +152,54 @@ export class JSEngine<FunctionsType extends object> {
       );
       result = fn(this.variablesProxy);
     } catch (e) {
-      this.handleError(e);
+      this.reThrowError(e);
       return false;
+    }
+
+    Reflect.defineMetadata(JSEngineExecutionFlag, false, this.functions);
+    return result;
+  }
+
+  number(expression: string): number {
+    Reflect.defineMetadata(JSEngineExecutionFlag, true, this.functions);
+
+    let result: number;
+    try {
+      let fn = new Function(
+        'vars',
+        `
+        with (vars) {
+          return Number(${expression});
+        }
+      `
+      );
+      result = fn(this.variablesProxy);
+    } catch (e) {
+      this.reThrowError(e);
+      return 0;
+    }
+
+    Reflect.defineMetadata(JSEngineExecutionFlag, false, this.functions);
+    return result;
+  }
+
+  string(expression: string): string {
+    Reflect.defineMetadata(JSEngineExecutionFlag, true, this.functions);
+
+    let result: string;
+    try {
+      let fn = new Function(
+        'vars',
+        `
+        with (vars) {
+          return String(\`${expression}\`);
+        }
+      `
+      );
+      result = fn(this.variablesProxy);
+    } catch (e) {
+      this.reThrowError(e);
+      return '';
     }
 
     Reflect.defineMetadata(JSEngineExecutionFlag, false, this.functions);
@@ -179,7 +229,7 @@ export class JSEngine<FunctionsType extends object> {
     });
   }
 
-  private handleError(e: unknown): void {
+  private reThrowError(e: unknown): void {
     if (e instanceof Error) {
       e.message = e.message.replace(/^.*Error: /, '');
       throw e; // Preserve original stack trace

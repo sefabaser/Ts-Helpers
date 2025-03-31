@@ -56,16 +56,16 @@ describe('JSEngine', () => {
     });
   });
 
-  describe('Conditions', () => {
+  describe('Boolean Evaluation', () => {
     test('sample 1', () => {
       let storyEngine = new JSEngine({}, { a: undefined });
 
-      expect(storyEngine.conditionCheck('a == 1')).toEqual(false);
+      expect(storyEngine.boolean('a == 1')).toEqual(false);
 
       storyEngine.execute('a = 1');
 
-      expect(storyEngine.conditionCheck('a == 1')).toEqual(true);
-      expect(storyEngine.conditionCheck('a == 2')).toEqual(false);
+      expect(storyEngine.boolean('a == 1')).toEqual(true);
+      expect(storyEngine.boolean('a == 2')).toEqual(false);
     });
 
     test('sample 2', () => {
@@ -74,8 +74,131 @@ describe('JSEngine', () => {
       storyEngine.execute('a = 1');
       storyEngine.execute('b = true');
 
-      expect(storyEngine.conditionCheck('a == 1 && b')).toEqual(true);
-      expect(storyEngine.conditionCheck('a == 1 || b')).toEqual(true);
+      expect(storyEngine.boolean('a == 1 && b')).toEqual(true);
+      expect(storyEngine.boolean('a == 1 || b')).toEqual(true);
+    });
+
+    test('sample 3', () => {
+      class Functions {
+        @JSEngineFunction()
+        foo(value: string): string {
+          return 'hello ' + value;
+        }
+      }
+      let functions = new Functions();
+      let storyEngine = new JSEngine(functions, {});
+
+      expect(storyEngine.boolean('foo("world") === "hello world"')).toEqual(true);
+    });
+  });
+
+  describe('Number Evaluation', () => {
+    test('basic number evaluation', () => {
+      let storyEngine = new JSEngine({}, {});
+      expect(storyEngine.number('42')).toEqual(42);
+    });
+
+    test('number evaluation with variables', () => {
+      let storyEngine = new JSEngine({}, { x: 42 });
+      expect(storyEngine.number('x')).toEqual(42);
+    });
+
+    test('number evaluation with arithmetic', () => {
+      let storyEngine = new JSEngine({}, { x: 10, y: 5 });
+      expect(storyEngine.number('x + y')).toEqual(15);
+      expect(storyEngine.number('x - y')).toEqual(5);
+      expect(storyEngine.number('x * y')).toEqual(50);
+      expect(storyEngine.number('x / y')).toEqual(2);
+    });
+
+    test('number evaluation with invalid input', () => {
+      let storyEngine = new JSEngine({}, {});
+      expect(storyEngine.number('invalid')).toEqual(NaN);
+    });
+
+    test('number evaluation with undefined variable', () => {
+      let storyEngine = new JSEngine({}, { x: undefined });
+      expect(storyEngine.number('x')).toEqual(NaN);
+    });
+
+    test('number evaluation with string numbers', () => {
+      let storyEngine = new JSEngine({}, { x: '42' });
+      expect(storyEngine.number('x')).toEqual(42);
+    });
+
+    test('number evaluation with complex expressions', () => {
+      let storyEngine = new JSEngine({}, { x: 10, y: 5, z: 2 });
+      expect(storyEngine.number('(x + y) * z')).toEqual(30);
+      expect(storyEngine.number('x + (y * z)')).toEqual(20);
+    });
+
+    test('number evaluation with function call', () => {
+      class Functions {
+        @JSEngineFunction()
+        foo(): number {
+          return 42;
+        }
+      }
+      let functions = new Functions();
+      let storyEngine = new JSEngine(functions, {});
+
+      expect(storyEngine.number('foo()')).toEqual(42);
+    });
+  });
+
+  describe('String Evaluation', () => {
+    test('basic string evaluation', () => {
+      let storyEngine = new JSEngine({}, {});
+      expect(storyEngine.string('"hello"')).toEqual('"hello"');
+    });
+
+    test('string evaluation with variables', () => {
+      let storyEngine = new JSEngine({}, { x: 'hello' });
+      expect(storyEngine.string('${x}')).toEqual('hello');
+    });
+
+    test('string evaluation with number conversion', () => {
+      let storyEngine = new JSEngine({}, { x: 42 });
+      expect(storyEngine.string('${x}')).toEqual('42');
+    });
+
+    test('string evaluation with boolean conversion', () => {
+      let storyEngine = new JSEngine({}, { x: true, y: false });
+      expect(storyEngine.string('${x}')).toEqual('true');
+      expect(storyEngine.string('${y}')).toEqual('false');
+    });
+
+    test('string evaluation with undefined variable', () => {
+      let storyEngine = new JSEngine({}, { x: undefined });
+      expect(storyEngine.string('${x}')).toEqual('undefined');
+    });
+
+    test('string evaluation with object', () => {
+      let storyEngine = new JSEngine({}, { x: { a: 1, b: 2 } });
+      expect(storyEngine.string('${x}')).toEqual('[object Object]');
+    });
+
+    test('string evaluation with array', () => {
+      let storyEngine = new JSEngine({}, { x: [1, 2, 3] });
+      expect(storyEngine.string('${x}')).toEqual('1,2,3');
+    });
+
+    test('string evaluation with concatenation', () => {
+      let storyEngine = new JSEngine({}, { x: 'hello', y: 'world' });
+      expect(storyEngine.string('${x} ${y}')).toEqual('hello world');
+    });
+
+    test('string evaluation with function call', () => {
+      class Functions {
+        @JSEngineFunction()
+        foo(value: string): string {
+          return 'hello ' + value;
+        }
+      }
+      let functions = new Functions();
+      let storyEngine = new JSEngine(functions, {});
+
+      expect(storyEngine.string('${foo("world")}')).toEqual('hello world');
     });
   });
 
