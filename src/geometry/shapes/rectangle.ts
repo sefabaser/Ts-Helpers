@@ -37,4 +37,22 @@ export class Rectangle {
   isValid(): boolean {
     return this.topLeft.x <= this.bottomRight.x && this.topLeft.y <= this.bottomRight.y;
   }
+
+  isOverlapping(rectangle: Rectangle): boolean {
+    return (
+      this.topLeft.x <= rectangle.bottomRight.x &&
+      this.bottomRight.x >= rectangle.topLeft.x &&
+      this.topLeft.y <= rectangle.bottomRight.y &&
+      this.bottomRight.y >= rectangle.topLeft.y
+    );
+  }
+
+  isPointInside(point: Vec2): boolean {
+    return (
+      this.topLeft.x <= point.x &&
+      this.bottomRight.x >= point.x &&
+      this.topLeft.y <= point.y &&
+      this.bottomRight.y >= point.y
+    );
+  }
 }
