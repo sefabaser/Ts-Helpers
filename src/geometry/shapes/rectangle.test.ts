@@ -109,6 +109,23 @@ describe('Rectangle: ', () => {
       let rect2 = new Rectangle(new Vector(0, 0), new Vector(1, 1));
       expect(rect1.isCovering(rect2)).toEqual(true);
     });
+
+    test('complete coverage with includeEdges: false', () => {
+      let rect1 = new Rectangle(new Vector(0, 0), new Vector(3, 3));
+      let rect2 = new Rectangle(new Vector(1, 1), new Vector(2, 2));
+      expect(rect1.isCovering(rect2, { includeEdges: false })).toEqual(true);
+    });
+
+    test('same rectangle with includeEdges: false', () => {
+      let rect1 = new Rectangle(new Vector(0, 0), new Vector(1, 1));
+      expect(rect1.isCovering(rect1, { includeEdges: false })).toEqual(false);
+    });
+
+    test('covering with shared edges with includeEdges: false', () => {
+      let rect1 = new Rectangle(new Vector(0, 0), new Vector(2, 2));
+      let rect2 = new Rectangle(new Vector(0, 0), new Vector(1, 1));
+      expect(rect1.isCovering(rect2, { includeEdges: false })).toEqual(false);
+    });
   });
 
   describe('isOverlapping: ', () => {
@@ -163,6 +180,24 @@ describe('Rectangle: ', () => {
       let rect1 = new Rectangle(new Vector(0, 0), new Vector(2, 2));
       let rect2 = new Rectangle(new Vector(1, 1), new Vector(3, 3));
       expect(rect1.isOverlapping(rect2)).toEqual(true);
+    });
+
+    test('touching rectangles with includeEdges: false', () => {
+      let rect1 = new Rectangle(new Vector(0, 0), new Vector(1, 1));
+      let rect2 = new Rectangle(new Vector(1, 0), new Vector(2, 1));
+      expect(rect1.isOverlapping(rect2, { includeEdges: false })).toEqual(false);
+    });
+
+    test('overlapping with includeEdges: false', () => {
+      let rect1 = new Rectangle(new Vector(0, 0), new Vector(2, 2));
+      let rect2 = new Rectangle(new Vector(1, 1), new Vector(3, 3));
+      expect(rect1.isOverlapping(rect2, { includeEdges: false })).toEqual(true);
+    });
+
+    test('contained rectangle with includeEdges: false', () => {
+      let rect1 = new Rectangle(new Vector(0, 0), new Vector(3, 3));
+      let rect2 = new Rectangle(new Vector(0, 0), new Vector(3, 3));
+      expect(rect1.isOverlapping(rect2, { includeEdges: false })).toEqual(true);
     });
   });
 
@@ -220,6 +255,21 @@ describe('Rectangle: ', () => {
     test('point on infinity', () => {
       let rect = new Rectangle(new Vector(0, 0), new Vector(Infinity, Infinity));
       expect(rect.isPointInside({ x: Infinity, y: 1 })).toEqual(true);
+    });
+
+    test('point on edge with includeEdges: false', () => {
+      let rect = new Rectangle(new Vector(0, 0), new Vector(2, 2));
+      expect(rect.isPointInside({ x: 0, y: 1 }, { includeEdges: false })).toEqual(false);
+    });
+
+    test('point on corner with includeEdges: false', () => {
+      let rect = new Rectangle(new Vector(0, 0), new Vector(2, 2));
+      expect(rect.isPointInside({ x: 0, y: 0 }, { includeEdges: false })).toEqual(false);
+    });
+
+    test('point inside with includeEdges: false', () => {
+      let rect = new Rectangle(new Vector(0, 0), new Vector(2, 2));
+      expect(rect.isPointInside({ x: 1, y: 1 }, { includeEdges: false })).toEqual(true);
     });
   });
 });
