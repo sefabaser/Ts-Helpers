@@ -62,6 +62,55 @@ describe('Rectangle: ', () => {
     });
   });
 
+  describe('isCovering: ', () => {
+    test('complete coverage', () => {
+      let rect1 = new Rectangle(new Vector(0, 0), new Vector(3, 3));
+      let rect2 = new Rectangle(new Vector(1, 1), new Vector(2, 2));
+      expect(rect1.isCovering(rect2)).toEqual(true);
+    });
+
+    test('no coverage', () => {
+      let rect1 = new Rectangle(new Vector(0, 0), new Vector(1, 1));
+      let rect2 = new Rectangle(new Vector(2, 2), new Vector(3, 3));
+      expect(rect1.isCovering(rect2)).toEqual(false);
+    });
+
+    test('partial coverage', () => {
+      let rect1 = new Rectangle(new Vector(0, 0), new Vector(2, 2));
+      let rect2 = new Rectangle(new Vector(1, 1), new Vector(3, 3));
+      expect(rect1.isCovering(rect2)).toEqual(false);
+    });
+
+    test('same rectangle', () => {
+      let rect1 = new Rectangle(new Vector(0, 0), new Vector(1, 1));
+      expect(rect1.isCovering(rect1)).toEqual(true);
+    });
+
+    test('larger rectangle', () => {
+      let rect1 = new Rectangle(new Vector(0, 0), new Vector(2, 2));
+      let rect2 = new Rectangle(new Vector(1, 1), new Vector(3, 3));
+      expect(rect2.isCovering(rect1)).toEqual(false);
+    });
+
+    test('touching edges', () => {
+      let rect1 = new Rectangle(new Vector(0, 0), new Vector(2, 2));
+      let rect2 = new Rectangle(new Vector(2, 0), new Vector(3, 2));
+      expect(rect1.isCovering(rect2)).toEqual(false);
+    });
+
+    test('overlapping but not covering', () => {
+      let rect1 = new Rectangle(new Vector(0, 0), new Vector(2, 2));
+      let rect2 = new Rectangle(new Vector(1, 1), new Vector(3, 3));
+      expect(rect1.isCovering(rect2)).toEqual(false);
+    });
+
+    test('covering with same edges', () => {
+      let rect1 = new Rectangle(new Vector(0, 0), new Vector(2, 2));
+      let rect2 = new Rectangle(new Vector(0, 0), new Vector(1, 1));
+      expect(rect1.isCovering(rect2)).toEqual(true);
+    });
+  });
+
   describe('isOverlapping: ', () => {
     test('overlapping rectangles', () => {
       let rect1 = new Rectangle(new Vector(0, 0), new Vector(2, 2));
@@ -166,6 +215,11 @@ describe('Rectangle: ', () => {
     test('point on right edge', () => {
       let rect = new Rectangle(new Vector(0, 0), new Vector(2, 2));
       expect(rect.isPointInside({ x: 2, y: 1 })).toEqual(true);
+    });
+
+    test('point on infinity', () => {
+      let rect = new Rectangle(new Vector(0, 0), new Vector(Infinity, Infinity));
+      expect(rect.isPointInside({ x: Infinity, y: 1 })).toEqual(true);
     });
   });
 });

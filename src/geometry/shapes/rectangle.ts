@@ -38,6 +38,15 @@ export class Rectangle {
     return this.topLeft.x <= this.bottomRight.x && this.topLeft.y <= this.bottomRight.y;
   }
 
+  isCovering(rectangle: Rectangle): boolean {
+    return (
+      this.topLeft.x <= rectangle.topLeft.x &&
+      this.bottomRight.x >= rectangle.bottomRight.x &&
+      this.topLeft.y <= rectangle.topLeft.y &&
+      this.bottomRight.y >= rectangle.bottomRight.y
+    );
+  }
+
   isOverlapping(rectangle: Rectangle): boolean {
     return (
       this.topLeft.x <= rectangle.bottomRight.x &&
