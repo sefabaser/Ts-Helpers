@@ -1,6 +1,6 @@
 {
   "name": "helpers-lib",
-  "version": "1.12.3",
+  "version": "1.12.4",
   "description": "Typescript Helpers Library",
   "main": "dist/index.js",
   "repository": {
@@ -13,7 +13,7 @@
     "url": "https://github.com/sefabaser/Ts-Helpers/issues"
   },
   "prettier": {
-    "printWidth": 120,
+    "printWidth": 130,
     "tabWidth": 2,
     "semicolons": true,
     "singleQuote": true,

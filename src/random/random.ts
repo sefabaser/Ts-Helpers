@@ -27,10 +27,8 @@ export class Random {
     return items[i];
   }
 
-  static pickRandomElementWithWeight<T>(
-    items: { value: T; weight: number }[] | ReadonlyArray<{ value: T; weight: number }>
-  ): T {
-    let selectedIndex = this.pickRandomWeight([...items].map(item => item.weight));
+  static pickRandomElementWithWeight<T>(items: { value: T; weight: number }[] | ReadonlyArray<{ value: T; weight: number }>): T {
+    let selectedIndex = this.pickRandomWeight(items.map(item => item.weight));
     return items[selectedIndex].value;
   }
 
@@ -44,7 +42,7 @@ export class Random {
 
   static pickRandomWeight(weights: number[] | ReadonlyArray<number>): number {
     let total = weights.reduce((acc, item) => acc + item);
-    let threshold = Math.ceil(Math.random() * total);
+    let threshold = Math.random() * total;
     total = 0;
     for (let i = 0; i < weights.length; ++i) {
       total += weights[i];
