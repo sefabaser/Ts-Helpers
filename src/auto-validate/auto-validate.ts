@@ -61,7 +61,9 @@ export function AutoValidate(options?: {
             let originalFunction = target[property];
             if (typeof originalFunction === 'function') {
               let wrappedFunction = function (...functionArgs: any[]): void {
-                let schemas = Reflect.getOwnMetadata(FunctionParameterSchemasKey, constructor.prototype, property);
+                let schemas =
+                  Reflect.getOwnMetadata(FunctionParameterSchemasKey, constructor.prototype, property) ||
+                  Reflect.getMetadata(FunctionParameterSchemasKey, constructor.prototype, property);
                 if (originalFunction.length < functionArgs.length) {
                   throw new Error(
                     `Unexpected argument has sent to ${property}. Expected: ${originalFunction.length}, Received: ${functionArgs.length}`
@@ -79,11 +81,13 @@ export function AutoValidate(options?: {
 
                 if (schemas) {
                   schemas.forEach((functionArgumentSchema: Joi.Schema, index: number) => {
-                    let { error } = functionArgumentSchema.validate(functionArgs[index]);
-                    if (error) {
-                      throw new Error(
-                        `Validation failed for argument at position ${index + 1} in ${property}: ${error.message}`
-                      );
+                    if (functionArgumentSchema) {
+                      let { error } = functionArgumentSchema.validate(functionArgs[index]);
+                      if (error) {
+                        throw new Error(
+                          `Validation failed for argument at position ${index + 1} in ${property}: ${error.message}`
+                        );
+                      }
                     }
                   });
                 }

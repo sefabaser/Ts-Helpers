@@ -65,6 +65,13 @@ module.exports = {
         selector: 'variable',
         modifiers: ['const'],
         format: ['PascalCase', 'UPPER_CASE']
+      },
+      {
+        selector: 'variable',
+        modifiers: [],
+        format: ['camelCase'],
+        leadingUnderscore: 'forbid',
+        trailingUnderscore: 'forbid'
       }
     ],
     '@typescript-eslint/no-array-constructor': 'error',
@@ -98,7 +105,7 @@ module.exports = {
     '@typescript-eslint/no-shadow': 'warn',
     'arrow-body-style': 'error',
     'arrow-parens': [2, 'as-needed'],
-    'brace-style': ['error', '1tbs'],
+    'brace-style': ['error', '0tbs'],
     'constructor-super': 'error',
     curly: 'error',
     'eol-last': 'error',

@@ -281,9 +281,7 @@ describe('AutoValidate', () => {
 
         let functions = new Functions();
 
-        expect(() => (functions as any).sayHello()).toThrow(
-          'Missing arguments in function "sayHello". Expected: 1, received: 0'
-        );
+        expect(() => (functions as any).sayHello()).toThrow('Missing arguments in function "sayHello". Expected: 1, received: 0');
       });
 
       test('sample 7 - more argument has been sent', () => {
@@ -450,6 +448,40 @@ describe('AutoValidate', () => {
 
         expect(instance.foo.length).toEqual(1);
       });
+    });
+  });
+
+  describe('Inheritance', () => {
+    test('sample 1 - decorated', () => {
+      abstract class Base {
+        sayHello(@Schema(Joi.string().min(2).max(50).required()) name: string): string {
+          return `Hello, ${name}!`;
+        }
+      }
+
+      @AutoValidate()
+      class Functions extends Base {}
+
+      let functions = new Functions();
+
+      expect(functions.sayHello('John')).toEqual('Hello, John!');
+    });
+
+    test('sample 2 - not matching schema', () => {
+      abstract class Base {
+        sayHello(@Schema(Joi.string().min(2).max(50).required()) name: string): string {
+          return `Hello, ${name}!`;
+        }
+      }
+
+      @AutoValidate()
+      class Functions extends Base {}
+
+      let functions = new Functions();
+
+      expect(() => functions.sayHello('a')).toThrow(
+        'Validation failed for argument at position 1 in sayHello: "value" length must be at least 2 characters long'
+      );
     });
   });
 });
