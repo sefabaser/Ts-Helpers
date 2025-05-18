@@ -2,17 +2,26 @@ import { beforeEach, describe, expect, test } from 'vitest';
 
 import { Rectangle } from '../../geometry/shapes/rectangle';
 import { Vector } from '../../geometry/vector/vector';
-import { Grid } from './grid';
+import { Grid, GridNeighborType } from './grid';
 
 describe('Grid', () => {
   let grid: Grid<boolean>;
 
   beforeEach(() => {
-    grid = Grid.createNew(new Vector(3, 3), true);
+    grid = new Grid({ size: new Vector(3, 3), defaultValue: true });
   });
 
   test('should be defined', () => {
     expect(grid).toBeDefined();
+  });
+
+  test('should create a grid from an array', () => {
+    let grid = new Grid([
+      [true, false],
+      [false, true]
+    ]);
+    expect(grid.get(new Vector(0, 0))).toBeTruthy();
+    expect(grid.get(new Vector(1, 0))).toBeFalsy();
   });
 
   test('should set and get values', () => {
@@ -23,28 +32,32 @@ describe('Grid', () => {
     expect(grid.get(new Vector(1, 1))).toBeFalsy();
   });
 
+  test('trying to get a value that is outside of the grid', () => {
+    expect(grid.get(new Vector(3, 3))).toEqual(undefined);
+    expect(grid.get(new Vector(-1, 3))).toEqual(undefined);
+    expect(grid.get(new Vector(1, -3))).toEqual(undefined);
+  });
+
   test('should throw an error if area is outside of the grid', () => {
-    expect(() => grid.setArea(new Rectangle(new Vector(0, 0), new Vector(3, 3)), false)).toThrow();
+    expect(() => grid.setAreaOrFail(new Rectangle(new Vector(0, 0), new Vector(3, 3)), false)).toThrow();
   });
 
   test('should crop area outside of the grid 1', () => {
-    expect(grid.cropPartsOutsideOfTheGrid(new Rectangle(new Vector(-1, -1), new Vector(3, 3))).toRect()).toStrictEqual({
+    expect(grid.cropAreaOutsideOfTheGrid(new Rectangle(new Vector(-1, -1), new Vector(3, 3))).toRect()).toStrictEqual({
       topLeft: { x: 0, y: 0 },
       bottomRight: { x: 2, y: 2 }
     });
   });
 
   test('should crop area outside of the grid 2', () => {
-    expect(grid.cropPartsOutsideOfTheGrid(new Rectangle(new Vector(3, 3), new Vector(4, 4))).toRect()).toStrictEqual({
+    expect(grid.cropAreaOutsideOfTheGrid(new Rectangle(new Vector(3, 3), new Vector(4, 4))).toRect()).toStrictEqual({
       topLeft: { x: 2, y: 2 },
       bottomRight: { x: 2, y: 2 }
     });
   });
 
   test('should crop area outside of the grid 2', () => {
-    expect(
-      grid.cropPartsOutsideOfTheGrid(new Rectangle(new Vector(-1, -1), new Vector(-1, -1))).toRect()
-    ).toStrictEqual({
+    expect(grid.cropAreaOutsideOfTheGrid(new Rectangle(new Vector(-1, -1), new Vector(-1, -1))).toRect()).toStrictEqual({
       topLeft: { x: 0, y: 0 },
       bottomRight: { x: 0, y: 0 }
     });
@@ -62,52 +75,11 @@ describe('Grid', () => {
   });
 
   test('should set area within bounds', () => {
-    grid.safeSetArea(new Rectangle(new Vector(0, 0), new Vector(3, 3)), false);
+    grid.setArea(new Rectangle(new Vector(0, 0), new Vector(3, 3)), false);
     expect(grid.get(new Vector(0, 0))).toBeFalsy();
     expect(grid.get(new Vector(0, 1))).toBeFalsy();
     expect(grid.get(new Vector(1, 0))).toBeFalsy();
     expect(grid.get(new Vector(1, 1))).toBeFalsy();
-  });
-
-  test('should return neighbor positions only adjacent', () => {
-    expect(grid.getNeighborPositions(new Vector(1, 1)).map(item => item.toVec2())).toStrictEqual([
-      { x: 0, y: 1 },
-      { x: 1, y: 0 },
-      { x: 1, y: 2 },
-      { x: 2, y: 1 }
-    ]);
-  });
-
-  test('should return neighbor positions with diagonals', () => {
-    expect(
-      grid.getNeighborPositions(new Vector(1, 1), { includeDiagonals: true }).map(item => item.toVec2())
-    ).toStrictEqual([
-      { x: 0, y: 1 },
-      { x: 1, y: 0 },
-      { x: 1, y: 2 },
-      { x: 2, y: 1 },
-      { x: 0, y: 0 },
-      { x: 0, y: 2 },
-      { x: 2, y: 0 },
-      { x: 2, y: 2 }
-    ]);
-  });
-
-  test('should return neighbor positions only adjacent at the edge', () => {
-    expect(grid.getNeighborPositions(new Vector(2, 2)).map(item => item.toVec2())).toStrictEqual([
-      { x: 1, y: 2 },
-      { x: 2, y: 1 }
-    ]);
-  });
-
-  test('should return neighbor positions at the edge with diagonals', () => {
-    expect(
-      grid.getNeighborPositions(new Vector(0, 0), { includeDiagonals: true }).map(item => item.toVec2())
-    ).toStrictEqual([
-      { x: 0, y: 1 },
-      { x: 1, y: 0 },
-      { x: 1, y: 1 }
-    ]);
   });
 
   test('should iterate over all values', () => {
@@ -146,37 +118,40 @@ describe('Grid', () => {
     expect(newGrid.size.toVec2()).toStrictEqual({ x: 3, y: 3 });
   });
 
-  test('should find the neighbor direction from a vector', () => {
-    expect(Grid.vectorToNeighborDirection(new Vector(0, 1)).toVec2()).toStrictEqual({ x: 0, y: 1 });
-    expect(Grid.vectorToNeighborDirection(new Vector(1, 0)).toVec2()).toStrictEqual({ x: 1, y: 0 });
-    expect(Grid.vectorToNeighborDirection(new Vector(0, -1)).toVec2()).toStrictEqual({ x: 0, y: -1 });
-    expect(Grid.vectorToNeighborDirection(new Vector(-1, 0)).toVec2()).toStrictEqual({ x: -1, y: 0 });
-
-    expect(Grid.vectorToNeighborDirection(new Vector(0.5, 2)).toVec2()).toStrictEqual({ x: 0, y: 1 });
-    expect(Grid.vectorToNeighborDirection(new Vector(2, -0.5)).toVec2()).toStrictEqual({ x: 1, y: -0 });
-    expect(Grid.vectorToNeighborDirection(new Vector(0.5, -2)).toVec2()).toStrictEqual({ x: 0, y: -1 });
-    expect(Grid.vectorToNeighborDirection(new Vector(-2, -0.5)).toVec2()).toStrictEqual({ x: -1, y: -0 });
-
-    let middle = Grid.vectorToNeighborDirection(new Vector(1, 1));
-    expect(Vector.isEqual(middle, new Vector(0, 1)) || Vector.isEqual(middle, new Vector(1, 0))).toBeTruthy();
+  test('should return neighbor positions only adjacent', () => {
+    expect(grid.getNeighborPositions(new Vector(1, 1), GridNeighborType.ORTOGONAL).map(item => item.toVec2())).toStrictEqual([
+      { x: 0, y: 1 },
+      { x: 1, y: 0 },
+      { x: 1, y: 2 },
+      { x: 2, y: 1 }
+    ]);
   });
 
-  test('should find the neighbor direction with diagonals from a vector', () => {
-    expect(Grid.vectorToNeighborDirection(new Vector(0, 1), { includeDiagonals: true }).toVec2()).toStrictEqual({
-      x: 0,
-      y: 1
-    });
-    expect(Grid.vectorToNeighborDirection(new Vector(1, 1), { includeDiagonals: true }).toVec2()).toStrictEqual({
-      x: 1,
-      y: 1
-    });
-    expect(Grid.vectorToNeighborDirection(new Vector(-1, -1), { includeDiagonals: true }).toVec2()).toStrictEqual({
-      x: -1,
-      y: -1
-    });
-    expect(Grid.vectorToNeighborDirection(new Vector(2, 1), { includeDiagonals: true }).toVec2()).toStrictEqual({
-      x: 1,
-      y: 0
-    });
+  test('should return neighbor positions with diagonals', () => {
+    expect(grid.getNeighborPositions(new Vector(1, 1), GridNeighborType.ALL).map(item => item.toVec2())).toStrictEqual([
+      { x: 0, y: 1 },
+      { x: 1, y: 0 },
+      { x: 1, y: 2 },
+      { x: 2, y: 1 },
+      { x: 0, y: 0 },
+      { x: 0, y: 2 },
+      { x: 2, y: 0 },
+      { x: 2, y: 2 }
+    ]);
+  });
+
+  test('should return neighbor positions only adjacent at the edge', () => {
+    expect(grid.getNeighborPositions(new Vector(2, 2), GridNeighborType.ORTOGONAL).map(item => item.toVec2())).toStrictEqual([
+      { x: 1, y: 2 },
+      { x: 2, y: 1 }
+    ]);
+  });
+
+  test('should return neighbor positions at the edge with diagonals', () => {
+    expect(grid.getNeighborPositions(new Vector(0, 0), GridNeighborType.ALL).map(item => item.toVec2())).toStrictEqual([
+      { x: 0, y: 1 },
+      { x: 1, y: 0 },
+      { x: 1, y: 1 }
+    ]);
   });
 });

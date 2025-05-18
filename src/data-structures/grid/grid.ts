@@ -1,50 +1,20 @@
+import { Comparator } from '../../comparator/comparator';
 import { Rectangle } from '../../geometry/shapes/rectangle';
 import { Vector } from '../../geometry/vector/vector';
-import { Random } from '../../random/random';
 
-const NEIGHBORS = [new Vector(-1, 0), new Vector(0, -1), new Vector(0, 1), new Vector(1, 0)];
-
+const ORTOGONALS = [new Vector(-1, 0), new Vector(0, -1), new Vector(0, 1), new Vector(1, 0)];
 const DIAGONALS = [new Vector(-1, -1), new Vector(-1, 1), new Vector(1, -1), new Vector(1, 1)];
+const ALL_NEIGHBORS = [...ORTOGONALS, ...DIAGONALS];
 
-const NEIGHBORS_INCLUDING_DIAGONALS = [...NEIGHBORS, ...DIAGONALS];
+export enum GridNeighborType {
+  ORTOGONAL = 'ortogonal',
+  DIAGONAL = 'diagonal',
+  ALL = 'all'
+}
 
 export class Grid<T> {
-  static createByValues<T>(values: T[][]): Grid<T> {
-    let width = values[0].length;
-    values.forEach(row => {
-      if (row.length !== width) {
-        throw new Error(`Grid: All rows must have the same length. Expected: ${width}, got: ${row.length}`);
-      }
-    });
-    return new Grid(values);
-  }
-
-  static createNew<T>(size: Vector, defaultValue: T): Grid<T> {
-    let values = Array(Math.floor(size.y))
-      .fill(undefined)
-      .map(() => Array(Math.floor(size.x)).fill(defaultValue));
-    return new Grid<T>(values);
-  }
-
-  static getNeighborDirections(options?: { includeDiagonals: boolean }): Vector[] {
-    return options?.includeDiagonals ? NEIGHBORS_INCLUDING_DIAGONALS : NEIGHBORS;
-  }
-
-  static getDiagonalNeighborDirections(): Vector[] {
-    return DIAGONALS;
-  }
-
-  static vectorToNeighborDirection(vector: Vector, options?: { includeDiagonals: boolean }): Vector {
-    let roundedVector = vector.normalize().round();
-    if (!options?.includeDiagonals && roundedVector.x !== 0 && roundedVector.y !== 0) {
-      if (Random.chance(0.5)) {
-        return new Vector(0, roundedVector.y);
-      } else {
-        return new Vector(roundedVector.x, 0);
-      }
-    } else {
-      return new Vector(roundedVector.x, roundedVector.y);
-    }
+  static create<T>(size: Vector, callback: (position: Vector) => T): Grid<T> {
+    return new Grid({ size, defaultValue: undefined }).map((_, position) => callback(position));
   }
 
   private _size: Vector;
@@ -62,38 +32,87 @@ export class Grid<T> {
     return this._size.y;
   }
 
-  private constructor(values: T[][]) {
-    this._size = new Vector(values[0].length, values.length);
-    this._grid = values;
+  constructor(createFrom: T[][] | { size: Vector; defaultValue: T }) {
+    if (Comparator.isArray(createFrom)) {
+      this._size = new Vector(createFrom[0].length, createFrom.length);
+      this._grid = createFrom;
+    } else {
+      if (!Comparator.isInteger(createFrom.size.x) || !Comparator.isInteger(createFrom.size.y)) {
+        throw new Error(`Grid: Size has to be integer: size: "${createFrom.size}"`);
+      } else if (createFrom.size.x < 0 || createFrom.size.y < 0) {
+        throw new Error(`Grid: Size has to be positive: size: "${createFrom.size}"`);
+      }
+
+      this._size = createFrom.size;
+      this._grid = Array(createFrom.size.y)
+        .fill(undefined)
+        .map(() => Array(createFrom.size.x).fill(createFrom.defaultValue));
+    }
   }
 
+  // ------------- GETTERS -------------
   has(position: Vector): boolean {
-    return this.isPointWithinBounds(position) && this.get(position) !== undefined;
+    this.validatePoint(position);
+    return this.get(position) !== undefined;
   }
 
-  get(position: Vector): T {
+  get(position: Vector): T | undefined {
+    return this._grid[position.y]?.[position.x];
+  }
+
+  getOrFail(position: Vector): T {
+    this.validatePoint(position);
     return this._grid[position.y][position.x];
   }
 
-  set(position: Vector, value: T): void {
-    if (!this.isPointWithinBounds(position)) {
-      throw new Error(`Grid: Point is outside of the grid: point: "${position}", grid-size: "${this._size}"`);
+  getNeighbors(position: Vector, type: GridNeighborType): T[] {
+    let neighborPositions = this.getNeighborPositions(position, type);
+    return neighborPositions.map(neighborPosition => this.get(neighborPosition)!);
+  }
+
+  getNeighborPositions(position: Vector, type: GridNeighborType): Vector[] {
+    return this.getNeighborDirections(position, type).map(direction => position.add(direction));
+  }
+
+  getNeighborDirections(position: Vector, type: GridNeighborType): Vector[] {
+    this.validatePoint(position);
+    let directions = this.neighborTypeToDirections(type);
+
+    if (position.y === 0) {
+      directions = directions.filter(direction => direction.y !== -1);
     }
+
+    if (position.y === this._size.y - 1) {
+      directions = directions.filter(direction => direction.y !== 1);
+    }
+
+    if (position.x === 0) {
+      directions = directions.filter(direction => direction.x !== -1);
+    }
+
+    if (position.x === this._size.x - 1) {
+      directions = directions.filter(direction => direction.x !== 1);
+    }
+    return directions;
+  }
+
+  // ------------- SETTERS -------------
+  set(position: Vector, value: T): void {
+    this.validatePoint(position);
     this._grid[position.y][position.x] = value;
   }
 
-  safeSetArea(area: Rectangle, value: T): void {
-    area = this.cropPartsOutsideOfTheGrid(area);
-    this.setArea(area, value);
+  setArea(area: Rectangle, value: T): void {
+    area = this.cropAreaOutsideOfTheGrid(area);
+    this.internalSetArea(area, value);
   }
 
-  setArea(area: Rectangle, value: T): void {
-    if (!this.isAreaWithinBounds(area)) {
-      throw new Error(
-        `Grid: Area is outside of the grid: area: "${JSON.stringify(area)}", grid-size: "${JSON.stringify(this._size)}"`
-      );
-    }
+  setAreaOrFail(area: Rectangle, value: T): void {
+    this.validateArea(area);
+    this.internalSetArea(area, value);
+  }
 
+  private internalSetArea(area: Rectangle, value: T): void {
     for (let y = area.topLeft.y; y <= area.bottomRight.y && y < this._grid.length; y++) {
       for (let x = area.topLeft.x; x <= area.bottomRight.x && x < this._grid[y].length; x++) {
         this._grid[y][x] = value;
@@ -101,6 +120,7 @@ export class Grid<T> {
     }
   }
 
+  // ------------- ITERATIONS -------------
   forEach(callback: (value: T, position: Vector) => void): void {
     this._grid.forEach((row, y) => row.forEach((value, x) => callback(value, new Vector(x, y))));
   }
@@ -108,6 +128,26 @@ export class Grid<T> {
   map<U>(callback: (value: T, position: Vector) => U): Grid<U> {
     let newValues = this._grid.map((row, y) => row.map((value, x) => callback(value, new Vector(x, y))));
     return new Grid(newValues);
+  }
+
+  toArray(): T[][] {
+    return this._grid.map(row => row.map(value => value));
+  }
+
+  // ------------- CONTROLS -------------
+  private validateArea(area: Rectangle): void {
+    this.validatePoint(area.topLeft);
+    this.validatePoint(area.bottomRight);
+  }
+
+  private validatePoint(point: Vector): void {
+    if (!Comparator.isInteger(point.x) || !Comparator.isInteger(point.y)) {
+      throw new Error(`Grid: Point values has to be integer: point: "${point}"`);
+    }
+
+    if (!this.isPointWithinBounds(point)) {
+      throw new Error(`Grid: Point is outside of the grid: point: "${point}", grid-size: "${this._size}"`);
+    }
   }
 
   isAreaWithinBounds(area: Rectangle): boolean {
@@ -118,37 +158,25 @@ export class Grid<T> {
     return point.x >= 0 && point.y >= 0 && point.x < this._size.x && point.y < this._size.y;
   }
 
-  cropPartsOutsideOfTheGrid(area: Rectangle): Rectangle {
-    let topLeft = this.movePositionInsideGrid(area.topLeft);
-    let bottomRight = this.movePositionInsideGrid(area.bottomRight);
-    return new Rectangle(topLeft, bottomRight);
-  }
-
-  moveAreaInsideGrid(area: Rectangle): Rectangle {
+  // ------------- BOUNDARY HELPERS -------------
+  cropAreaOutsideOfTheGrid(area: Rectangle): Rectangle {
     let topLeft = this.movePositionInsideGrid(area.topLeft);
     let bottomRight = this.movePositionInsideGrid(area.bottomRight);
     return new Rectangle(topLeft, bottomRight);
   }
 
   movePositionInsideGrid(point: Vector): Vector {
-    let x = Math.max(0, Math.min(this._size.x - 1, point.x));
-    let y = Math.max(0, Math.min(this._size.y - 1, point.y));
+    let x = Math.round(point.x);
+    let y = Math.round(point.y);
+
+    x = Math.max(0, Math.min(this._size.x - 1, x));
+    y = Math.max(0, Math.min(this._size.y - 1, y));
+
     return new Vector(x, y);
   }
 
-  getNeighborPositions(
-    position: Vector,
-    options: { includeDiagonals: boolean } = { includeDiagonals: false }
-  ): Vector[] {
-    let neighbors = options.includeDiagonals ? NEIGHBORS_INCLUDING_DIAGONALS : NEIGHBORS;
-    return neighbors
-      .map(neighborDirection => new Vector(position.x + neighborDirection.x, position.y + neighborDirection.y))
-      .filter(neighborPosition => this.isPointWithinBounds(neighborPosition));
-  }
-
-  getDiagonalNeighborPositions(position: Vector): Vector[] {
-    return DIAGONALS.map(
-      neighborDirection => new Vector(position.x + neighborDirection.x, position.y + neighborDirection.y)
-    ).filter(neighborPosition => this.isPointWithinBounds(neighborPosition));
+  // ------------- DIRECTION HELPERS -------------
+  private neighborTypeToDirections(type: GridNeighborType): Vector[] {
+    return type === GridNeighborType.ORTOGONAL ? ORTOGONALS : type === GridNeighborType.DIAGONAL ? DIAGONALS : ALL_NEIGHBORS;
   }
 }
