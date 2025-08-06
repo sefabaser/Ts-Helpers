@@ -150,10 +150,17 @@ export class Vector {
     return new Vector(this.x / divider, this.y / divider, { radian: this.cache.radian });
   }
 
-  round(): Vector {
+  round(options?: { rollHalfsDown?: boolean }): Vector {
     // Cache - length: Unknown, requires calculation.
     // Cache - radian: Unknown, requires calculation.
-    return new Vector(Math.round(this.x), Math.round(this.y));
+    let rollHalfsDown = options?.rollHalfsDown ?? false;
+    if (rollHalfsDown) {
+      let x = Math.abs(this.x % 1) === 0.5 ? this.x - 0.5 : this.x;
+      let y = Math.abs(this.y % 1) === 0.5 ? this.y - 0.5 : this.y;
+      return new Vector(Math.round(x), Math.round(y));
+    } else {
+      return new Vector(Math.round(this.x), Math.round(this.y));
+    }
   }
 
   floor(): Vector {

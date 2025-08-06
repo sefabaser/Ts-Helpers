@@ -1,8 +1,8 @@
 import { describe, expect, test } from 'vitest';
 
-import { Vector } from './vector';
+import { PI_180, PI_90, Radian } from '../radian/radian';
 import { Rectangle } from '../shapes/rectangle';
-import { PI_90, PI_180, Radian } from '../radian/radian';
+import { Vector } from './vector';
 
 describe('Vector: ', () => {
   describe('IsEqual: ', () => {
@@ -277,6 +277,16 @@ describe('Vector: ', () => {
     test('sample 5', () => {
       let vec = new Vector(1.6, -1.1);
       expect(vec.round().toVec2()).toEqual({ x: 2, y: -1 });
+    });
+
+    test('sample 6', () => {
+      let vec = new Vector(1.5, -1.5);
+      expect(vec.round({ rollHalfsDown: true }).toVec2()).toEqual({ x: 1, y: -2 });
+    });
+
+    test('sample 7', () => {
+      let vec = new Vector(1.51, -1.49);
+      expect(vec.round({ rollHalfsDown: true }).toVec2()).toEqual({ x: 2, y: -1 });
     });
   });
 
@@ -594,9 +604,7 @@ describe('Vector: ', () => {
       expect((vec['cache'].length ?? 0) - 2).toBeLessThanOrEqual(Number.EPSILON * 2);
       expect(vec['getLength']() - 2).toBeLessThanOrEqual(Number.EPSILON * 2);
 
-      expect(vec['getRadian']().acuteAngle(vec['cache'].radian ?? Radian.get0).value).toBeLessThanOrEqual(
-        Number.EPSILON
-      );
+      expect(vec['getRadian']().acuteAngle(vec['cache'].radian ?? Radian.get0).value).toBeLessThanOrEqual(Number.EPSILON);
     });
 
     test('multiply number', () => {
