@@ -14,12 +14,16 @@ export interface VectorCache {
 // Each "new Vector()" should consider the cache and have "Cache" comments.
 export class Vector {
   // Cache - length: Known, equals to zero.
-  // Cache - radion: If anyone gets the radion of the vector, it will set the cache for all requests. There is no need to cache beforehand.
+  // Cache - radian: If anyone gets the radian of the vector, it will set the cache for all requests. There is no need to cache beforehand.
   static zero = new Vector(0, 0, { length: 0, radian: undefined });
 
   // Cache - length: Known
-  // Cache - radion: If anyone gets the radion of the vector, it will set the cache for all requests. There is no need to cache beforehand.
+  // Cache - radian: If anyone gets the radian of the vector, it will set the cache for all requests. There is no need to cache beforehand.
   static half = new Vector(0.5, 0.5, { length: 0.7071068, radian: undefined });
+
+  // Cache - length: Known
+  // Cache - radian: If anyone gets the radian of the vector, it will set the cache for all requests. There is no need to cache beforehand.
+  static one = new Vector(1, 1, { length: 1.4142136, radian: undefined });
 
   static fromVec2(vector: Vec2): Vector {
     // Cache - length: Unknown, requires calculation.
@@ -122,7 +126,7 @@ export class Vector {
     return new Vector(this.x - value, this.y - value);
   }
 
-  fromTo(vector: Vector): Vector {
+  to(vector: Vector): Vector {
     return Vector.fromTo(this, vector);
   }
 
@@ -227,7 +231,7 @@ export class Vector {
   }
 
   getDistance(vector: Vector): number {
-    return this.fromTo(vector).length;
+    return this.to(vector).length;
   }
 
   ensureMaxLength(maxLength: number): Vector {

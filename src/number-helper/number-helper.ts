@@ -70,6 +70,17 @@ export class NumberHelper {
   }
 
   /**
+   * Linear interpolation between two numbers
+   * @param start start number
+   * @param end end number
+   * @param ratio interpolation factor, between 0 and 1
+   * @returns the interpolated number
+   */
+  static lerp(start: number, end: number, ratio: number): number {
+    return start + (end - start) * ratio;
+  }
+
+  /**
    * @param row number of the desired row of the pascal triangle
    * @returns Row's values of the pascal triangle
    */

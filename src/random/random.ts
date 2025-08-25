@@ -36,7 +36,11 @@ export class Random {
     return Math.random() < possibility;
   }
 
-  static randomIntegerBetween(start: number, to: number): number {
+  static between(from: number, to: number): number {
+    return Math.random() * (to - from) + from;
+  }
+
+  static integerBetween(start: number, to: number): number {
     return Math.floor(Math.random() * (to - start) + start);
   }
 
