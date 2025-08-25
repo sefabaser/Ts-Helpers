@@ -37,11 +37,17 @@ export class Random {
   }
 
   static between(from: number, to: number): number {
+    if (from > to) {
+      [from, to] = [to, from];
+    }
     return Math.random() * (to - from) + from;
   }
 
-  static integerBetween(start: number, to: number): number {
-    return Math.floor(Math.random() * (to - start) + start);
+  static integerBetween(from: number, to: number): number {
+    if (from > to) {
+      [from, to] = [to, from];
+    }
+    return Math.floor(Math.random() * (to - from) + from);
   }
 
   static pickRandomWeight(weights: number[] | ReadonlyArray<number>): number {
@@ -58,13 +64,14 @@ export class Random {
   }
 
   /**
-   * @param x - The minimum value
-   * @param y - The maximum value
+   * @param from - The minimum value
+   * @param to - The maximum value
+   * @param type 'ascending' | 'descending' | 'full'
    * @returns A random number between x and y that respects the probability of the gaussian distribution
    */
-  static gaussianRandomBetween(x: number, y: number): number {
-    if (x > y) {
-      [x, y] = [y, x];
+  static gaussianRandomBetween(from: number, to: number, type: 'ascending' | 'descending' | 'full' = 'full'): number {
+    if (from > to) {
+      [from, to] = [to, from];
     }
 
     let gaussianClamped = this.gaussianRandomWithoutRange();
@@ -72,10 +79,24 @@ export class Random {
       gaussianClamped = this.gaussianRandomWithoutRange();
     }
 
-    let center = (x + y) * 0.5;
-    let range = (y - x) * 0.5;
+    switch (type) {
+      case 'ascending': {
+        gaussianClamped = Math.abs(gaussianClamped);
+        let range = to - from;
+        return to - gaussianClamped * range;
+      }
+      case 'descending': {
+        gaussianClamped = Math.abs(gaussianClamped);
+        let range = to - from;
+        return from + gaussianClamped * range;
+      }
+      case 'full': {
+        let center = (from + to) * 0.5;
+        let range = (to - from) * 0.5;
 
-    return center + gaussianClamped * range;
+        return center + gaussianClamped * range;
+      }
+    }
   }
 
   /**

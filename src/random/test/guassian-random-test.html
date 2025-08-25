@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gaussian Random Number Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .controls {
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            display: inline-block;
+            margin: 10px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        input {
+            width: 80px;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            text-align: center;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .generate-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin: 20px;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .generate-btn:active {
+            transform: translateY(0);
+        }
+
+        .result {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            font-size: 2em;
+            font-weight: bold;
+            color: #333;
+            border: 3px solid #e9ecef;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .history {
+            margin-top: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+        }
+
+        .history-title {
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .history-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .history-item {
+            background: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            border: 1px solid #ddd;
+        }
+
+        .clear-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+
+        .graph-section {
+            margin: 20px 0;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+        }
+
+        #distributionGraph {
+            display: block;
+            margin: 15px auto 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎲 Gaussian Random</h1>
+        <p class="subtitle">Generate random numbers following a bell curve distribution</p>
+        
+        <div class="controls">
+            <div class="input-group">
+                <label for="minValue">Min Value:</label>
+                <input type="number" id="minValue" value="1" step="any">
+            </div>
+            <div class="input-group">
+                <label for="maxValue">Max Value:</label>
+                <input type="number" id="maxValue" value="100" step="any">
+            </div>
+        </div>
+
+        <button class="generate-btn" onclick="generateNumber()">Generate Random Number</button>
+        
+        <div class="result" id="result">
+            Click the button to generate a number!
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-label">Count</div>
+                <div class="stat-value" id="count">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Average</div>
+                <div class="stat-value" id="average">-</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Min Generated</div>
+                <div class="stat-value" id="minGenerated">-</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Max Generated</div>
+                <div class="stat-value" id="maxGenerated">-</div>
+            </div>
+        </div>
+
+        <div class="graph-section">
+            <div class="history-title">
+                Distribution Graph (1000 samples)
+                <button class="generate-btn" style="padding: 8px 16px; font-size: 14px; margin-left: 10px;" onclick="generateGraph()">Generate Graph</button>
+                <button class="clear-btn" onclick="clearGraph()">Clear Graph</button>
+            </div>
+            <canvas id="distributionGraph" width="500" height="300" style="border: 2px solid #e9ecef; border-radius: 8px; background: white; max-width: 100%;"></canvas>
+        </div>
+
+        <div class="history">
+            <div class="history-title">
+                Recent Results (Last 20)
+                <button class="clear-btn" onclick="clearHistory()">Clear</button>
+            </div>
+            <div class="history-list" id="historyList">
+                No results yet...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let generatedNumbers = [];
+        let graphData = [];
+
+
+        
+  /**
+   * @param x - The minimum value
+   * @param y - The maximum value
+   * @returns A random number between x and y that respects the probability of the gaussian distribution
+   */
+   function randomBetween(from, to, type = 'full') {
+    if (from > to) {
+      [from, to] = [to, from];
+    }
+
+    let gaussianClamped = this.gaussianRandomWithoutRange();
+    while (Math.abs(gaussianClamped) > 1) {
+      gaussianClamped = this.gaussianRandomWithoutRange();
+    }
+
+    switch (type) {
+      case 'ascending': {
+        gaussianClamped = Math.abs(gaussianClamped);
+        let range = (to - from);
+        return to - gaussianClamped * range;
+      }
+      case 'descending': {
+        gaussianClamped = Math.abs(gaussianClamped);
+        let range = (to - from);
+        return from + gaussianClamped * range;
+      }
+      case 'full':{
+        let center = (from + to) * 0.5;
+        let range = (to - from) * 0.5;
+
+        return center + gaussianClamped * range;
+      }
+    }
+  }
+
+  /**
+   * Generates a random number that respects the probability of the gaussian distribution
+   * @returns A random number between -Infinity and Infinity ~99.7% of values fall within [-1, 1]
+   */
+  function gaussianRandomWithoutRange() {
+    let u = 0;
+    let v = 0;
+    // Converting [0,1) to (0,1)
+    while (u === 0) {
+      u = Math.random();
+    }
+    while (v === 0) {
+      v = Math.random();
+    }
+    return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v) * 0.3;
+  }
+
+        function generateGraph() {
+            const minVal = parseFloat(document.getElementById('minValue').value);
+            const maxVal = parseFloat(document.getElementById('maxValue').value);
+            
+            if (isNaN(minVal) || isNaN(maxVal)) {
+                alert('Please enter valid numbers for min and max values!');
+                return;
+            }
+
+            // Generate 1000 samples
+            const samples = [];
+            for (let i = 0; i < 10000; i++) {
+                samples.push(randomBetween(minVal, maxVal, 'ascending'));
+            }
+
+            // Create histogram bins
+            const numBins = 25;
+            const binSize = (maxVal - minVal) / numBins;
+            const bins = new Array(numBins).fill(0);
+            const binCenters = [];
+
+            // Calculate bin centers
+            for (let i = 0; i < numBins; i++) {
+                binCenters.push(minVal + (i + 0.5) * binSize);
+            }
+
+            // Count samples in each bin
+            samples.forEach(sample => {
+                const binIndex = Math.floor((sample - minVal) / binSize);
+                if (binIndex >= 0 && binIndex < numBins) {
+                    bins[Math.min(binIndex, numBins - 1)]++;
+                }
+            });
+
+            // Store data for graph
+            graphData = { bins, binCenters, binSize, samples };
+
+            // Draw the graph
+            drawGraph();
+        }
+
+        function drawGraph() {
+            const canvas = document.getElementById('distributionGraph');
+            const ctx = canvas.getContext('2d');
+            const { bins, binCenters, binSize, samples } = graphData;
+
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (!bins || bins.length === 0) {
+                ctx.fillStyle = '#666';
+                ctx.font = '16px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('Click "Generate Graph" to see distribution', canvas.width / 2, canvas.height / 2);
+                return;
+            }
+
+            const padding = 40;
+            const graphWidth = canvas.width - 2 * padding;
+            const graphHeight = canvas.height - 2 * padding;
+            const maxCount = Math.max(...bins);
+
+            // Draw bars
+            const barWidth = graphWidth / bins.length;
+            bins.forEach((count, i) => {
+                const barHeight = (count / maxCount) * graphHeight;
+                const x = padding + i * barWidth;
+                const y = canvas.height - padding - barHeight;
+
+                // Bar
+                ctx.fillStyle = 'rgba(102, 126, 234, 0.7)';
+                ctx.fillRect(x, y, barWidth - 1, barHeight);
+
+                // Bar outline
+                ctx.strokeStyle = 'rgba(102, 126, 234, 1)';
+                ctx.strokeRect(x, y, barWidth - 1, barHeight);
+            });
+
+            // Draw theoretical Gaussian curve
+            ctx.beginPath();
+            ctx.strokeStyle = '#dc3545';
+            ctx.lineWidth = 3;
+
+            const minVal = parseFloat(document.getElementById('minValue').value);
+            const maxVal = parseFloat(document.getElementById('maxValue').value);
+            const mean = (minVal + maxVal) / 2;
+            const stdDev = (maxVal - minVal) / 6; // Approximate standard deviation
+
+            for (let i = 0; i <= graphWidth; i++) {
+                const x = minVal + (i / graphWidth) * (maxVal - minVal);
+                const gaussianValue = Math.exp(-0.5 * Math.pow((x - mean) / stdDev, 2));
+                const normalizedValue = gaussianValue * maxCount * 0.8; // Scale to fit
+                
+                const canvasX = padding + i;
+                const canvasY = canvas.height - padding - (normalizedValue / maxCount) * graphHeight;
+                
+                if (i === 0) {
+                    ctx.moveTo(canvasX, canvasY);
+                } else {
+                    ctx.lineTo(canvasX, canvasY);
+                }
+            }
+            ctx.stroke();
+
+            // Draw axes
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 1;
+            
+            // Y-axis
+            ctx.beginPath();
+            ctx.moveTo(padding, padding);
+            ctx.lineTo(padding, canvas.height - padding);
+            ctx.stroke();
+            
+            // X-axis
+            ctx.beginPath();
+            ctx.moveTo(padding, canvas.height - padding);
+            ctx.lineTo(canvas.width - padding, canvas.height - padding);
+            ctx.stroke();
+
+            // Labels
+            ctx.fillStyle = '#333';
+            ctx.font = '12px Arial';
+            ctx.textAlign = 'center';
+            
+            // X-axis labels
+            for (let i = 0; i <= 5; i++) {
+                const value = minVal + (i / 5) * (maxVal - minVal);
+                const x = padding + (i / 5) * graphWidth;
+                ctx.fillText(value.toFixed(1), x, canvas.height - padding + 15);
+            }
+            
+            // Y-axis labels
+            ctx.textAlign = 'right';
+            for (let i = 0; i <= 4; i++) {
+                const value = (i / 4) * maxCount;
+                const y = canvas.height - padding - (i / 4) * graphHeight + 3;
+                ctx.fillText(Math.round(value), padding - 5, y);
+            }
+
+            // Legend
+            ctx.textAlign = 'left';
+            ctx.fillStyle = 'rgba(102, 126, 234, 0.7)';
+            ctx.fillRect(canvas.width - 150, 20, 20, 15);
+            ctx.fillStyle = '#333';
+            ctx.fillText('Generated samples', canvas.width - 125, 32);
+            
+            ctx.strokeStyle = '#dc3545';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(canvas.width - 150, 45);
+            ctx.lineTo(canvas.width - 130, 45);
+            ctx.stroke();
+            ctx.fillText('Theoretical Gaussian', canvas.width - 125, 49);
+
+            // Statistics
+            const mean_actual = samples.reduce((a, b) => a + b) / samples.length;
+            ctx.font = '11px Arial';
+            ctx.fillText(`Samples: 1000`, canvas.width - 150, 70);
+            ctx.fillText(`Mean: ${mean_actual.toFixed(2)}`, canvas.width - 150, 85);
+            ctx.fillText(`Expected: ${mean.toFixed(2)}`, canvas.width - 150, 100);
+        }
+
+        function clearGraph() {
+            graphData = [];
+            const canvas = document.getElementById('distributionGraph');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = '#666';
+            ctx.font = '16px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Click "Generate Graph" to see distribution', canvas.width / 2, canvas.height / 2);
+        }
+
+        function generateNumber() {
+            const minVal = parseFloat(document.getElementById('minValue').value);
+            const maxVal = parseFloat(document.getElementById('maxValue').value);
+            
+            if (isNaN(minVal) || isNaN(maxVal)) {
+                document.getElementById('result').textContent = 'Please enter valid numbers!';
+                return;
+            }
+
+            const randomNum = gaussianRandomBetween(minVal, maxVal);
+            const rounded = Math.round(randomNum * 100) / 100; // Round to 2 decimal places
+            
+            // Update result display
+            document.getElementById('result').textContent = rounded;
+            
+            // Add to history
+            generatedNumbers.push(rounded);
+            
+            // Update statistics
+            updateStats();
+            updateHistory();
+        }
+
+        function updateStats() {
+            const count = generatedNumbers.length;
+            document.getElementById('count').textContent = count;
+            
+            if (count > 0) {
+                const sum = generatedNumbers.reduce((a, b) => a + b, 0);
+                const average = Math.round((sum / count) * 100) / 100;
+                const min = Math.min(...generatedNumbers);
+                const max = Math.max(...generatedNumbers);
+                
+                document.getElementById('average').textContent = average;
+                document.getElementById('minGenerated').textContent = min;
+                document.getElementById('maxGenerated').textContent = max;
+            }
+        }
+
+        function updateHistory() {
+            const historyList = document.getElementById('historyList');
+            const recentNumbers = generatedNumbers.slice(-20).reverse();
+            
+            if (recentNumbers.length === 0) {
+                historyList.textContent = 'No results yet...';
+                return;
+            }
+            
+            historyList.innerHTML = recentNumbers
+                .map(num => `<span class="history-item">${num}</span>`)
+                .join('');
+        }
+
+        function clearHistory() {
+            generatedNumbers = [];
+            document.getElementById('result').textContent = 'Click the button to generate a number!';
+            document.getElementById('count').textContent = '0';
+            document.getElementById('average').textContent = '-';
+            document.getElementById('minGenerated').textContent = '-';
+            document.getElementById('maxGenerated').textContent = '-';
+            document.getElementById('historyList').textContent = 'No results yet...';
+        }
+
+        // Allow Enter key to generate number
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                generateNumber();
+            }
+        });
+
+        // Initialize graph on page load
+        window.addEventListener('load', function() {
+            clearGraph();
+        });
+    </script>
+</body>
+</html>
