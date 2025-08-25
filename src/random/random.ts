@@ -56,4 +56,42 @@ export class Random {
     }
     return -1;
   }
+
+  /**
+   * @param x - The minimum value
+   * @param y - The maximum value
+   * @returns A random number between x and y that respects the probability of the gaussian distribution
+   */
+  static gaussianRandomBetween(x: number, y: number): number {
+    if (x > y) {
+      [x, y] = [y, x];
+    }
+
+    let gaussianClamped = this.gaussianRandomWithoutRange();
+    while (Math.abs(gaussianClamped) > 1) {
+      gaussianClamped = this.gaussianRandomWithoutRange();
+    }
+
+    let center = (x + y) * 0.5;
+    let range = (y - x) * 0.5;
+
+    return center + gaussianClamped * range;
+  }
+
+  /**
+   * Generates a random number that respects the probability of the gaussian distribution
+   * @returns A random number between -Infinity and Infinity ~99.7% of values fall within [-1, 1]
+   */
+  static gaussianRandomWithoutRange(): number {
+    let u = 0;
+    let v = 0;
+    // Converting [0,1) to (0,1)
+    while (u === 0) {
+      u = Math.random();
+    }
+    while (v === 0) {
+      v = Math.random();
+    }
+    return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v) * 0.3;
+  }
 }
