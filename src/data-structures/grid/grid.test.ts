@@ -16,7 +16,7 @@ describe('Grid', () => {
   });
 
   test('should create a grid from an array', () => {
-    let grid = new Grid([
+    grid = new Grid([
       [true, false],
       [false, true]
     ]);

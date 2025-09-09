@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import { PI_360, PI_90, Radian } from './radian';
+import { PI_90, PI_360, Radian } from './radian';
 
 describe('Radian: ', () => {
   describe('GetAverage', () => {

@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import { PI_180, PI_90, Radian } from '../radian/radian';
+import { PI_90, PI_180, Radian } from '../radian/radian';
 import { Rectangle } from '../shapes/rectangle';
 import { Vector } from './vector';
 

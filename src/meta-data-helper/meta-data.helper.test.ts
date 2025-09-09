@@ -1,7 +1,8 @@
-import 'reflect-metadata';
 import { describe, expect, it } from 'vitest';
 
 import { MetaDataHelper } from './meta-data.helper';
+
+import 'reflect-metadata';
 
 describe('MetaDataHelper', () => {
   it('should copy metadata from one object to another', () => {

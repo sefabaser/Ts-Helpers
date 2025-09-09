@@ -1,7 +1,8 @@
 import Joi from 'joi';
-import 'reflect-metadata';
 
 import { MetaDataHelper } from '../meta-data-helper/meta-data.helper';
+
+import 'reflect-metadata';
 
 const FunctionParameterSchemasKey = 'AutoValidateFunctionParameterSchemas';
 const PropertySchemaKey = 'AutoValidatePropertySchema';

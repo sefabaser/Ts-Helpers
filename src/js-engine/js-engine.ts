@@ -1,9 +1,9 @@
-import 'reflect-metadata';
-
 import { Comparator } from '../comparator/comparator';
 import { JsonHelper } from '../json-helper/json-helper';
 import { MetaDataHelper } from '../meta-data-helper/meta-data.helper';
 import { JSVariableType } from '../utility-types/utility-types';
+
+import 'reflect-metadata';
 
 const ReservedWords = new Set(['Boolean', 'Number', 'String']);
 

@@ -24,10 +24,23 @@ module.exports = {
     node: true,
     jest: true
   },
-  plugins: ['@typescript-eslint', '@typescript-eslint/eslint-plugin', 'no-null'],
+  plugins: ['@typescript-eslint', '@typescript-eslint/eslint-plugin', 'no-null', 'simple-import-sort'],
   ignorePatterns: ['**/*.js', 'vite.config.ts', 'out/**/*', 'dist/**/*', 'node_modules/**/*'],
   rules: {
+    'simple-import-sort/imports': [
+      'error',
+      {
+        groups: [
+          // External libraries (node_modules packages)
+          ['^[a-z]'],
+          // Local imports (relative imports starting with .)
+          ['^\\.\\.', '^\\./']
+        ]
+      }
+    ],
+    'simple-import-sort/exports': 'error',
     'no-null/no-null': 2,
+    'comma-dangle': ['error', 'never'],
     '@typescript-eslint/adjacent-overload-signatures': 'error',
     '@typescript-eslint/ban-ts-comment': 'off',
     '@typescript-eslint/ban-types': 'error',
@@ -35,7 +48,7 @@ module.exports = {
     '@typescript-eslint/dot-notation': 'off',
     '@typescript-eslint/explicit-function-return-type': [
       "warn",
-      { "allowExpressions": true } 
+      { "allowExpressions": true }
     ],
     '@typescript-eslint/explicit-member-accessibility': [
       'off',
@@ -44,7 +57,7 @@ module.exports = {
       }
     ],
     '@typescript-eslint/explicit-module-boundary-types': 'warn',
-    '@typescript-eslint/indent': ['off', 2],
+    '@typescript-eslint/indent': ['error', 2],
     '@typescript-eslint/interface-name-prefix': 'off',
     '@typescript-eslint/member-delimiter-style': [
       'error',
@@ -70,7 +83,7 @@ module.exports = {
         selector: 'variable',
         modifiers: [],
         format: ['camelCase'],
-        leadingUnderscore: 'forbid',
+        leadingUnderscore: 'allow',
         trailingUnderscore: 'forbid'
       }
     ],
@@ -92,7 +105,17 @@ module.exports = {
     '@typescript-eslint/no-non-null-assertion': 'off',
     '@typescript-eslint/no-this-alias': 'error',
     '@typescript-eslint/no-unused-expressions': 'off',
-    '@typescript-eslint/no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': [
+      'error',
+      {
+        args: 'none',
+        vars: 'all',
+        varsIgnorePattern: '^_',
+        caughtErrors: 'all',
+        caughtErrorsIgnorePattern: '^_',
+        ignoreRestSiblings: true
+      }
+    ],
     '@typescript-eslint/no-var-requires': 'error',
     '@typescript-eslint/prefer-as-const': 'error',
     '@typescript-eslint/prefer-function-type': 'error',
@@ -105,7 +128,7 @@ module.exports = {
     '@typescript-eslint/no-shadow': 'warn',
     'arrow-body-style': 'error',
     'arrow-parens': [2, 'as-needed'],
-    'brace-style': ['error', '0tbs'],
+    'brace-style': ['error', '1tbs'],
     'constructor-super': 'error',
     curly: 'error',
     'eol-last': 'error',
@@ -116,7 +139,12 @@ module.exports = {
     'max-len': [
       'error',
       {
-        code: 170
+        code: 130,
+        ignoreUrls: true,
+        ignoreRegExpLiterals: true,
+        ignoreStrings: true,
+        ignoreTemplateLiterals: true,
+        ignoreComments: true
       }
     ],
     'no-array-constructor': 'off',

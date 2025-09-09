@@ -5,8 +5,8 @@ export type DeepPartial<T> = {
   [P in keyof T]?: T[P] extends (infer U)[]
     ? DeepPartial<U>[]
     : T[P] extends ReadonlyArray<infer U>
-    ? readonly DeepPartial<U>[]
-    : DeepPartial<T[P]>;
+      ? readonly DeepPartial<U>[]
+      : DeepPartial<T[P]>;
 };
 
 export class JsonHelper {

@@ -3,10 +3,11 @@ export { AutoValidate, Schema } from './auto-validate/auto-validate';
 export { ColorHelper, NormalizedColor, RGBColor } from './color/color';
 export { Comparator } from './comparator/comparator';
 export { ConsoleColor, ConsoleHelper } from './console-helper/console.helper';
+export * from './data-structures';
 export { DatetimeHelper } from './datetime-helper/datetime-helper';
 export { Wait } from './delayer/delayer';
 export { Line } from './geometry/line/line';
-export { PI_180, PI_360, PI_90, Radian, RadianCache } from './geometry/radian/radian';
+export { PI_90, PI_180, PI_360, Radian, RadianCache } from './geometry/radian/radian';
 export { Rect, Rectangle } from './geometry/shapes/rectangle';
 export { Vec2, Vector, VectorCache } from './geometry/vector/vector';
 export { JSEngine, JSEngineFunction } from './js-engine/js-engine';
@@ -15,7 +16,5 @@ export { MetaDataHelper } from './meta-data-helper/meta-data.helper';
 export { NumberHelper } from './number-helper/number-helper';
 export { Guid } from './random/guid';
 export { Random } from './random/random';
-
-export * from './data-structures';
 export * from './utility-types/utility-types';
 
