@@ -15,6 +15,7 @@ export { MetaDataHelper } from './meta-data-helper/meta-data.helper';
 export { NumberHelper } from './number-helper/number-helper';
 export { Guid } from './random/guid';
 export { Random } from './random/random';
-export { DeepReadonly, FixedArray, JSVariableType, Mutable, ReadonlyFixedArray } from './utility-types/utility-types';
 
 export * from './data-structures';
+export * from './utility-types/utility-types';
+
