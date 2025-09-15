@@ -31,6 +31,20 @@ describe('JSEngine and AutoValidate', () => {
     jsEngine.execute('gameOver()');
   });
 
+  test('calling a function that is not JSEngine function', () => {
+    @AutoValidate()
+    class Functions {
+      gameOver(): void {}
+    }
+
+    let functions = new Functions();
+
+    let jsEngine = new JSEngine(functions, {});
+    expect(() => jsEngine.execute('gameOver()')).toThrow(
+      '"gameOver(...)" is not a JSEngine function, it cannot be called during the executions.'
+    );
+  });
+
   test('invalid function call', () => {
     @AutoValidate()
     class Functions {
@@ -42,6 +56,37 @@ describe('JSEngine and AutoValidate', () => {
 
     let jsEngine = new JSEngine(functions, {});
     expect(() => jsEngine.execute('gameOver("a", 2)')).toThrow(
+      'Unexpected argument has sent to gameOver. Expected: 0, Received: 2'
+    );
+  });
+
+  test('validation after duplication, calling a function that is not JSEngine function', () => {
+    @AutoValidate()
+    class Functions {
+      gameOver(): void {}
+    }
+
+    let functions = new Functions();
+
+    let jsEngine = new JSEngine(functions, {});
+    let copy = jsEngine.duplicate();
+    expect(() => copy.execute('gameOver()')).toThrow(
+      '"gameOver(...)" is not a JSEngine function, it cannot be called during the executions.'
+    );
+  });
+
+  test('validation after duplication, invalid function call', () => {
+    @AutoValidate()
+    class Functions {
+      @JSEngineFunction()
+      gameOver(): void {}
+    }
+
+    let functions = new Functions();
+
+    let jsEngine = new JSEngine(functions, {});
+    let copy = jsEngine.duplicate();
+    expect(() => copy.execute('gameOver("a", 2)')).toThrow(
       'Unexpected argument has sent to gameOver. Expected: 0, Received: 2'
     );
   });
