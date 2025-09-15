@@ -49,6 +49,9 @@ function decorateWithAutoValidate<T extends new (...args: any[]) => object>(obje
       if (typeof property === 'symbol') {
         return target[property];
       }
+      if (property === DEEP_COPYABLE_SYMBOL) {
+        return target[property];
+      }
 
       if (
         !options?.allowReadingNonExistantProperties &&

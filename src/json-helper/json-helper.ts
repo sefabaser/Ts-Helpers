@@ -9,7 +9,7 @@ export type DeepPartial<T> = {
       : DeepPartial<T[P]>;
 };
 
-export const DEEP_COPYABLE_SYMBOL = Symbol('DeepCopyable');
+export const DEEP_COPYABLE_SYMBOL = '_deepCopyable';
 
 export class JsonHelper {
   static deepFind(obj: any, path: string): any {
