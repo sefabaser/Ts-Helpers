@@ -9,6 +9,8 @@ export type DeepPartial<T> = {
       : DeepPartial<T[P]>;
 };
 
+export const DEEP_COPYABLE_SYMBOL = Symbol('DeepCopyable');
+
 export class JsonHelper {
   static deepFind(obj: any, path: string): any {
     if (!path) {
@@ -57,13 +59,22 @@ export class JsonHelper {
       }
 
       if (typeof instance === 'object') {
-        let clone = Object.create(Object.getPrototypeOf(instance));
+        let deepCopyableSymbol = (instance as any)[DEEP_COPYABLE_SYMBOL];
+        if (deepCopyableSymbol) {
+          if (typeof deepCopyableSymbol === 'function') {
+            return deepCopyableSymbol.call(instance) as T;
+          } else {
+            throw new Error('Deep copy attempt on object with invalid deep copy function!');
+          }
+        } else {
+          let clone = Object.create(Object.getPrototypeOf(instance));
 
-        for (let key of Object.keys(instance)) {
-          let value = (instance as any)[key];
-          (clone as any)[key] = this.deepCopy(value);
+          for (let key of Object.keys(instance)) {
+            let value = (instance as any)[key];
+            (clone as any)[key] = this.deepCopy(value);
+          }
+          return clone;
         }
-        return clone;
       }
 
       return instance;
