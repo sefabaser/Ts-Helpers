@@ -263,10 +263,22 @@ describe('JSEngine', () => {
 
     test('sample 2', () => {
       class Functions {
+        a = { b: 1 };
+      }
+      let functions = new Functions();
+
+      let storyEngine = new JSEngine(functions, {});
+      let copy = storyEngine.duplicate();
+
+      expect(storyEngine.functions.a !== copy.functions.a).toEqual(true);
+    });
+
+    test('sample 3', () => {
+      class Functions {
         a = 1;
 
         @JSEngineFunction()
-        test(param1: number, param2: number): number {
+        test(): number {
           return this.a++;
         }
       }
@@ -281,7 +293,7 @@ describe('JSEngine', () => {
       expect(copy.functions.a).toEqual(1);
     });
 
-    test('sample 3 - Keeping the global namespace the same', () => {
+    test('sample 4 - Keeping the global namespace the same', () => {
       let namespace = new Map<string, JSVariableType>();
       let storyEngine = new JSEngine({}, {}, namespace);
       let copy = storyEngine.duplicate();

@@ -9,6 +9,8 @@ export type DeepPartial<T> = {
       : DeepPartial<T[P]>;
 };
 
+export const DEEP_COPYABLE_SYMBOL = Symbol('DeepCopyable');
+
 export class JsonHelper {
   static deepFind(obj: any, path: string): any {
     if (!path) {
@@ -37,7 +39,9 @@ export class JsonHelper {
     }
   }
 
-  static deepCopy<T>(instance: T): T {
+  static deepCopy<T>(instance: T, options?: {
+    skipDeepCopyableSymbol?: boolean;
+  }): T {
     try {
       // eslint-disable-next-line no-null/no-null
       if (instance === null) {
@@ -45,25 +49,34 @@ export class JsonHelper {
       }
 
       if (Array.isArray(instance)) {
-        return instance.map(item => this.deepCopy(item)) as T;
+        return instance.map(item => this.deepCopy(item, options)) as T;
       }
 
       if (instance instanceof Set) {
-        return new Set([...instance].map(item => this.deepCopy(item))) as T;
+        return new Set([...instance].map(item => this.deepCopy(item, options))) as T;
       }
 
       if (instance instanceof Map) {
-        return new Map([...instance].map(([key, value]) => [this.deepCopy(key), this.deepCopy(value)])) as T;
+        return new Map([...instance].map(([key, value]) => [this.deepCopy(key, options), this.deepCopy(value, options)])) as T;
       }
 
       if (typeof instance === 'object') {
-        let clone = Object.create(Object.getPrototypeOf(instance));
+        let deepCopyableSymbol = options?.skipDeepCopyableSymbol ? undefined : (instance as any)[DEEP_COPYABLE_SYMBOL];
+        if (deepCopyableSymbol) {
+          if (typeof deepCopyableSymbol === 'function') {
+            return deepCopyableSymbol.call(instance) as T;
+          } else {
+            throw new Error('Deep copy attempt on object with invalid deep copy function!');
+          }
+        } else {
+          let clone = Object.create(Object.getPrototypeOf(instance));
 
-        for (let key of Object.keys(instance)) {
-          let value = (instance as any)[key];
-          (clone as any)[key] = this.deepCopy(value);
+          for (let key of Object.keys(instance)) {
+            let value = (instance as any)[key];
+            (clone as any)[key] = this.deepCopy(value, options);
+          }
+          return clone;
         }
-        return clone;
       }
 
       return instance;
