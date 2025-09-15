@@ -278,7 +278,7 @@ describe('JSEngine', () => {
         a = 1;
 
         @JSEngineFunction()
-        test(param1: number, param2: number): number {
+        test(): number {
           return this.a++;
         }
       }
