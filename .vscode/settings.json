@@ -8,6 +8,15 @@
   "terminal.integrated.shellIntegration.decorationsEnabled": "never",
   "editor.wrappingIndent": "indent",
   "editor.codeActionsOnSave": {
-    "source.organizeImports": "always"
-  }
+    "source.fixAll.eslint": "always",
+    "source.organizeImports": "never",
+    "source.removeUnusedImports": "always"
+  },
+  "eslint.validate": ["javascript", "typescript"],
+  "eslint.run": "onType",
+  "editor.formatOnSave": false,
+  "typescript.suggest.autoImports": true,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true
 }
