@@ -73,6 +73,11 @@ describe('JSEngine and AutoValidate', () => {
     expect(() => copy.execute('gameOver()')).toThrow(
       '"gameOver(...)" is not a JSEngine function, it cannot be called during the executions.'
     );
+
+    let copy2 = copy.duplicate();
+    expect(() => copy2.execute('gameOver()')).toThrow(
+      '"gameOver(...)" is not a JSEngine function, it cannot be called during the executions.'
+    );
   });
 
   test('validation after duplication, invalid function call', () => {
@@ -89,40 +94,26 @@ describe('JSEngine and AutoValidate', () => {
     expect(() => copy.execute('gameOver("a", 2)')).toThrow(
       'Unexpected argument has sent to gameOver. Expected: 0, Received: 2'
     );
-  });
 
-  test('validation after double duplication, calling a function that is not JSEngine function', () => {
-    @AutoValidate()
-    class Functions {
-      gameOver(): void {}
-
-      constructor(public a: number) {}
-    }
-
-    let functions = new Functions(1);
-
-    let jsEngine = new JSEngine(functions, {});
-    let copy = jsEngine.duplicate().duplicate();
-    expect(() => copy.execute('gameOver()')).toThrow(
-      '"gameOver(...)" is not a JSEngine function, it cannot be called during the executions.'
-    );
-  });
-
-  test('validation after double duplication, invalid function call', () => {
-    @AutoValidate()
-    class Functions {
-      @JSEngineFunction()
-      gameOver(): void {}
-
-      constructor(public a: number) {}
-    }
-
-    let functions = new Functions(1);
-
-    let jsEngine = new JSEngine(functions, {});
-    let copy = jsEngine.duplicate().duplicate();
-    expect(() => copy.execute('gameOver("a", 2)')).toThrow(
+    let copy2 = copy.duplicate();
+    expect(() => copy2.execute('gameOver("a", 2)')).toThrow(
       'Unexpected argument has sent to gameOver. Expected: 0, Received: 2'
     );
+  });
+
+  test('duplication should not call the constructor', () => {
+    let constructorCallCount = 0;
+
+    @AutoValidate()
+    class Variables {
+      constructor() {
+        constructorCallCount++;
+      }
+    }
+
+    let jsEngine = new JSEngine({}, new Variables());
+    jsEngine.duplicate().duplicate();
+
+    expect(constructorCallCount).toEqual(1);
   });
 });

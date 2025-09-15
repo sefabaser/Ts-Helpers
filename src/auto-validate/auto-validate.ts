@@ -150,6 +150,23 @@ function decorateWithAutoValidate<T extends new (...args: any[]) => object>(obje
   });
 }
 
+function defineDeepCopyableSymbol(object: any, options?: {
+  allowNewProperties?: boolean;
+  allowReadingNonExistantProperties?: boolean;
+  allowUnsettingProperties?: boolean;
+  allowTypeChanges?: boolean;
+}): void {
+  Object.defineProperty(object, DEEP_COPYABLE_SYMBOL, {
+    value: function() {
+      let copy = JsonHelper.deepCopy(object, { skipDeepCopyableSymbol: true });
+      return decorateWithAutoValidate(copy, object.constructor, options);
+    },
+    enumerable: false,
+    writable: false,
+    configurable: false
+  });
+}
+
 export function AutoValidate(options?: {
   allowNewProperties?: boolean;
   allowReadingNonExistantProperties?: boolean;
@@ -161,25 +178,7 @@ export function AutoValidate(options?: {
       constructor(...args: any[]) {
         super(...args);
 
-        Object.defineProperty(this, DEEP_COPYABLE_SYMBOL, {
-          value: function() {
-            const DecoratedClass = AutoValidate(options)(constructor);
-            let newProxy = new DecoratedClass(...args);
-
-            for (let key of Object.keys(this)) {
-              if (key !== DEEP_COPYABLE_SYMBOL.toString()) {
-                let value = (this as any)[key];
-                (newProxy as any)[key] = JsonHelper.deepCopy(value);
-              }
-            }
-
-            return newProxy;
-          },
-          enumerable: false,
-          writable: false,
-          configurable: false
-        });
-
+        defineDeepCopyableSymbol(this, options);
         return decorateWithAutoValidate(this, constructor, options);
       }
     };

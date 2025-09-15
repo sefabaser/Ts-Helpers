@@ -39,7 +39,9 @@ export class JsonHelper {
     }
   }
 
-  static deepCopy<T>(instance: T): T {
+  static deepCopy<T>(instance: T, options?: {
+    skipDeepCopyableSymbol?: boolean;
+  }): T {
     try {
       // eslint-disable-next-line no-null/no-null
       if (instance === null) {
@@ -59,7 +61,7 @@ export class JsonHelper {
       }
 
       if (typeof instance === 'object') {
-        let deepCopyableSymbol = (instance as any)[DEEP_COPYABLE_SYMBOL];
+        let deepCopyableSymbol = options?.skipDeepCopyableSymbol ? undefined : (instance as any)[DEEP_COPYABLE_SYMBOL];
         if (deepCopyableSymbol) {
           if (typeof deepCopyableSymbol === 'function') {
             return deepCopyableSymbol.call(instance) as T;
