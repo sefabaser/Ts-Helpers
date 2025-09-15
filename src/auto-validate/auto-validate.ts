@@ -159,6 +159,7 @@ function defineDeepCopyableSymbol(object: any, options?: {
   Object.defineProperty(object, DEEP_COPYABLE_SYMBOL, {
     value: function() {
       let copy = JsonHelper.deepCopy(object, { skipDeepCopyableSymbol: true });
+      defineDeepCopyableSymbol(copy, options);
       return decorateWithAutoValidate(copy, object.constructor, options);
     },
     enumerable: false,

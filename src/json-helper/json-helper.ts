@@ -49,15 +49,15 @@ export class JsonHelper {
       }
 
       if (Array.isArray(instance)) {
-        return instance.map(item => this.deepCopy(item)) as T;
+        return instance.map(item => this.deepCopy(item, options)) as T;
       }
 
       if (instance instanceof Set) {
-        return new Set([...instance].map(item => this.deepCopy(item))) as T;
+        return new Set([...instance].map(item => this.deepCopy(item, options))) as T;
       }
 
       if (instance instanceof Map) {
-        return new Map([...instance].map(([key, value]) => [this.deepCopy(key), this.deepCopy(value)])) as T;
+        return new Map([...instance].map(([key, value]) => [this.deepCopy(key, options), this.deepCopy(value, options)])) as T;
       }
 
       if (typeof instance === 'object') {
@@ -73,7 +73,7 @@ export class JsonHelper {
 
           for (let key of Object.keys(instance)) {
             let value = (instance as any)[key];
-            (clone as any)[key] = this.deepCopy(value);
+            (clone as any)[key] = this.deepCopy(value, options);
           }
           return clone;
         }
