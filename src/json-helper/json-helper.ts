@@ -45,7 +45,7 @@ export class JsonHelper {
     }
   ): T {
     try {
-      // eslint-disable-next-line no-null/no-null
+      // biome-ignore lint:all
       if (instance === null) {
         return instance;
       }
@@ -103,7 +103,7 @@ export class JsonHelper {
     return JSON.stringify(obj, () => {
       let seen = new WeakSet();
       return (key: any, value: any) => {
-        // eslint-disable-next-line no-null/no-null
+        // biome-ignore lint:all
         if (typeof value === 'object' && value !== null) {
           if (seen.has(value)) {
             return;

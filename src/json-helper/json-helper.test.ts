@@ -52,7 +52,7 @@ describe(`Json Helper: `, () => {
 
   describe(`Deep Copy: `, () => {
     test('should work with primitive types', () => {
-      // eslint-disable-next-line no-null/no-null
+      // biome-ignore lint:all
       let primitiveTypeSamples = [undefined, null, NaN, 0, 1, '', '0', 'false', 'true', 'str', true, false];
       primitiveTypeSamples.forEach(item => {
         let copy = JsonHelper.deepCopy(item);

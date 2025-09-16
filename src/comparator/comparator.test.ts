@@ -1,4 +1,3 @@
-/* eslint-disable no-null/no-null */
 import { describe, expect, test } from 'vitest';
 
 import { Comparator } from './comparator';
@@ -242,9 +241,13 @@ describe('Comparator: ', () => {
       expect(Comparator.isEqual(undefined, 0)).toEqual(false);
       expect(Comparator.isEqual(undefined, false)).toEqual(false);
 
+      // biome-ignore lint:all
       expect(Comparator.isEqual(null, null)).toEqual(true);
+      // biome-ignore lint:all
       expect(Comparator.isEqual(null, '')).toEqual(false);
+      // biome-ignore lint:all
       expect(Comparator.isEqual(null, 0)).toEqual(false);
+      // biome-ignore lint:all
       expect(Comparator.isEqual(null, false)).toEqual(false);
     });
 
@@ -255,10 +258,15 @@ describe('Comparator: ', () => {
       expect(Comparator.isEqual(undefined, [])).toEqual(false);
       expect(Comparator.isEqual(undefined, {})).toEqual(false);
 
+      // biome-ignore lint:all
       expect(Comparator.isEqual(null, 'str')).toEqual(false);
+      // biome-ignore lint:all
       expect(Comparator.isEqual(null, 10)).toEqual(false);
+      // biome-ignore lint:all
       expect(Comparator.isEqual(null, true)).toEqual(false);
+      // biome-ignore lint:all
       expect(Comparator.isEqual(null, [])).toEqual(false);
+      // biome-ignore lint:all
       expect(Comparator.isEqual(null, {})).toEqual(false);
     });
 
