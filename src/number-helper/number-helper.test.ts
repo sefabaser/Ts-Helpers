@@ -1,4 +1,4 @@
-import { describe, expect,test } from 'vitest';
+import { describe, expect, test } from 'vitest';
 
 import { NumberHelper } from './number-helper';
 

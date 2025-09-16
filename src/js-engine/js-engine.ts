@@ -56,9 +56,7 @@ export class JSEngine<FunctionsType extends object> {
           return String;
         } else if (typeof (this.functions as any)[property] === 'function') {
           if (!JSEngine.isJSEngineFunction((this.functions as any)[property])) {
-            throw new Error(
-              `"${property}(...)" is not a JSEngine function, it cannot be called during the executions.`
-            );
+            throw new Error(`"${property}(...)" is not a JSEngine function, it cannot be called during the executions.`);
           }
 
           return (...args: any[]) => (this.functions as any)[property](...args);
@@ -69,10 +67,8 @@ export class JSEngine<FunctionsType extends object> {
       set: (_: any, property: string, value: any) => {
         if (ReservedWords.has(property)) {
           throw new Error(`JSEngine: Reserved word "${property}" cannot be assigned.`);
-        } else if (Object.prototype.hasOwnProperty.call(this.functions, property)) {
-          throw new Error(
-            `JSEngine: Cannot set a value to the property "${property}". It is already in use as a function.`
-          );
+        } else if (Object.hasOwn(this.functions, property)) {
+          throw new Error(`JSEngine: Cannot set a value to the property "${property}". It is already in use as a function.`);
         } else if (
           this.globalNameSpace &&
           this.globalNameSpace.has(property) &&
@@ -105,11 +101,7 @@ export class JSEngine<FunctionsType extends object> {
     }
   );
 
-  constructor(
-    functions: FunctionsType,
-    variables: { [key: string]: any },
-    globalNameSpace?: Map<string, JSVariableType>
-  ) {
+  constructor(functions: FunctionsType, variables: { [key: string]: any }, globalNameSpace?: Map<string, JSVariableType>) {
     this.validateArguments(functions, variables);
     this.variables = variables;
     this.functions = functions;
@@ -223,7 +215,7 @@ export class JSEngine<FunctionsType extends object> {
     });
 
     Object.getOwnPropertyNames(functions).forEach(functionName => {
-      if (Object.prototype.hasOwnProperty.call(variables, functionName)) {
+      if (Object.hasOwn(variables, functionName)) {
         throw new Error(`JSEngine: Reserved word "${functionName}" cannot be used as a variable.`);
       }
     });

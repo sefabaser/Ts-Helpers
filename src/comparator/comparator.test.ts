@@ -336,12 +336,8 @@ describe('Comparator: ', () => {
     });
 
     test('should compare objects deeply with Sets that contains objects', () => {
-      expect(Comparator.isEqual({ a: { b: new Set([{ a: 'a' }]) } }, { a: { b: new Set([{ a: 'b' }]) } })).toEqual(
-        false
-      );
-      expect(Comparator.isEqual({ a: { b: new Set([{ a: 'a' }]) } }, { a: { b: new Set([{ a: 'a' }]) } })).toEqual(
-        true
-      );
+      expect(Comparator.isEqual({ a: { b: new Set([{ a: 'a' }]) } }, { a: { b: new Set([{ a: 'b' }]) } })).toEqual(false);
+      expect(Comparator.isEqual({ a: { b: new Set([{ a: 'a' }]) } }, { a: { b: new Set([{ a: 'a' }]) } })).toEqual(true);
     });
 
     test('should compare objects deeply with Maps', () => {
@@ -359,18 +355,16 @@ describe('Comparator: ', () => {
           }
         )
       ).toEqual(false);
-      expect(Comparator.isEqual({ a: { b: new Map([[1, 'one']]) } }, { a: { b: new Map([[1, 'one']]) } })).toEqual(
-        true
-      );
+      expect(Comparator.isEqual({ a: { b: new Map([[1, 'one']]) } }, { a: { b: new Map([[1, 'one']]) } })).toEqual(true);
     });
 
     test('should compare objects deeply with Maps that contains objects', () => {
-      expect(
-        Comparator.isEqual({ a: { b: new Map([[1, { a: 'a' }]]) } }, { a: { b: new Map([[1, { a: 'b' }]]) } })
-      ).toEqual(false);
-      expect(
-        Comparator.isEqual({ a: { b: new Map([[1, { a: 'a' }]]) } }, { a: { b: new Map([[1, { a: 'a' }]]) } })
-      ).toEqual(true);
+      expect(Comparator.isEqual({ a: { b: new Map([[1, { a: 'a' }]]) } }, { a: { b: new Map([[1, { a: 'b' }]]) } })).toEqual(
+        false
+      );
+      expect(Comparator.isEqual({ a: { b: new Map([[1, { a: 'a' }]]) } }, { a: { b: new Map([[1, { a: 'a' }]]) } })).toEqual(
+        true
+      );
     });
 
     test('should compare objects deeply with Dates', () => {

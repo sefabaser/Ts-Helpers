@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { Comparator } from '../comparator/comparator';
 
 export type DeepPartial<T> = {
@@ -39,9 +38,12 @@ export class JsonHelper {
     }
   }
 
-  static deepCopy<T>(instance: T, options?: {
-    skipDeepCopyableSymbol?: boolean;
-  }): T {
+  static deepCopy<T>(
+    instance: T,
+    options?: {
+      skipDeepCopyableSymbol?: boolean;
+    }
+  ): T {
     try {
       // eslint-disable-next-line no-null/no-null
       if (instance === null) {
@@ -168,9 +170,7 @@ export class JsonHelper {
 
         if (!parentObject) {
           throw new Error(
-            `JsonHelper.arrayToObject: parent object not found for keyPath '${keyPath}', object: ${JSON.stringify(
-              outputItem
-            )}`
+            `JsonHelper.arrayToObject: parent object not found for keyPath '${keyPath}', object: ${JSON.stringify(outputItem)}`
           );
         }
 

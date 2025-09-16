@@ -17,4 +17,3 @@ export { NumberHelper } from './number-helper/number-helper';
 export { Guid } from './random/guid';
 export { Random } from './random/random';
 export * from './utility-types/utility-types';
-

@@ -10,7 +10,7 @@ describe('AutoValidate', () => {
       test('sample 1 - not decorated', () => {
         @AutoValidate()
         class Variables {
-          name: string = 'initial';
+          name = 'initial';
         }
 
         let variables = new Variables();
@@ -21,7 +21,7 @@ describe('AutoValidate', () => {
       test('sample 2 - decorated', () => {
         @AutoValidate()
         class Variables {
-          @Schema(Joi.string().min(2).max(50).required()) name: string = 'initial';
+          @Schema(Joi.string().min(2).max(50).required()) name = 'initial';
         }
 
         let variables = new Variables();
@@ -32,7 +32,7 @@ describe('AutoValidate', () => {
       test('sample 3 - getting not existing variable', () => {
         @AutoValidate()
         class Variables {
-          @Schema(Joi.string().min(2).max(50).required()) name: string = 'initial';
+          @Schema(Joi.string().min(2).max(50).required()) name = 'initial';
         }
 
         let variables = new Variables();
@@ -57,7 +57,7 @@ describe('AutoValidate', () => {
       test('sample 2 - matching schema', () => {
         @AutoValidate()
         class Variables {
-          @Schema(Joi.string().min(2).max(50).required()) name: string = 'initial';
+          @Schema(Joi.string().min(2).max(50).required()) name = 'initial';
         }
 
         let variables = new Variables();
@@ -69,7 +69,7 @@ describe('AutoValidate', () => {
       test('sample 3 - not matching schema', () => {
         @AutoValidate()
         class Variables {
-          @Schema(Joi.string().min(2).max(50).required()) name: string = 'initial';
+          @Schema(Joi.string().min(2).max(50).required()) name = 'initial';
         }
 
         let variables = new Variables();
@@ -100,7 +100,7 @@ describe('AutoValidate', () => {
       test('sample 6 - setting different type', () => {
         @AutoValidate()
         class Variables {
-          name: string = 'initial';
+          name = 'initial';
         }
 
         let variables = new Variables();
@@ -136,7 +136,7 @@ describe('AutoValidate', () => {
       test('sample 9 - deleting optional property', () => {
         @AutoValidate()
         class Variables {
-          @Schema(Joi.string().min(2).max(50).optional()) name: string = 'initial';
+          @Schema(Joi.string().min(2).max(50).optional()) name = 'initial';
         }
 
         let variables = new Variables();
@@ -317,7 +317,7 @@ describe('AutoValidate', () => {
       test('sample 1 - default argument values', () => {
         @AutoValidate()
         class Functions {
-          sayHello(@Schema(Joi.string().min(2).max(50)) name: string = 'John'): string {
+          sayHello(@Schema(Joi.string().min(2).max(50)) name = 'John'): string {
             return `Hello, ${name}!`;
           }
         }

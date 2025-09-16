@@ -31,7 +31,7 @@ export class Vector {
     return new Vector(vector.x, vector.y);
   }
 
-  static random(length: number = 1): Vector {
+  static random(length = 1): Vector {
     let radian = Radian.random();
     // Cache - length: Known, it is assigned.
     // Cache - radian: Known, it is assigned.
@@ -185,7 +185,7 @@ export class Vector {
    * @param normalize If it is known that the given vector is already normalized, this option skips the normalization process.
    * @returns Rotation result
    */
-  rotate(vector: Vector, normalize: boolean = true): Vector {
+  rotate(vector: Vector, normalize = true): Vector {
     if (normalize) {
       vector = vector.normalize();
     }
@@ -194,7 +194,7 @@ export class Vector {
     return new Vector(-this.x * vector.y - this.y * vector.x, this.x * vector.x - this.y * vector.y);
   }
 
-  normalize(value: number = 1): Vector {
+  normalize(value = 1): Vector {
     let length = this.length;
     if (length === value) {
       return this;

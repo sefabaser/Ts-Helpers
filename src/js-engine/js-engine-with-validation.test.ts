@@ -91,14 +91,10 @@ describe('JSEngine and AutoValidate', () => {
 
     let jsEngine = new JSEngine(functions, {});
     let copy = jsEngine.duplicate();
-    expect(() => copy.execute('gameOver("a", 2)')).toThrow(
-      'Unexpected argument has sent to gameOver. Expected: 0, Received: 2'
-    );
+    expect(() => copy.execute('gameOver("a", 2)')).toThrow('Unexpected argument has sent to gameOver. Expected: 0, Received: 2');
 
     let copy2 = copy.duplicate();
-    expect(() => copy2.execute('gameOver("a", 2)')).toThrow(
-      'Unexpected argument has sent to gameOver. Expected: 0, Received: 2'
-    );
+    expect(() => copy2.execute('gameOver("a", 2)')).toThrow('Unexpected argument has sent to gameOver. Expected: 0, Received: 2');
   });
 
   test('duplication should not call the constructor', () => {

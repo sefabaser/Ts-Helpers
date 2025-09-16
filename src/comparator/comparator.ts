@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 export class Comparator {
   static isFunction(fn: any): fn is (...args: any[]) => any {
     return typeof fn === 'function';

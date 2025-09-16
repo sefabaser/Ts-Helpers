@@ -83,18 +83,10 @@ export class Rectangle {
 
     if (includeEdges) {
       return (
-        this.topLeft.x <= point.x &&
-        this.bottomRight.x >= point.x &&
-        this.topLeft.y <= point.y &&
-        this.bottomRight.y >= point.y
+        this.topLeft.x <= point.x && this.bottomRight.x >= point.x && this.topLeft.y <= point.y && this.bottomRight.y >= point.y
       );
     } else {
-      return (
-        this.topLeft.x < point.x &&
-        this.bottomRight.x > point.x &&
-        this.topLeft.y < point.y &&
-        this.bottomRight.y > point.y
-      );
+      return this.topLeft.x < point.x && this.bottomRight.x > point.x && this.topLeft.y < point.y && this.bottomRight.y > point.y;
     }
   }
 }

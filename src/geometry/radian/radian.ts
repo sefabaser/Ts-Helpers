@@ -149,9 +149,7 @@ export class Radian {
 
   isBetweenAngles(start: Radian, end: Radian): boolean {
     let total =
-      Math.abs(start.acuteAngle(this).value) +
-      Math.abs(this.acuteAngle(end).value) -
-      Math.abs(start.acuteAngle(end).value);
+      Math.abs(start.acuteAngle(this).value) + Math.abs(this.acuteAngle(end).value) - Math.abs(start.acuteAngle(end).value);
     return total <= TRIPLE_EPSILON;
   }
 

@@ -23,11 +23,11 @@ export function Schema(schema: Joi.Schema) {
 }
 
 function doesExists(target: any, property: string): boolean {
-  return Object.prototype.hasOwnProperty.call(target, property) || target[property] !== undefined;
+  return Object.hasOwn(target, property) || target[property] !== undefined;
 }
 
-function doesSchemaAllowUndefined<T extends new (...args: any[]) => object>(constructor: T, property: string): boolean {
-  let schema = Reflect.getOwnMetadata(PropertySchemaKey, constructor.prototype, property);
+function doesSchemaAllowUndefined<T extends new (...args: any[]) => object>(Class: T, property: string): boolean {
+  let schema = Reflect.getOwnMetadata(PropertySchemaKey, Class.prototype, property);
   if (schema) {
     let { error } = schema.validate(undefined);
     if (!error) {
@@ -38,12 +38,16 @@ function doesSchemaAllowUndefined<T extends new (...args: any[]) => object>(cons
   return false;
 }
 
-function decorateWithAutoValidate<T extends new (...args: any[]) => object>(object: any, constructor: T, options?: {
-  allowNewProperties?: boolean;
-  allowReadingNonExistantProperties?: boolean;
-  allowUnsettingProperties?: boolean;
-  allowTypeChanges?: boolean;
-}): T {
+function decorateWithAutoValidate<T extends new (...args: any[]) => object>(
+  object: any,
+  Class: T,
+  options?: {
+    allowNewProperties?: boolean;
+    allowReadingNonExistantProperties?: boolean;
+    allowUnsettingProperties?: boolean;
+    allowTypeChanges?: boolean;
+  }
+): T {
   return new Proxy(object, {
     get(target: any, property: string | symbol) {
       if (typeof property === 'symbol') {
@@ -56,7 +60,7 @@ function decorateWithAutoValidate<T extends new (...args: any[]) => object>(obje
       if (
         !options?.allowReadingNonExistantProperties &&
         !doesExists(target, property) &&
-        !doesSchemaAllowUndefined(constructor, property)
+        !doesSchemaAllowUndefined(Class, property)
       ) {
         throw new Error(`The property "${property}" does not exist.`);
       }
@@ -65,7 +69,7 @@ function decorateWithAutoValidate<T extends new (...args: any[]) => object>(obje
       let originalFunction = target[property];
       if (typeof originalFunction === 'function') {
         let wrappedFunction = function (...functionArgs: any[]): void {
-          let schemas = Reflect.getMetadata(FunctionParameterSchemasKey, constructor.prototype, property);
+          let schemas = Reflect.getMetadata(FunctionParameterSchemasKey, Class.prototype, property);
           if (originalFunction.length < functionArgs.length) {
             throw new Error(
               `Unexpected argument has sent to ${property}. Expected: ${originalFunction.length}, Received: ${functionArgs.length}`
@@ -86,9 +90,7 @@ function decorateWithAutoValidate<T extends new (...args: any[]) => object>(obje
               if (functionArgumentSchema) {
                 let { error } = functionArgumentSchema.validate(functionArgs[index]);
                 if (error) {
-                  throw new Error(
-                    `Validation failed for argument at position ${index + 1} in ${property}: ${error.message}`
-                  );
+                  throw new Error(`Validation failed for argument at position ${index + 1} in ${property}: ${error.message}`);
                 }
               }
             });
@@ -106,7 +108,7 @@ function decorateWithAutoValidate<T extends new (...args: any[]) => object>(obje
       }
     },
     set(target: any, property: string, value: any) {
-      let schema = Reflect.getOwnMetadata(PropertySchemaKey, constructor.prototype, property);
+      let schema = Reflect.getOwnMetadata(PropertySchemaKey, Class.prototype, property);
       let validatedBySchema = false;
       if (schema) {
         let { error } = schema.validate(value);
@@ -140,7 +142,7 @@ function decorateWithAutoValidate<T extends new (...args: any[]) => object>(obje
     },
     deleteProperty(target: any, property: string) {
       if (doesExists(target, property)) {
-        if (!options?.allowUnsettingProperties && !doesSchemaAllowUndefined(constructor, property)) {
+        if (!options?.allowUnsettingProperties && !doesSchemaAllowUndefined(Class, property)) {
           throw new Error(`Cannot unset the property "${property}".`);
         }
       } else {
@@ -153,14 +155,17 @@ function decorateWithAutoValidate<T extends new (...args: any[]) => object>(obje
   });
 }
 
-function defineDeepCopyableSymbol(object: any, options?: {
-  allowNewProperties?: boolean;
-  allowReadingNonExistantProperties?: boolean;
-  allowUnsettingProperties?: boolean;
-  allowTypeChanges?: boolean;
-}): void {
+function defineDeepCopyableSymbol(
+  object: any,
+  options?: {
+    allowNewProperties?: boolean;
+    allowReadingNonExistantProperties?: boolean;
+    allowUnsettingProperties?: boolean;
+    allowTypeChanges?: boolean;
+  }
+): void {
   Object.defineProperty(object, DEEP_COPYABLE_SYMBOL, {
-    value: function() {
+    value: function () {
       let copy = JsonHelper.deepCopy(object, { skipDeepCopyableSymbol: true });
       defineDeepCopyableSymbol(copy, options);
       return decorateWithAutoValidate(copy, object.constructor, options);
@@ -177,13 +182,13 @@ export function AutoValidate(options?: {
   allowUnsettingProperties?: boolean;
   allowTypeChanges?: boolean;
 }) {
-  return function <T extends new (...args: any[]) => object>(constructor: T): T {
-    return class extends constructor {
+  return function <T extends new (...args: any[]) => object>(Class: T): T {
+    return class extends Class {
       constructor(...args: any[]) {
         super(...args);
 
         defineDeepCopyableSymbol(this, options);
-        return decorateWithAutoValidate(this, constructor, options);
+        return decorateWithAutoValidate(this, Class, options);
       }
     };
   };

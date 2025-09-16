@@ -60,7 +60,7 @@ export class ColorHelper {
   }
 
   static rgbToHex(color: RGBColor): number {
-    // eslint-disable-next-line no-bitwise
+    // biome-ignore lint/suspicious/noBitwiseOperators: accepted
     return (color.r << 16) + (color.g << 8) + color.b;
   }
 

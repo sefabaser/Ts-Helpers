@@ -44,9 +44,9 @@ export class Grid<T> {
       }
 
       this._size = createFrom.size;
-      this._grid = Array(createFrom.size.y)
+      this._grid = new Array(createFrom.size.y)
         .fill(undefined)
-        .map(() => Array(createFrom.size.x).fill(createFrom.defaultValue));
+        .map(() => new Array(createFrom.size.x).fill(createFrom.defaultValue));
     }
   }
 

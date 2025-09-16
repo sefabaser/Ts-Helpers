@@ -9,12 +9,22 @@
   "editor.wrappingIndent": "indent",
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "always",
+    "source.fixAll.biome": "always",
     "source.organizeImports": "never",
     "source.removeUnusedImports": "always"
   },
   "eslint.validate": ["javascript", "typescript"],
   "eslint.run": "onType",
-  "editor.formatOnSave": false,
+  "editor.formatOnSave": true,
+  "[typescript]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
   "typescript.suggest.autoImports": true,
   "typescript.updateImportsOnFileMove.enabled": "always",
   "typescript.tsdk": "node_modules/typescript/lib",

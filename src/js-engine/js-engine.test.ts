@@ -320,9 +320,7 @@ describe('JSEngine', () => {
 
     test('reserved word cannot be deleted', () => {
       let storyEngine = new JSEngine({}, {});
-      expect(() => storyEngine.execute('delete Boolean')).toThrow(
-        'JSEngine: Reserved word "Boolean" cannot be deleted.'
-      );
+      expect(() => storyEngine.execute('delete Boolean')).toThrow('JSEngine: Reserved word "Boolean" cannot be deleted.');
     });
 
     test('reserved word cannot be assigned', () => {
