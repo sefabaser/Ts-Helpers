@@ -25,7 +25,8 @@ export class Queue<T> {
   }
 
   /**
-   * @param args The values to add to end of the queue
+   * @param args Adds the given elements in queue in the given order
+   * @compexity O(1)
    */
   add(...args: T[]): void {
     args.forEach(value => {
@@ -42,7 +43,8 @@ export class Queue<T> {
   }
 
   /**
-   * @returns The value of the first element in the queue
+   * @returns Removes the first element and returns it
+   * @compexity O(1)
    */
   pop(): T | undefined {
     if (this.start) {
@@ -59,6 +61,7 @@ export class Queue<T> {
 
   /**
    * @returns The value of the first element in the queue without removing it
+   * @compexity O(1)
    */
   peek(): T | undefined {
     return this.start?.value;
@@ -67,6 +70,7 @@ export class Queue<T> {
   /**
    * @param deepCopyItem An optional function that takes an item and returns a deep copy of it
    * @returns The duplicated queue
+   * @compexity deepCopy ? O(n*deepCopy(T)) : O(n)
    */
   duplicate(deepCopyItem?: (item: T) => T): Queue<T> {
     let newQueue = new Queue<T>();
