@@ -2,8 +2,7 @@
   "name": "helpers-lib",
   "version": "1.13.10",
   "description": "Typescript Helpers Library",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "src/index.ts",
   "files": [
     "dist/**/*.js",
     "dist/**/*.d.ts"
@@ -11,6 +10,10 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sefabaser/Ts-Helpers.git"
+  },
+  "publishConfig": {
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts"
   },
   "author": "sefabaser",
   "license": "UNLICENSED",
@@ -26,7 +29,9 @@
     "start": "npm run build && node dist",
     "build": "tsc",
     "lint": "biome check . --write --max-diagnostics=1",
-    "deploy": "vitest run && npm run build && npm publish"
+    "deploy": "vitest run && npm run build && npm publish",
+    "prepack": "cp package.json package.json.bak && ts-node scripts/prepare-package-json.ts",
+    "postpack": "mv package.json.bak package.json"
   },
   "dependencies": {
     "reflect-metadata": "0.2.2",
@@ -34,6 +39,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.4",
+    "@types/node": "20.12.11",
     "typescript": "5.3.3",
     "vitest": "3.2.4"
   }

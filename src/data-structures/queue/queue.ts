@@ -1,7 +1,7 @@
 class DoublyLinkedListNode<T> {
   value: T;
-  previous: DoublyLinkedListNode<T> | undefined;
-  next: DoublyLinkedListNode<T> | undefined;
+  forward: DoublyLinkedListNode<T> | undefined;
+  behind: DoublyLinkedListNode<T> | undefined;
 
   constructor(value: T) {
     this.value = value;
@@ -12,8 +12,12 @@ export class Queue<T> {
   private start: DoublyLinkedListNode<T> | undefined;
   private end: DoublyLinkedListNode<T> | undefined;
 
-  get isEmpty(): boolean {
+  get empty(): boolean {
     return this.start === undefined;
+  }
+
+  get notEmpty(): boolean {
+    return this.start !== undefined;
   }
 
   constructor(firstNode?: T | undefined) {
@@ -32,8 +36,8 @@ export class Queue<T> {
     args.forEach(value => {
       let newNode = new DoublyLinkedListNode(value);
       if (this.start) {
-        newNode.previous = this.end;
-        this.end!.next = newNode;
+        newNode.forward = this.end;
+        this.end!.behind = newNode;
         this.end = newNode;
       } else {
         this.start = newNode;
@@ -49,11 +53,28 @@ export class Queue<T> {
   pop(): T | undefined {
     if (this.start) {
       let value = this.start.value;
-      this.start = this.start.next;
+      this.start = this.start.behind;
       if (this.start) {
-        this.start.previous = undefined;
+        this.start.forward = undefined;
       } else {
         this.end = undefined;
+      }
+      return value;
+    }
+  }
+
+  /**
+   * @returns Removes the first element and returns it
+   * @compexity O(1)
+   */
+  dequeue(): T | undefined {
+    if (this.end) {
+      let value = this.end.value;
+      this.end = this.end.forward;
+      if (this.end) {
+        this.end.behind = undefined;
+      } else {
+        this.start = undefined;
       }
       return value;
     }
@@ -68,6 +89,14 @@ export class Queue<T> {
   }
 
   /**
+   * @returns The value of the first element in the queue without removing it
+   * @compexity O(1)
+   */
+  peekLast(): T | undefined {
+    return this.end?.value;
+  }
+
+  /**
    * @param deepCopyItem An optional function that takes an item and returns a deep copy of it
    * @returns The duplicated queue
    * @compexity deepCopy ? O(n*deepCopy(T)) : O(n)
@@ -78,7 +107,7 @@ export class Queue<T> {
     while (current) {
       let value = deepCopyItem ? deepCopyItem(current.value) : current.value;
       newQueue.add(value);
-      current = current.next;
+      current = current.behind;
     }
     return newQueue;
   }

@@ -16,4 +16,5 @@ export { MetaDataHelper } from './meta-data-helper/meta-data.helper';
 export { NumberHelper } from './number-helper/number-helper';
 export { Guid } from './random/guid';
 export { Random } from './random/random';
+export { UnitTestHelper } from './unit-test-helper/unit-test.helper';
 export * from './utility-types/utility-types';

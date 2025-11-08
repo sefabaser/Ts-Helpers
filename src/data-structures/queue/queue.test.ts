@@ -13,7 +13,8 @@ describe('Queue', () => {
     test('should return false when queue is not empty', () => {
       let queue = new Queue<number>(1);
 
-      expect(queue.isEmpty).toBe(false);
+      expect(queue.empty).toBe(false);
+      expect(queue.notEmpty).toBe(true);
     });
 
     test('should add elements to the queue', () => {
@@ -36,11 +37,32 @@ describe('Queue', () => {
       expect(queue.pop()).toBe(3);
     });
 
+    test('dequeue should remove and return the last element', () => {
+      let queue = new Queue<number>(1);
+
+      queue.add(2, 3);
+
+      expect(queue.dequeue()).toBe(3);
+      expect(queue.dequeue()).toBe(2);
+      expect(queue.dequeue()).toBe(1);
+    });
+
     test('peek should return the first element in the queue without removing it', () => {
       let queue = new Queue<number>(1);
+      queue.add(2);
 
       expect(queue.peek()).toBe(1);
       expect(queue.pop()).toBe(1);
+      expect(queue.pop()).toBe(2);
+    });
+
+    test('peekLast should return the last element in the queue without removing it', () => {
+      let queue = new Queue<number>(1);
+      queue.add(2);
+
+      expect(queue.peekLast()).toBe(2);
+      expect(queue.pop()).toBe(1);
+      expect(queue.pop()).toBe(2);
     });
   });
 

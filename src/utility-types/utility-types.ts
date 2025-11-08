@@ -28,6 +28,7 @@ export type DeepReadonly<T> = {
  *   name: string;
  *   age: number;
  * }>;
+ *
  * let a: EventEntry = {
  *   type: 'name',
  *   value: 'John'
@@ -53,3 +54,5 @@ export type TypeValuePair<M extends Record<T, any>, T extends string = keyof M &
     readonly value: M[K];
   };
 }[T];
+
+export type EmptyObject = Record<string, never>;
