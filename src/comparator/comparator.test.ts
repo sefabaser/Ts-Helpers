@@ -38,6 +38,12 @@ describe('Comparator: ', () => {
       expect(Comparator.isObject(obj)).toEqual(false);
     });
 
+    test('should compare null', () => {
+      // biome-ignore lint: allowed null
+      let obj = null;
+      expect(Comparator.isObject(obj)).toEqual(false);
+    });
+
     test('should compare object', () => {
       let obj = {};
       expect(Comparator.isObject(obj)).toEqual(true);
@@ -91,18 +97,23 @@ describe('Comparator: ', () => {
   });
 
   describe(`IsNumber: `, () => {
-    test('should compare non number object', () => {
-      let obj = 'str';
+    test('non number object', () => {
+      let obj = {};
       expect(Comparator.isNumber(obj)).toEqual(false);
     });
 
-    test('should compare number', () => {
+    test('number', () => {
       let obj = 2;
       expect(Comparator.isNumber(obj)).toEqual(true);
     });
 
-    test('should compare number as string', () => {
+    test('string', () => {
       let obj = '2';
+      expect(Comparator.isNumber(obj)).toEqual(false);
+    });
+
+    test('NaN', () => {
+      let obj = NaN;
       expect(Comparator.isNumber(obj)).toEqual(false);
     });
   });

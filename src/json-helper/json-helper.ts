@@ -45,8 +45,8 @@ export class JsonHelper {
     }
   ): T {
     try {
-      // biome-ignore lint:all
-      if (instance === null) {
+      // biome-ignore lint: allowed null
+      if (!Comparator.isObject(instance) || instance === null) {
         return instance;
       }
 
@@ -81,7 +81,9 @@ export class JsonHelper {
         }
       }
 
-      return instance;
+      throw new Error(
+        `Comparator: all types are exhausted but couldn't found a fitting one. Type: "${typeof instance}", value: "${instance}"`
+      );
     } catch (e) {
       if (e instanceof RangeError) {
         throw new Error('Deep copy attempt on circularly dependent object!');
