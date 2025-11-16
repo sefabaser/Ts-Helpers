@@ -72,7 +72,7 @@ export class UnitTestHelper {
    * @param partialOptions.printResult Log the result in the console. Default = true.
    */
   static async testPerformance(
-    callback: () => void,
+    callback: () => Promise<void> | void,
     partialOptions?: Partial<UnitTestHelperPerformanceTestOptions>
   ): Promise<number> {
     let options: UnitTestHelperPerformanceTestOptions = {
@@ -89,7 +89,10 @@ export class UnitTestHelper {
     for (let v = 0; v < options.sampleCount; v++) {
       start = performance.now();
       for (let i = 0; i < options.repetationCount; i++) {
-        callback();
+        let promise = callback();
+        if (promise) {
+          await promise;
+        }
       }
       end = performance.now();
       durations.push(end - start);
