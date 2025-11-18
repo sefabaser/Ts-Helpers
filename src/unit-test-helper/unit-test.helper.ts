@@ -29,12 +29,16 @@ export class UnitTestHelper {
     this.allPromises.push(promise);
   }
 
-  static callEachDelayed<T>(values: T[], callback: (value: T) => void, allDone?: () => void, duration?: number): void {
+  static callEachDelayed<T>(
+    values: T[],
+    callback: (value: T) => void,
+    options?: { allDone?: () => void; duration?: number }
+  ): void {
     let promise = new Promise<void>((resolve, reject) => {
       this.allResolves.add(resolve);
       (async () => {
         for (let value of values) {
-          await Wait(duration);
+          await Wait(options?.duration);
           try {
             callback(value);
           } catch (e) {
@@ -46,7 +50,7 @@ export class UnitTestHelper {
         resolve();
         this.allResolves.delete(resolve);
       })();
-    }).finally(allDone);
+    }).finally(options?.allDone);
     this.allPromises.push(promise);
   }
 
@@ -86,6 +90,9 @@ export class UnitTestHelper {
     let end: number;
     let durations: number[] = [];
 
+    await this.runCallbackToTestErrors(callback);
+
+    this.silenceConsole(true);
     for (let v = 0; v < options.sampleCount; v++) {
       start = performance.now();
       for (let i = 0; i < options.repetationCount; i++) {
@@ -103,6 +110,7 @@ export class UnitTestHelper {
         await Wait();
       }
     }
+    this.silenceConsole(false);
 
     durations = durations.sort((a, b) => a - b);
     let min = durations[0];
@@ -111,5 +119,62 @@ export class UnitTestHelper {
       console.info('Min: ', min);
     }
     return min;
+  }
+
+  private static async runCallbackToTestErrors(callback: () => Promise<void> | void): Promise<void> {
+    let capturedError: Error | undefined;
+
+    let unhandledRejectionHandler = (reason: any) => {
+      capturedError = reason instanceof Error ? reason : new Error(String(reason));
+    };
+
+    let uncaughtExceptionHandler = (error: Error) => {
+      capturedError = error;
+    };
+
+    process.on('unhandledRejection', unhandledRejectionHandler);
+    process.on('uncaughtException', uncaughtExceptionHandler);
+
+    let originalError = console.error;
+    console.error = (...data: any[]) => {
+      throw new Error(data.map(d => String(d)).join(' '));
+    };
+
+    try {
+      let promise = callback();
+      if (promise) {
+        await promise;
+      }
+      await Wait();
+      if (capturedError) {
+        throw capturedError;
+      }
+    } finally {
+      process.off('unhandledRejection', unhandledRejectionHandler);
+      process.off('uncaughtException', uncaughtExceptionHandler);
+      console.error = originalError;
+    }
+  }
+
+  private static originalLog = console.log;
+  private static originalInfo = console.info;
+  private static originalError = console.error;
+  private static originalWarn = console.warn;
+  private static originalDir = console.dir;
+
+  static silenceConsole(silence: boolean): void {
+    if (silence) {
+      console.log = () => {};
+      console.info = () => {};
+      console.warn = () => {};
+      console.dir = () => {};
+      console.error = () => {};
+    } else {
+      console.log = this.originalLog;
+      console.info = this.originalInfo;
+      console.warn = this.originalWarn;
+      console.dir = this.originalDir;
+      console.error = this.originalError;
+    }
   }
 }
