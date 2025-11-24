@@ -90,7 +90,7 @@ export class UnitTestHelper {
     let end: number;
     let durations: number[] = [];
 
-    await this.runCallbackToTestErrors(callback);
+    await this.checkCallbackErrors(callback);
 
     this.silenceConsole(true);
     for (let v = 0; v < options.sampleCount; v++) {
@@ -121,19 +121,42 @@ export class UnitTestHelper {
     return min;
   }
 
-  private static async runCallbackToTestErrors(callback: () => Promise<void> | void): Promise<void> {
-    let capturedError: Error | undefined;
-
+  static captureErrors(callback: (error: Error) => void): { destroy: () => void } {
     let unhandledRejectionHandler = (reason: any) => {
-      capturedError = reason instanceof Error ? reason : new Error(String(reason));
+      let capturedError = reason instanceof Error ? reason : new Error(String(reason));
+      callback(capturedError);
     };
 
     let uncaughtExceptionHandler = (error: Error) => {
-      capturedError = error;
+      callback(error);
     };
+
+    let originalUnhandledListeners = process.listeners('unhandledRejection');
+    let originalUncaughtListeners = process.listeners('uncaughtException');
+    process.removeAllListeners('unhandledRejection');
+    process.removeAllListeners('uncaughtException');
 
     process.on('unhandledRejection', unhandledRejectionHandler);
     process.on('uncaughtException', uncaughtExceptionHandler);
+
+    return {
+      destroy: () => {
+        // To prevent errors for using libraries that does not @types/node installed.
+        (process as any).off('unhandledRejection', unhandledRejectionHandler);
+        (process as any).off('uncaughtException', uncaughtExceptionHandler);
+
+        originalUnhandledListeners.forEach(listener => process.on('unhandledRejection', listener));
+        originalUncaughtListeners.forEach(listener => process.on('uncaughtException', listener));
+      }
+    };
+  }
+
+  private static async checkCallbackErrors(callback: () => Promise<void> | void): Promise<void> {
+    let capturedError: Error | undefined;
+
+    let errorCapture = this.captureErrors(error => {
+      capturedError = error;
+    });
 
     let originalError = console.error;
     console.error = (...data: any[]) => {
@@ -150,8 +173,7 @@ export class UnitTestHelper {
         throw capturedError;
       }
     } finally {
-      process.off('unhandledRejection', unhandledRejectionHandler);
-      process.off('uncaughtException', uncaughtExceptionHandler);
+      errorCapture.destroy();
       console.error = originalError;
     }
   }
