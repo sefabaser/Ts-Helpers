@@ -121,14 +121,16 @@ export class UnitTestHelper {
     return min;
   }
 
-  static captureErrors(callback: (error: Error) => void): { destroy: () => void } {
+  static captureErrors(): { destroy: () => void; getErrors: () => Error[]; throwErrors: () => void } {
+    let capturedErrors: Error[] = [];
+
     let unhandledRejectionHandler = (reason: any) => {
       let capturedError = reason instanceof Error ? reason : new Error(String(reason));
-      callback(capturedError);
+      capturedErrors.push(capturedError);
     };
 
     let uncaughtExceptionHandler = (error: Error) => {
-      callback(error);
+      capturedErrors.push(error);
     };
 
     let originalUnhandledListeners = process.listeners('unhandledRejection');
@@ -140,6 +142,14 @@ export class UnitTestHelper {
     process.on('uncaughtException', uncaughtExceptionHandler);
 
     return {
+      getErrors: () => {
+        return capturedErrors;
+      },
+      throwErrors: () => {
+        capturedErrors.forEach(error => {
+          throw error;
+        });
+      },
       destroy: () => {
         // To prevent errors for using libraries that does not @types/node installed.
         (process as any).off('unhandledRejection', unhandledRejectionHandler);
@@ -152,11 +162,7 @@ export class UnitTestHelper {
   }
 
   private static async checkCallbackErrors(callback: () => Promise<void> | void): Promise<void> {
-    let capturedError: Error | undefined;
-
-    let errorCapture = this.captureErrors(error => {
-      capturedError = error;
-    });
+    let errorCapturer = this.captureErrors();
 
     let originalError = console.error;
     console.error = (...data: any[]) => {
@@ -169,11 +175,12 @@ export class UnitTestHelper {
         await promise;
       }
       await Wait();
-      if (capturedError) {
-        throw capturedError;
+      let capturedErrors = errorCapturer.getErrors();
+      if (capturedErrors.length > 0) {
+        throw capturedErrors[0];
       }
     } finally {
-      errorCapture.destroy();
+      errorCapturer.destroy();
       console.error = originalError;
     }
   }
