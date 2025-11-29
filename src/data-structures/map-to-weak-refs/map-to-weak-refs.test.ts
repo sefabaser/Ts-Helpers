@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test } from 'vitest';
 
-import { Wait } from '../../delayer/delayer';
+import { UnitTestHelper } from '../../unit-test-helper/unit-test.helper';
 import { MapToWeakRefs } from './map-to-weak-refs';
 
 let globalWeakRefHost: any = globalThis;
@@ -42,11 +42,6 @@ function withMockWeakRef(callback: (dropAll: () => void) => void): void {
   } finally {
     restore();
   }
-}
-
-async function forceGarbageCollection(): Promise<void> {
-  await Wait();
-  global?.gc?.();
 }
 
 describe('MapToWeakRefs', () => {
@@ -208,13 +203,13 @@ describe('MapToWeakRefs', () => {
       expect(map.has('b')).toBeTruthy();
 
       item1 = undefined;
-      await forceGarbageCollection();
+      await UnitTestHelper.forceGarbageCollection();
 
       expect(map.has('a')).toBeFalsy();
       expect(map.has('b')).toBeTruthy();
 
       item2 = undefined;
-      await forceGarbageCollection();
+      await UnitTestHelper.forceGarbageCollection();
 
       expect(map.has('a')).toBeFalsy();
       expect(map.has('b')).toBeFalsy();
@@ -228,12 +223,12 @@ describe('MapToWeakRefs', () => {
       map.set('beta', beta);
 
       beta = undefined;
-      await forceGarbageCollection();
+      await UnitTestHelper.forceGarbageCollection();
 
       expect(map.entries().map(([key]) => key)).toStrictEqual(['alpha']);
 
       alpha = undefined;
-      await forceGarbageCollection();
+      await UnitTestHelper.forceGarbageCollection();
 
       expect(map.entries()).toStrictEqual([]);
     });
@@ -253,7 +248,7 @@ describe('MapToWeakRefs', () => {
       expect(visitedBefore).toStrictEqual(['keep', 'drop']);
 
       drop = undefined;
-      await forceGarbageCollection();
+      await UnitTestHelper.forceGarbageCollection();
 
       let visitedAfter: string[] = [];
       map.forEach((value, key) => {

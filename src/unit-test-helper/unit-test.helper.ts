@@ -70,6 +70,15 @@ export class UnitTestHelper {
     this.allPromises = [];
   }
 
+  static async forceGarbageCollection(): Promise<void> {
+    await Wait();
+    if (global?.gc) {
+      global.gc();
+    } else {
+      throw new Error('The "global.gc()" is not activated. Run tests with --expose-gc.');
+    }
+  }
+
   /**
    * @param partialOptions.sampleCount How many samples will be taken to determine the lowest run time. Default = 500.
    * @param partialOptions.repetationCount How many times the callback will be called. Default = 1000.
@@ -104,11 +113,7 @@ export class UnitTestHelper {
       end = performance.now();
       durations.push(end - start);
 
-      await Wait();
-      if (global.gc) {
-        global.gc();
-        await Wait();
-      }
+      await this.forceGarbageCollection();
     }
     this.silenceConsole(false);
 
