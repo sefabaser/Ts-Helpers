@@ -51,7 +51,7 @@ describe('Unit Test Helper', () => {
     test('sample case', async () => {
       let result = await UnitTestHelper.testPerformance(
         () => {
-          let arr = [];
+          let arr: unknown[] = [];
           arr.sort();
         },
         { printResult: false, repetationCount: 1, sampleCount: 1 }
