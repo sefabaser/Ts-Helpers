@@ -89,8 +89,8 @@ export class UnitTestHelper {
     partialOptions?: Partial<UnitTestHelperPerformanceTestOptions>
   ): Promise<number> {
     let options: UnitTestHelperPerformanceTestOptions = {
-      sampleCount: 500,
-      repetationCount: 1000,
+      sampleCount: 100,
+      repetationCount: 10000,
       printResult: true,
       ...partialOptions
     };
