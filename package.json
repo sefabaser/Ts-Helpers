@@ -35,8 +35,10 @@
     "postpack": "mv package.json.bak package.json"
   },
   "dependencies": {
-    "reflect-metadata": "0.2.2",
     "joi": "17.11.0"
+  },
+  "peerDependencies": {
+    "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.4",
