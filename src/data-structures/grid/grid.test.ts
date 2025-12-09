@@ -119,7 +119,7 @@ describe('Grid', () => {
   });
 
   test('should return neighbor positions only adjacent', () => {
-    expect(grid.getNeighborPositions(new Vector(1, 1), GridNeighborType.ORTOGONAL).map(item => item.toVec2())).toStrictEqual([
+    expect(grid.getNeighborPositions(new Vector(1, 1), GridNeighborType.Ortogonal).map(item => item.toVec2())).toStrictEqual([
       { x: 0, y: 1 },
       { x: 1, y: 0 },
       { x: 1, y: 2 },
@@ -128,7 +128,7 @@ describe('Grid', () => {
   });
 
   test('should return neighbor positions with diagonals', () => {
-    expect(grid.getNeighborPositions(new Vector(1, 1), GridNeighborType.ALL).map(item => item.toVec2())).toStrictEqual([
+    expect(grid.getNeighborPositions(new Vector(1, 1), GridNeighborType.All).map(item => item.toVec2())).toStrictEqual([
       { x: 0, y: 1 },
       { x: 1, y: 0 },
       { x: 1, y: 2 },
@@ -141,14 +141,14 @@ describe('Grid', () => {
   });
 
   test('should return neighbor positions only adjacent at the edge', () => {
-    expect(grid.getNeighborPositions(new Vector(2, 2), GridNeighborType.ORTOGONAL).map(item => item.toVec2())).toStrictEqual([
+    expect(grid.getNeighborPositions(new Vector(2, 2), GridNeighborType.Ortogonal).map(item => item.toVec2())).toStrictEqual([
       { x: 1, y: 2 },
       { x: 2, y: 1 }
     ]);
   });
 
   test('should return neighbor positions at the edge with diagonals', () => {
-    expect(grid.getNeighborPositions(new Vector(0, 0), GridNeighborType.ALL).map(item => item.toVec2())).toStrictEqual([
+    expect(grid.getNeighborPositions(new Vector(0, 0), GridNeighborType.All).map(item => item.toVec2())).toStrictEqual([
       { x: 0, y: 1 },
       { x: 1, y: 0 },
       { x: 1, y: 1 }

@@ -288,33 +288,33 @@ describe('Radian: ', () => {
   describe('Cache: ', () => {
     test('random', () => {
       let radian = Radian.random();
-      expect(radian['cache'].alreadyNormalized).toBe(true);
+      expect(radian['_cache'].alreadyNormalized).toBe(true);
     });
 
     test('abs', () => {
       let radian = new Radian(PI_360);
-      expect(radian.abs()['cache'].alreadyNormalized).toBe(true);
+      expect(radian.abs()['_cache'].alreadyNormalized).toBe(true);
     });
 
     test('acuteAngle 1', () => {
       let radian = new Radian(PI_360).acuteAngle(Radian.get30);
-      expect(radian['cache'].alreadyNormalized).toBe(true);
+      expect(radian['_cache'].alreadyNormalized).toBe(true);
       expect(radian.value).toEqual(Radian.get30.value);
     });
 
     test('acuteAngle 2', () => {
       let radian = new Radian(PI_360).acuteAngle(Radian.get330);
-      expect(radian['cache'].alreadyNormalized).toBe(true);
+      expect(radian['_cache'].alreadyNormalized).toBe(true);
       expect(radian.value).toEqual(-Radian.get30.value);
     });
 
     test('getVector', () => {
       let vector = new Radian(PI_360).vector;
-      expect(vector['cache'].length).toStrictEqual(1);
-      expect(vector['getLength']()).toStrictEqual(1);
+      expect(vector['_cache'].length).toStrictEqual(1);
+      expect(vector['_getLength']()).toStrictEqual(1);
 
-      expect(vector['cache'].radian?.value).toStrictEqual(0);
-      expect(vector['getRadian']().value).toStrictEqual(0);
+      expect(vector['_cache'].radian?.value).toStrictEqual(0);
+      expect(vector['_getRadian']().value).toStrictEqual(0);
     });
   });
 

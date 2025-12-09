@@ -90,13 +90,13 @@ export class NumberHelper {
       throw new Error('NumberHelper: Row number must be less than or equal to 50');
     }
 
-    return [...NumberHelper.getPascalTriangleRow(row)];
+    return [...NumberHelper._getPascalTriangleRow(row)];
   }
 
-  private static pascalTriangleCache = new Map<number, number[]>();
-  private static getPascalTriangleRow(row: number): number[] {
-    if (NumberHelper.pascalTriangleCache.has(row)) {
-      return NumberHelper.pascalTriangleCache.get(row) as number[];
+  private static _pascalTriangleCache = new Map<number, number[]>();
+  private static _getPascalTriangleRow(row: number): number[] {
+    if (NumberHelper._pascalTriangleCache.has(row)) {
+      return NumberHelper._pascalTriangleCache.get(row) as number[];
     }
 
     let result = [1];
@@ -110,7 +110,7 @@ export class NumberHelper {
       result = result.concat(result.slice(0, -2).reverse());
     }
 
-    NumberHelper.pascalTriangleCache.set(row, result);
+    NumberHelper._pascalTriangleCache.set(row, result);
     return result;
   }
 }

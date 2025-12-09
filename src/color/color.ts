@@ -51,12 +51,12 @@ export class ColorHelper {
       hexString = '0' + hexString;
     }
 
-    return ColorHelper.colorNumbersToRGBColor(hexString);
+    return ColorHelper._colorNumbersToRGBColor(hexString);
   }
 
   static stringColorToRGBColor(color: string): RGBColor {
     color = color.replace('#', '');
-    return ColorHelper.colorNumbersToRGBColor(color);
+    return ColorHelper._colorNumbersToRGBColor(color);
   }
 
   static rgbToHex(color: RGBColor): number {
@@ -84,7 +84,7 @@ export class ColorHelper {
     };
   }
 
-  private static colorNumbersToRGBColor(colorNumbers: string): RGBColor {
+  private static _colorNumbersToRGBColor(colorNumbers: string): RGBColor {
     let r = parseInt(colorNumbers.slice(0, 2), 16);
     let g = parseInt(colorNumbers.slice(2, 4), 16);
     let b = parseInt(colorNumbers.slice(4, 6), 16);

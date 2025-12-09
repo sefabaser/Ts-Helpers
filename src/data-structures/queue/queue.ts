@@ -10,22 +10,22 @@ class DoublyLinkedListNode<T> {
 }
 
 export class Queue<T> {
-  private front: DoublyLinkedListNode<T> | undefined;
-  private end: DoublyLinkedListNode<T> | undefined;
+  private _front: DoublyLinkedListNode<T> | undefined;
+  private _end: DoublyLinkedListNode<T> | undefined;
 
   get empty(): boolean {
-    return this.front === undefined;
+    return this._front === undefined;
   }
 
   get notEmpty(): boolean {
-    return this.front !== undefined;
+    return this._front !== undefined;
   }
 
   constructor(firstNode?: T | undefined) {
     if (firstNode) {
       let firstNodeInstance = new DoublyLinkedListNode(firstNode);
-      this.front = firstNodeInstance;
-      this.end = firstNodeInstance;
+      this._front = firstNodeInstance;
+      this._end = firstNodeInstance;
     }
   }
 
@@ -59,16 +59,16 @@ export class Queue<T> {
       if (!node.destroyed) {
         node.destroyed = true;
 
-        if (this.front === node) {
+        if (this._front === node) {
           if (node.behind) {
-            this.front = node.behind;
+            this._front = node.behind;
             node.behind.forward = undefined;
           } else {
-            this.front = undefined;
-            this.end = undefined;
+            this._front = undefined;
+            this._end = undefined;
           }
-        } else if (this.end === node) {
-          this.end = node.forward;
+        } else if (this._end === node) {
+          this._end = node.forward;
           node.forward!.behind = undefined;
         } else {
           node.forward!.behind = node.behind;
@@ -80,13 +80,13 @@ export class Queue<T> {
 
   private _add(value: T): DoublyLinkedListNode<T> {
     let newNode = new DoublyLinkedListNode(value);
-    if (this.front) {
-      newNode.forward = this.end;
-      this.end!.behind = newNode;
-      this.end = newNode;
+    if (this._front) {
+      newNode.forward = this._end;
+      this._end!.behind = newNode;
+      this._end = newNode;
     } else {
-      this.front = newNode;
-      this.end = newNode;
+      this._front = newNode;
+      this._end = newNode;
     }
 
     return newNode;
@@ -97,15 +97,15 @@ export class Queue<T> {
    * @compexity O(1)
    */
   pop(): T | undefined {
-    if (this.front) {
-      this.front.destroyed = true;
+    if (this._front) {
+      this._front.destroyed = true;
 
-      let value = this.front.value;
-      this.front = this.front.behind;
-      if (this.front) {
-        this.front.forward = undefined;
+      let value = this._front.value;
+      this._front = this._front.behind;
+      if (this._front) {
+        this._front.forward = undefined;
       } else {
-        this.end = undefined;
+        this._end = undefined;
       }
       return value;
     }
@@ -116,15 +116,15 @@ export class Queue<T> {
    * @compexity O(1)
    */
   dequeue(): T | undefined {
-    if (this.end) {
-      this.end.destroyed = true;
+    if (this._end) {
+      this._end.destroyed = true;
 
-      let value = this.end.value;
-      this.end = this.end.forward;
-      if (this.end) {
-        this.end.behind = undefined;
+      let value = this._end.value;
+      this._end = this._end.forward;
+      if (this._end) {
+        this._end.behind = undefined;
       } else {
-        this.front = undefined;
+        this._front = undefined;
       }
       return value;
     }
@@ -135,7 +135,7 @@ export class Queue<T> {
    * @compexity O(1)
    */
   peek(): T | undefined {
-    return this.front?.value;
+    return this._front?.value;
   }
 
   /**
@@ -143,7 +143,7 @@ export class Queue<T> {
    * @compexity O(1)
    */
   peekLast(): T | undefined {
-    return this.end?.value;
+    return this._end?.value;
   }
 
   /**
@@ -153,7 +153,7 @@ export class Queue<T> {
    */
   duplicate(deepCopyItem?: (item: T) => T): Queue<T> {
     let newQueue = new Queue<T>();
-    let current = this.front;
+    let current = this._front;
     while (current) {
       let value = deepCopyItem ? deepCopyItem(current.value) : current.value;
       newQueue.add(value);

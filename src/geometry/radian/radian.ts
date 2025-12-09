@@ -67,27 +67,27 @@ export class Radian {
     return sum.normalize().radian;
   }
 
-  private cache: RadianCache;
+  private _cache: RadianCache;
 
   private _value: number;
   get value(): number {
-    if (!this.cache.alreadyNormalized) {
-      this._value = this.normalize(this._value);
-      this.cache.alreadyNormalized = true;
+    if (!this._cache.alreadyNormalized) {
+      this._value = this._normalize(this._value);
+      this._cache.alreadyNormalized = true;
     }
     return this._value;
   }
 
   get vector(): Vector {
-    if (!this.cache.vector) {
-      this.cache.vector = this.getVector();
+    if (!this._cache.vector) {
+      this._cache.vector = this._getVector();
     }
-    return this.cache.vector;
+    return this._cache.vector;
   }
 
   constructor(value: number, cache?: RadianCache) {
     this._value = value;
-    this.cache = cache ?? { vector: undefined, alreadyNormalized: undefined };
+    this._cache = cache ?? { vector: undefined, alreadyNormalized: undefined };
   }
 
   subtract(radian: Radian): Radian {
@@ -163,7 +163,7 @@ export class Radian {
   /**
    * @returns Normalizes radian to [-PI, PI]
    */
-  private normalize(radian: number): number {
+  private _normalize(radian: number): number {
     radian = radian % PI_360;
     if (radian < -PI_180) {
       radian += Math.ceil(-radian / PI_360) * PI_360;
@@ -173,7 +173,7 @@ export class Radian {
     return NumberHelper.ensurePositiveZero(radian);
   }
 
-  private getVector(): Vector {
+  private _getVector(): Vector {
     // Cache - length: Known, equals to this radian.
     // Cache - radian: Known, equals to one.
     return new Vector(Math.sin(this.value), Math.cos(PI_180 - this.value), { radian: this, length: 1 });

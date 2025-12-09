@@ -13,14 +13,14 @@ export type ConsoleColor = 'yellow' | 'cyan' | 'magenta' | 'red' | 'green' | 'bl
 
 export class ConsoleHelper {
   static log(message: string, color: ConsoleColor): void {
-    console.log(ConsoleHelper.colorToAnsi(color) + '%s' + DEFAULT, message);
+    console.log(ConsoleHelper._colorToAnsi(color) + '%s' + DEFAULT, message);
   }
 
   static newLine(): void {
     console.log();
   }
 
-  private static colorToAnsi(color: ConsoleColor): string {
+  private static _colorToAnsi(color: ConsoleColor): string {
     switch (color) {
       case 'yellow':
         return YELLOW;

@@ -1,15 +1,15 @@
 export class Guid {
-  private guid: string;
+  private _guid: string;
 
   constructor() {
-    this.guid = this.next();
+    this._guid = this._next();
   }
 
   toString(): string {
-    return this.guid;
+    return this._guid;
   }
 
-  private next(): string {
+  private _next(): string {
     let guid = '';
     let i: string;
     let j: number;

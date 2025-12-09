@@ -174,8 +174,8 @@ describe('Comparator: ', () => {
 
   describe(`IsEnum: `, () => {
     enum SampleEnum {
-      a = '1',
-      b = '2'
+      A = '1',
+      B = '2'
     }
 
     test('should compare non enum object', () => {
@@ -184,7 +184,7 @@ describe('Comparator: ', () => {
     });
 
     test('should compare enum', () => {
-      expect(Comparator.isEnum(SampleEnum.a, SampleEnum)).toEqual(true);
+      expect(Comparator.isEnum(SampleEnum.A, SampleEnum)).toEqual(true);
     });
   });
 
