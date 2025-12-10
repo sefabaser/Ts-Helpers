@@ -154,4 +154,68 @@ describe('Grid', () => {
       { x: 1, y: 1 }
     ]);
   });
+
+  describe('snapshot', () => {
+    test('snapshot returns a copy of the grid', () => {
+      let testGrid = new Grid([
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9]
+      ]);
+
+      let result = testGrid.snapshot();
+
+      expect(result).toStrictEqual([
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9]
+      ]);
+    });
+
+    test('snapshot modification does not affect original grid values', () => {
+      let testGrid = new Grid([
+        [1, 2],
+        [3, 4]
+      ]);
+
+      let result = testGrid.snapshot();
+      result[0][0] = 999;
+      result[1][1] = 888;
+
+      expect(testGrid.get(new Vector(0, 0))).toBe(1);
+      expect(testGrid.get(new Vector(1, 1))).toBe(4);
+    });
+
+    test('snapshot modification does not affect original grid rows', () => {
+      let testGrid = new Grid([
+        [1, 2],
+        [3, 4]
+      ]);
+
+      let result = testGrid.snapshot();
+      result[0] = [100, 200];
+      result.push([5, 6]);
+
+      expect(testGrid.snapshot()).toStrictEqual([
+        [1, 2],
+        [3, 4]
+      ]);
+    });
+
+    test('snapshot of empty grid returns empty array', () => {
+      let testGrid = new Grid({ size: new Vector(0, 0), defaultValue: 0 });
+
+      expect(testGrid.snapshot()).toStrictEqual([]);
+    });
+
+    test('snapshot preserves grid with default values', () => {
+      let testGrid = new Grid({ size: new Vector(2, 2), defaultValue: false });
+      testGrid.set(new Vector(1, 0), true);
+
+      expect(testGrid.snapshot()).toStrictEqual([
+        [false, true],
+        [false, false]
+      ]);
+    });
+  });
 });

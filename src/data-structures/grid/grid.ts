@@ -96,6 +96,10 @@ export class Grid<T> {
     return directions;
   }
 
+  snapshot(): T[][] {
+    return this._grid.map(row => [...row]);
+  }
+
   // ------------- SETTERS -------------
   set(position: Vector, value: T): void {
     this._validatePoint(position);
