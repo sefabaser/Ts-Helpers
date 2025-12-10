@@ -1,6 +1,6 @@
 {
   "name": "helpers-lib",
-  "version": "1.13.11",
+  "version": "1.14.0",
   "description": "Typescript Helpers Library",
   "main": "src/index.ts",
   "files": [
@@ -28,7 +28,8 @@
     "test": "vitest run --mode=quick",
     "test-full": "vitest run",
     "start": "npm run build && node dist",
-    "build": "tsc",
+    "build": "npx ts-node scripts/generate-mangle-cache.ts && tsup && npx ts-node scripts/remove-private-properties-from-build.ts && npm run restart-vitest",
+    "restart-vitest": "touch vitest.config.ts",
     "lint": "biome check . --write --max-diagnostics=1",
     "deploy": "vitest run && npm run build && npm publish",
     "prepack": "cp package.json package.json.bak && ts-node scripts/prepare-package-json.ts",
@@ -42,7 +43,9 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.4",
+    "@swc/core": "1.15.3",
     "@types/node": "20.12.11",
+    "tsup": "8.5.1",
     "typescript": "5.3.3",
     "vitest": "3.2.4"
   }

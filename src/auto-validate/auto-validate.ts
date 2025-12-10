@@ -1,4 +1,4 @@
-import Joi from 'joi';
+import type Joi from 'joi';
 
 import { DEEP_COPYABLE_SYMBOL, JsonHelper } from '../json-helper/json-helper';
 import { MetaDataHelper } from '../meta-data-helper/meta-data.helper';
