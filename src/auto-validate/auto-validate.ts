@@ -76,7 +76,7 @@ function decorateWithAutoValidate<T extends new (...args: any[]) => object>(
             );
           } else {
             let requiredArgumentCount = schemas
-              ? schemas.filter((schema: Joi.Schema) => schema._flags.presence === 'required').length
+              ? schemas.filter((schema: Joi.Schema) => schema['_flags'].presence === 'required').length
               : originalFunction.length;
             if (requiredArgumentCount > functionArgs.length) {
               throw new Error(

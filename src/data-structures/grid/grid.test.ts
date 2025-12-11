@@ -119,7 +119,7 @@ describe('Grid', () => {
   });
 
   test('should return neighbor positions only adjacent', () => {
-    expect(grid.getNeighborPositions(new Vector(1, 1), GridNeighborType.ORTOGONAL).map(item => item.toVec2())).toStrictEqual([
+    expect(grid.getNeighborPositions(new Vector(1, 1), GridNeighborType.Ortogonal).map(item => item.toVec2())).toStrictEqual([
       { x: 0, y: 1 },
       { x: 1, y: 0 },
       { x: 1, y: 2 },
@@ -128,7 +128,7 @@ describe('Grid', () => {
   });
 
   test('should return neighbor positions with diagonals', () => {
-    expect(grid.getNeighborPositions(new Vector(1, 1), GridNeighborType.ALL).map(item => item.toVec2())).toStrictEqual([
+    expect(grid.getNeighborPositions(new Vector(1, 1), GridNeighborType.All).map(item => item.toVec2())).toStrictEqual([
       { x: 0, y: 1 },
       { x: 1, y: 0 },
       { x: 1, y: 2 },
@@ -141,17 +141,81 @@ describe('Grid', () => {
   });
 
   test('should return neighbor positions only adjacent at the edge', () => {
-    expect(grid.getNeighborPositions(new Vector(2, 2), GridNeighborType.ORTOGONAL).map(item => item.toVec2())).toStrictEqual([
+    expect(grid.getNeighborPositions(new Vector(2, 2), GridNeighborType.Ortogonal).map(item => item.toVec2())).toStrictEqual([
       { x: 1, y: 2 },
       { x: 2, y: 1 }
     ]);
   });
 
   test('should return neighbor positions at the edge with diagonals', () => {
-    expect(grid.getNeighborPositions(new Vector(0, 0), GridNeighborType.ALL).map(item => item.toVec2())).toStrictEqual([
+    expect(grid.getNeighborPositions(new Vector(0, 0), GridNeighborType.All).map(item => item.toVec2())).toStrictEqual([
       { x: 0, y: 1 },
       { x: 1, y: 0 },
       { x: 1, y: 1 }
     ]);
+  });
+
+  describe('snapshot', () => {
+    test('snapshot returns a copy of the grid', () => {
+      let testGrid = new Grid([
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9]
+      ]);
+
+      let result = testGrid.snapshot();
+
+      expect(result).toStrictEqual([
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9]
+      ]);
+    });
+
+    test('snapshot modification does not affect original grid values', () => {
+      let testGrid = new Grid([
+        [1, 2],
+        [3, 4]
+      ]);
+
+      let result = testGrid.snapshot();
+      result[0][0] = 999;
+      result[1][1] = 888;
+
+      expect(testGrid.get(new Vector(0, 0))).toBe(1);
+      expect(testGrid.get(new Vector(1, 1))).toBe(4);
+    });
+
+    test('snapshot modification does not affect original grid rows', () => {
+      let testGrid = new Grid([
+        [1, 2],
+        [3, 4]
+      ]);
+
+      let result = testGrid.snapshot();
+      result[0] = [100, 200];
+      result.push([5, 6]);
+
+      expect(testGrid.snapshot()).toStrictEqual([
+        [1, 2],
+        [3, 4]
+      ]);
+    });
+
+    test('snapshot of empty grid returns empty array', () => {
+      let testGrid = new Grid({ size: new Vector(0, 0), defaultValue: 0 });
+
+      expect(testGrid.snapshot()).toStrictEqual([]);
+    });
+
+    test('snapshot preserves grid with default values', () => {
+      let testGrid = new Grid({ size: new Vector(2, 2), defaultValue: false });
+      testGrid.set(new Vector(1, 0), true);
+
+      expect(testGrid.snapshot()).toStrictEqual([
+        [false, true],
+        [false, false]
+      ]);
+    });
   });
 });

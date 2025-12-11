@@ -358,10 +358,10 @@ describe('AutoValidate', () => {
       test('sample 4 - "this" should point the original class', () => {
         @AutoValidate()
         class Functions {
-          private value = 2;
+          private _value = 2;
 
           multiply(@Schema(Joi.number().min(2).max(50)) multiplier: number): number {
-            return this.value * multiplier;
+            return this._value * multiplier;
           }
         }
 

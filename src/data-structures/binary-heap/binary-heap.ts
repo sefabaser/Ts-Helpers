@@ -11,42 +11,42 @@ class BinaryHeapNode<T> {
 }
 
 export class BinaryHeap<T> {
-  private heap: BinaryHeapNode<T>[] = [];
-  private map = new Map<T, BinaryHeapNode<T>>();
+  private _heap: BinaryHeapNode<T>[] = [];
+  private _map = new Map<T, BinaryHeapNode<T>>();
 
   get size(): number {
-    return this.heap.length;
+    return this._heap.length;
   }
 
-  private comparator = (a: BinaryHeapNode<T>, b: BinaryHeapNode<T>): boolean => a.priority < b.priority;
-  private comparatorOrEqual = (a: BinaryHeapNode<T>, b: BinaryHeapNode<T>): boolean => a.priority <= b.priority;
+  private _comparator = (a: BinaryHeapNode<T>, b: BinaryHeapNode<T>): boolean => a.priority < b.priority;
+  private _comparatorOrEqual = (a: BinaryHeapNode<T>, b: BinaryHeapNode<T>): boolean => a.priority <= b.priority;
 
   constructor(type: 'min' | 'max' = 'min') {
     if (type === 'max') {
-      this.comparator = (a, b): boolean => a.priority > b.priority;
-      this.comparatorOrEqual = (a, b): boolean => a.priority >= b.priority;
+      this._comparator = (a, b): boolean => a.priority > b.priority;
+      this._comparatorOrEqual = (a, b): boolean => a.priority >= b.priority;
     }
   }
 
   add(priority: number, item: T): void {
-    let node = new BinaryHeapNode<T>(priority, item, this.heap.length);
-    this.heap.push(node);
-    this.map.set(item, node);
-    this.bubbleUp(node.index);
+    let node = new BinaryHeapNode<T>(priority, item, this._heap.length);
+    this._heap.push(node);
+    this._map.set(item, node);
+    this._bubbleUp(node.index);
   }
 
   delete(item: T): boolean {
-    let node = this.map.get(item);
+    let node = this._map.get(item);
     if (node) {
-      let lastNode = this.heap.pop() as unknown as BinaryHeapNode<T>;
-      if (this.heap.length > 0) {
-        this.heap[node.index] = lastNode;
+      let lastNode = this._heap.pop() as unknown as BinaryHeapNode<T>;
+      if (this._heap.length > 0) {
+        this._heap[node.index] = lastNode;
         lastNode.index = node.index;
-        this.map.set(lastNode.item, lastNode);
-        this.bubbleDown(node.index);
-        this.bubbleUp(node.index);
+        this._map.set(lastNode.item, lastNode);
+        this._bubbleDown(node.index);
+        this._bubbleUp(node.index);
       }
-      this.map.delete(item);
+      this._map.delete(item);
       return true;
     } else {
       return false;
@@ -54,52 +54,52 @@ export class BinaryHeap<T> {
   }
 
   pop(): T | undefined {
-    if (this.heap.length > 0) {
-      let topNode = this.heap[0];
-      let lastNode = this.heap.pop() as unknown as BinaryHeapNode<T>;
-      if (this.heap.length > 0) {
-        this.heap[0] = lastNode;
+    if (this._heap.length > 0) {
+      let topNode = this._heap[0];
+      let lastNode = this._heap.pop() as unknown as BinaryHeapNode<T>;
+      if (this._heap.length > 0) {
+        this._heap[0] = lastNode;
         lastNode.index = 0;
-        this.map.set(lastNode.item, lastNode);
-        this.bubbleDown(0);
+        this._map.set(lastNode.item, lastNode);
+        this._bubbleDown(0);
       }
-      this.map.delete(topNode.item);
+      this._map.delete(topNode.item);
       return topNode.item;
     }
   }
 
-  private bubbleUp(index: number): void {
+  private _bubbleUp(index: number): void {
     while (index > 0) {
       let parentIndex = Math.floor((index - 1) / 2);
-      if (this.comparatorOrEqual(this.heap[parentIndex], this.heap[index])) {
+      if (this._comparatorOrEqual(this._heap[parentIndex], this._heap[index])) {
         break;
       }
 
-      [this.heap[parentIndex], this.heap[index]] = [this.heap[index], this.heap[parentIndex]];
-      this.heap[parentIndex].index = parentIndex;
-      this.heap[index].index = index;
+      [this._heap[parentIndex], this._heap[index]] = [this._heap[index], this._heap[parentIndex]];
+      this._heap[parentIndex].index = parentIndex;
+      this._heap[index].index = index;
       index = parentIndex;
     }
   }
 
-  private bubbleDown(index: number): void {
+  private _bubbleDown(index: number): void {
     let leftChildIndex = 2 * index + 1;
     let rightChildIndex = 2 * index + 2;
     let currentIndex = index;
 
-    if (leftChildIndex < this.heap.length && this.comparator(this.heap[leftChildIndex], this.heap[currentIndex])) {
+    if (leftChildIndex < this._heap.length && this._comparator(this._heap[leftChildIndex], this._heap[currentIndex])) {
       currentIndex = leftChildIndex;
     }
 
-    if (rightChildIndex < this.heap.length && this.comparator(this.heap[rightChildIndex], this.heap[currentIndex])) {
+    if (rightChildIndex < this._heap.length && this._comparator(this._heap[rightChildIndex], this._heap[currentIndex])) {
       currentIndex = rightChildIndex;
     }
 
     if (currentIndex !== index) {
-      [this.heap[index], this.heap[currentIndex]] = [this.heap[currentIndex], this.heap[index]];
-      this.heap[index].index = index;
-      this.heap[currentIndex].index = currentIndex;
-      this.bubbleDown(currentIndex);
+      [this._heap[index], this._heap[currentIndex]] = [this._heap[currentIndex], this._heap[index]];
+      this._heap[index].index = index;
+      this._heap[currentIndex].index = currentIndex;
+      this._bubbleDown(currentIndex);
     }
   }
 }

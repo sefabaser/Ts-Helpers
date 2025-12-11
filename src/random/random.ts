@@ -1,16 +1,16 @@
 import { Comparator } from '../comparator/comparator';
 
 export class Random {
-  private static fibonacciMap: number[] = [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377];
+  private static _fibonacciMap: number[] = [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377];
   static fibonacci(i: number): number {
     if (Comparator.isInteger(i) && i >= 0) {
-      if (this.fibonacciMap[i]) {
-        return this.fibonacciMap[i];
+      if (this._fibonacciMap[i]) {
+        return this._fibonacciMap[i];
       } else {
         let iMinus1Result = this.fibonacci(i - 1);
-        this.fibonacciMap[i - 1] = iMinus1Result;
+        this._fibonacciMap[i - 1] = iMinus1Result;
         let iResult = iMinus1Result + this.fibonacci(i - 2);
-        this.fibonacciMap[i] = iResult;
+        this._fibonacciMap[i] = iResult;
         return iResult;
       }
     } else {

@@ -5,8 +5,6 @@ export type Mutable<T> = {
 export type FixedArray<T, L extends number> = { length: L } & Array<T>;
 export type ReadonlyFixedArray<T, L extends number> = { length: L } & ReadonlyArray<T>;
 
-export type JSVariableType = 'string' | 'number' | 'bigint' | 'boolean' | 'symbol' | 'undefined' | 'object' | 'function';
-
 export type DeepReadonly<T> = {
   readonly [P in keyof T]: T[P] extends (...args: any[]) => any
     ? T[P]
@@ -28,6 +26,7 @@ export type DeepReadonly<T> = {
  *   name: string;
  *   age: number;
  * }>;
+ *
  * let a: EventEntry = {
  *   type: 'name',
  *   value: 'John'
@@ -53,3 +52,5 @@ export type TypeValuePair<M extends Record<T, any>, T extends string = keyof M &
     readonly value: M[K];
   };
 }[T];
+
+export type EmptyObject = Record<string, never>;

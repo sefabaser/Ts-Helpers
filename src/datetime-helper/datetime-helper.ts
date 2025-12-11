@@ -82,13 +82,13 @@ export class DatetimeHelper {
     let currentDate = from;
     while (currentDate <= to) {
       dateArray.push(currentDate);
-      currentDate = DatetimeHelper.addDayWithoutTimeZone(currentDate);
+      currentDate = DatetimeHelper._addDayWithoutTimeZone(currentDate);
     }
     dateArray.pop();
     return dateArray;
   }
 
-  private static addDayWithoutTimeZone(date: Date): Date {
+  private static _addDayWithoutTimeZone(date: Date): Date {
     let dateCandidate = new Date(
       `${date.getFullYear()}-${date.getMonth() + 1 < 10 ? '0' : ''}${date.getMonth() + 1}-${
         date.getDate() + 1 < 10 ? '0' : ''

@@ -1,7 +1,8 @@
 class DoublyLinkedListNode<T> {
   value: T;
-  previous: DoublyLinkedListNode<T> | undefined;
-  next: DoublyLinkedListNode<T> | undefined;
+  forward: DoublyLinkedListNode<T> | undefined;
+  behind: DoublyLinkedListNode<T> | undefined;
+  destroyed = false;
 
   constructor(value: T) {
     this.value = value;
@@ -9,37 +10,86 @@ class DoublyLinkedListNode<T> {
 }
 
 export class Queue<T> {
-  private start: DoublyLinkedListNode<T> | undefined;
-  private end: DoublyLinkedListNode<T> | undefined;
+  private _front: DoublyLinkedListNode<T> | undefined;
+  private _end: DoublyLinkedListNode<T> | undefined;
 
-  get isEmpty(): boolean {
-    return this.start === undefined;
+  get empty(): boolean {
+    return this._front === undefined;
+  }
+
+  get notEmpty(): boolean {
+    return this._front !== undefined;
   }
 
   constructor(firstNode?: T | undefined) {
     if (firstNode) {
       let firstNodeInstance = new DoublyLinkedListNode(firstNode);
-      this.start = firstNodeInstance;
-      this.end = firstNodeInstance;
+      this._front = firstNodeInstance;
+      this._end = firstNodeInstance;
     }
+  }
+
+  /**
+   * @param value Adds the given element in queue
+   * @compexity O(1)
+   */
+  add(value: T): void {
+    this._add(value);
   }
 
   /**
    * @param args Adds the given elements in queue in the given order
    * @compexity O(1)
    */
-  add(...args: T[]): void {
-    args.forEach(value => {
-      let newNode = new DoublyLinkedListNode(value);
-      if (this.start) {
-        newNode.previous = this.end;
-        this.end!.next = newNode;
-        this.end = newNode;
-      } else {
-        this.start = newNode;
-        this.end = newNode;
+  addMany(...args: T[]): void {
+    for (let i = 0; i < args.length; i++) {
+      let value = args[i];
+      this._add(value);
+    }
+  }
+
+  /**
+   * @param value Adds the given element in queue
+   * @compexity O(1)
+   * @returns destroyer function that removes the added item from the queue when called
+   */
+  addWithDestroyer(value: T): () => void {
+    let node = this._add(value);
+    return () => {
+      if (!node.destroyed) {
+        node.destroyed = true;
+
+        if (this._front === node) {
+          if (node.behind) {
+            this._front = node.behind;
+            node.behind.forward = undefined;
+          } else {
+            this._front = undefined;
+            this._end = undefined;
+          }
+        } else if (this._end === node) {
+          this._end = node.forward;
+          node.forward!.behind = undefined;
+        } else {
+          node.forward!.behind = node.behind;
+          node.behind!.forward = node.forward;
+        }
       }
-    });
+    };
+  }
+
+  private _add(value: T): DoublyLinkedListNode<T> {
+    let newNode = new DoublyLinkedListNode(value);
+    if (this._front) {
+      newNode.forward = this._end;
+      this._end!.behind = newNode;
+      this._end = newNode;
+    } else {
+      this._front = newNode;
+      this._end = newNode;
+    }
+
+    return newNode;
   }
 
   /**
@@ -47,13 +97,34 @@ export class Queue<T> {
    * @compexity O(1)
    */
   pop(): T | undefined {
-    if (this.start) {
-      let value = this.start.value;
-      this.start = this.start.next;
-      if (this.start) {
-        this.start.previous = undefined;
+    if (this._front) {
+      this._front.destroyed = true;
+
+      let value = this._front.value;
+      this._front = this._front.behind;
+      if (this._front) {
+        this._front.forward = undefined;
       } else {
-        this.end = undefined;
+        this._end = undefined;
+      }
+      return value;
+    }
+  }
+
+  /**
+   * @returns Removes the first element and returns it
+   * @compexity O(1)
+   */
+  dequeue(): T | undefined {
+    if (this._end) {
+      this._end.destroyed = true;
+
+      let value = this._end.value;
+      this._end = this._end.forward;
+      if (this._end) {
+        this._end.behind = undefined;
+      } else {
+        this._front = undefined;
       }
       return value;
     }
@@ -64,7 +135,15 @@ export class Queue<T> {
    * @compexity O(1)
    */
   peek(): T | undefined {
-    return this.start?.value;
+    return this._front?.value;
+  }
+
+  /**
+   * @returns The value of the first element in the queue without removing it
+   * @compexity O(1)
+   */
+  peekLast(): T | undefined {
+    return this._end?.value;
   }
 
   /**
@@ -74,11 +153,11 @@ export class Queue<T> {
    */
   duplicate(deepCopyItem?: (item: T) => T): Queue<T> {
     let newQueue = new Queue<T>();
-    let current = this.start;
+    let current = this._front;
     while (current) {
       let value = deepCopyItem ? deepCopyItem(current.value) : current.value;
       newQueue.add(value);
-      current = current.next;
+      current = current.behind;
     }
     return newQueue;
   }

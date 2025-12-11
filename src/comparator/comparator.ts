@@ -8,7 +8,8 @@ export class Comparator {
   }
 
   static isObject(a: any): a is { [key: string]: any } {
-    return !!a && typeof a === 'object';
+    // biome-ignore lint: allowed null
+    return typeof a === 'object' && a !== null;
   }
 
   static isString(a: any): a is string {
@@ -24,7 +25,7 @@ export class Comparator {
   }
 
   static isNumber(a: any): a is number {
-    return !isNaN(a) && typeof a === 'number';
+    return typeof a === 'number' && a === a;
   }
 
   static isBoolean(a: any): a is boolean {

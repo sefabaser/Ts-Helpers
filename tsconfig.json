@@ -17,8 +17,9 @@
     "strictFunctionTypes": false,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
+    "emitDecoratorMetadata": false,
+    "useDefineForClassFields": false,
     "declaration": true,
-    "emitDecoratorMetadata": true,
-    "useDefineForClassFields": false
+    "stripInternal": true
   }
 }

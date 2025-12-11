@@ -8,16 +8,16 @@ class LinkedListNode<T> {
 }
 
 export class Stack<T> {
-  private start: LinkedListNode<T> | undefined;
+  private _start: LinkedListNode<T> | undefined;
 
   get isEmpty(): boolean {
-    return this.start === undefined;
+    return this._start === undefined;
   }
 
   constructor(firstNode?: T | undefined) {
     if (firstNode) {
       let firstNodeInstance = new LinkedListNode(firstNode);
-      this.start = firstNodeInstance;
+      this._start = firstNodeInstance;
     }
   }
 
@@ -25,13 +25,13 @@ export class Stack<T> {
    * @param args The values to add to start of the stack with keeping the given order, without inverting them
    */
   add(...args: T[]): void {
-    let previouslyFirstNode = this.start;
+    let previouslyFirstNode = this._start;
     let lastNode: LinkedListNode<T> | undefined;
 
     args.forEach(value => {
       if (lastNode === undefined) {
         lastNode = new LinkedListNode(value);
-        this.start = lastNode;
+        this._start = lastNode;
       } else {
         lastNode.next = new LinkedListNode(value);
         lastNode = lastNode.next;
@@ -47,9 +47,9 @@ export class Stack<T> {
    * @returns The value of the first element in the stack
    */
   pop(): T | undefined {
-    if (this.start) {
-      let value = this.start.value;
-      this.start = this.start.next;
+    if (this._start) {
+      let value = this._start.value;
+      this._start = this._start.next;
       return value;
     }
   }
@@ -58,7 +58,7 @@ export class Stack<T> {
    * @returns The value of the first element in the stack without removing it
    */
   peek(): T | undefined {
-    return this.start?.value;
+    return this._start?.value;
   }
 
   /**
@@ -71,7 +71,7 @@ export class Stack<T> {
     let firstNode: LinkedListNode<T> | undefined;
     let lastNode: LinkedListNode<T> | undefined;
 
-    let current = this.start;
+    let current = this._start;
     while (current) {
       let value = deepCopyItem ? deepCopyItem(current.value) : current.value;
       let node = new LinkedListNode(value);
@@ -87,7 +87,7 @@ export class Stack<T> {
       current = current.next;
     }
 
-    newStack.start = firstNode;
+    newStack._start = firstNode;
     return newStack;
   }
 }

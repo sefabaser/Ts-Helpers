@@ -1,12 +1,21 @@
 {
   "name": "helpers-lib",
-  "version": "1.13.10",
+  "version": "2.0.0",
   "description": "Typescript Helpers Library",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "src/index.ts",
+  "publishConfig": {
+    "main": "dist/index.js",
+    "module": "dist/index.mjs",
+    "types": "dist/index.d.ts",
+    "exports": {
+      ".": {
+        "import": "./dist/index.mjs",
+        "require": "./dist/index.js"
+      }
+    }
+  },
   "files": [
-    "dist/**/*.js",
-    "dist/**/*.d.ts"
+    "dist"
   ],
   "repository": {
     "type": "git",
@@ -22,18 +31,26 @@
     "clean-install": "cls && rm -rf node_modules && rm -rf package-lock.json && npm run i",
     "i": "npm cache clean --force && npm install",
     "pretest": "clear",
-    "test": "vitest",
+    "test": "vitest run --mode=quick",
+    "test-full": "vitest run",
     "start": "npm run build && node dist",
-    "build": "tsc",
+    "build": "npx ts-node scripts/generate-mangle-cache.ts && tsup && npx ts-node scripts/remove-private-properties-from-build.ts && npm run restart-vitest",
+    "restart-vitest": "touch vitest.config.ts",
     "lint": "biome check . --write --max-diagnostics=1",
-    "deploy": "vitest run && npm run build && npm publish"
+    "deploy": "vitest run && npm run build && npm publish",
+    "prepack": "cp package.json package.json.bak && ts-node scripts/prepare-package-json.ts",
+    "postpack": "mv package.json.bak package.json"
   },
   "dependencies": {
-    "reflect-metadata": "0.2.2",
-    "joi": "17.11.0"
+    "joi": "17.11.1"
+  },
+  "peerDependencies": {
+    "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.4",
+    "@types/node": "20.12.11",
+    "tsup": "8.5.1",
     "typescript": "5.3.3",
     "vitest": "3.2.4"
   }

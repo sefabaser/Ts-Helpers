@@ -7,13 +7,13 @@ const DIAGONALS = [new Vector(-1, -1), new Vector(-1, 1), new Vector(1, -1), new
 const ALL_NEIGHBORS = [...ORTOGONALS, ...DIAGONALS];
 
 export enum GridNeighborType {
-  ORTOGONAL = 'ortogonal',
-  DIAGONAL = 'diagonal',
-  ALL = 'all'
+  Ortogonal = 1,
+  Diagonal,
+  All
 }
 
 export class Grid<T> {
-  static create<T>(size: Vector, callback: (position: Vector) => T): Grid<T> {
+  static create<S>(size: Vector, callback: (position: Vector) => S): Grid<S> {
     return new Grid({ size, defaultValue: undefined }).map((_, position) => callback(position));
   }
 
@@ -52,7 +52,7 @@ export class Grid<T> {
 
   // ------------- GETTERS -------------
   has(position: Vector): boolean {
-    this.validatePoint(position);
+    this._validatePoint(position);
     return this.get(position) !== undefined;
   }
 
@@ -61,7 +61,7 @@ export class Grid<T> {
   }
 
   getOrFail(position: Vector): T {
-    this.validatePoint(position);
+    this._validatePoint(position);
     return this._grid[position.y][position.x];
   }
 
@@ -75,8 +75,8 @@ export class Grid<T> {
   }
 
   getNeighborDirections(position: Vector, type: GridNeighborType): Vector[] {
-    this.validatePoint(position);
-    let directions = this.neighborTypeToDirections(type);
+    this._validatePoint(position);
+    let directions = this._neighborTypeToDirections(type);
 
     if (position.y === 0) {
       directions = directions.filter(direction => direction.y !== -1);
@@ -96,23 +96,27 @@ export class Grid<T> {
     return directions;
   }
 
+  snapshot(): T[][] {
+    return this._grid.map(row => [...row]);
+  }
+
   // ------------- SETTERS -------------
   set(position: Vector, value: T): void {
-    this.validatePoint(position);
+    this._validatePoint(position);
     this._grid[position.y][position.x] = value;
   }
 
   setArea(area: Rectangle, value: T): void {
     area = this.cropAreaOutsideOfTheGrid(area);
-    this.internalSetArea(area, value);
+    this._internalSetArea(area, value);
   }
 
   setAreaOrFail(area: Rectangle, value: T): void {
-    this.validateArea(area);
-    this.internalSetArea(area, value);
+    this._validateArea(area);
+    this._internalSetArea(area, value);
   }
 
-  private internalSetArea(area: Rectangle, value: T): void {
+  private _internalSetArea(area: Rectangle, value: T): void {
     for (let y = area.topLeft.y; y <= area.bottomRight.y && y < this._grid.length; y++) {
       for (let x = area.topLeft.x; x <= area.bottomRight.x && x < this._grid[y].length; x++) {
         this._grid[y][x] = value;
@@ -135,12 +139,12 @@ export class Grid<T> {
   }
 
   // ------------- CONTROLS -------------
-  private validateArea(area: Rectangle): void {
-    this.validatePoint(area.topLeft);
-    this.validatePoint(area.bottomRight);
+  private _validateArea(area: Rectangle): void {
+    this._validatePoint(area.topLeft);
+    this._validatePoint(area.bottomRight);
   }
 
-  private validatePoint(point: Vector): void {
+  private _validatePoint(point: Vector): void {
     if (!Comparator.isInteger(point.x) || !Comparator.isInteger(point.y)) {
       throw new Error(`Grid: Point values has to be integer: point: "${point}"`);
     }
@@ -176,7 +180,7 @@ export class Grid<T> {
   }
 
   // ------------- DIRECTION HELPERS -------------
-  private neighborTypeToDirections(type: GridNeighborType): Vector[] {
-    return type === GridNeighborType.ORTOGONAL ? ORTOGONALS : type === GridNeighborType.DIAGONAL ? DIAGONALS : ALL_NEIGHBORS;
+  private _neighborTypeToDirections(type: GridNeighborType): Vector[] {
+    return type === GridNeighborType.Ortogonal ? ORTOGONALS : type === GridNeighborType.Diagonal ? DIAGONALS : ALL_NEIGHBORS;
   }
 }
