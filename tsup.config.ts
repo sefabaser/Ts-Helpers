@@ -6,9 +6,9 @@ export default defineConfig({
   format: ['cjs', 'esm'],
   dts: true,
   splitting: false,
-  sourcemap: false, 
+  sourcemap: false,
   clean: true,
-  minify: true, 
+  minify: true,
   treeshake: true,
   target: 'esnext',
   outDir: 'dist',
@@ -16,7 +16,7 @@ export default defineConfig({
     options.charset = 'utf8';
     options.mangleProps = /^_/;
     options.mangleCache = mangleCache;
-    options.mangleQuoted = true; 
+    options.mangleQuoted = false;
     options.keepNames = false;
     options.drop = [];
     options.pure = [];

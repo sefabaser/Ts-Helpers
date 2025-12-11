@@ -1,4 +1,4 @@
-import type { Vector } from '../../geometry/vector/vector';
+import { Vector } from '../../geometry/vector/vector';
 
 export class VectorSet {
   private _values: Map<number, Set<number>> = new Map();

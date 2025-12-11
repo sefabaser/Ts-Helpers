@@ -1,4 +1,4 @@
-import { type Vec2, Vector } from '../vector/vector';
+import { Vec2, Vector } from '../vector/vector';
 
 export interface Rect {
   topLeft: Vec2;

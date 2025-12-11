@@ -1,5 +1,5 @@
 import { PI_90, Radian } from '../radian/radian';
-import type { Rectangle } from '../shapes/rectangle';
+import { Rectangle } from '../shapes/rectangle';
 
 export interface Vec2 {
   readonly x: number;

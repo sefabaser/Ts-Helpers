@@ -53,8 +53,6 @@
       },
       "security": { "noGlobalEval": "error" },
       "style": {
-        "useExportType": "error",
-        "useImportType": "error",
         "noInferrableTypes": "error",
         "noNamespace": "error",
         "noNonNullAssertion": "off",

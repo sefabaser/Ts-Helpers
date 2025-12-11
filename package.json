@@ -1,8 +1,8 @@
 {
   "name": "helpers-lib",
-  "version": "2.0.0-rc0",
+  "version": "2.0.0-rc3",
   "description": "Typescript Helpers Library",
-  "main": "dist/index.js",
+  "main": "src/index.ts",
   "publishConfig": {
     "main": "dist/index.js",
     "module": "dist/index.mjs",
@@ -42,14 +42,13 @@
     "postpack": "mv package.json.bak package.json"
   },
   "dependencies": {
-    "joi": "17.11.0"
+    "joi": "17.11.1"
   },
   "peerDependencies": {
     "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.4",
-    "@swc/core": "1.15.3",
     "@types/node": "20.12.11",
     "tsup": "8.5.1",
     "typescript": "5.3.3",
