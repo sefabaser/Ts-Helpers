@@ -10,7 +10,7 @@ export { Line } from './geometry/line/line';
 export { PI_90, PI_180, PI_360, Radian, RadianCache } from './geometry/radian/radian';
 export { Rect, Rectangle } from './geometry/shapes/rectangle';
 export { Vec2, Vector, VectorCache } from './geometry/vector/vector';
-export { DEEP_COPYABLE_SYMBOL, DeepPartial, JsonHelper } from './json-helper/json-helper';
+export { DEEP_COPYABLE_SYMBOL, JsonHelper } from './json-helper/json-helper';
 export { MetaDataHelper } from './meta-data-helper/meta-data.helper';
 export { NumberHelper } from './number-helper/number-helper';
 export { Guid } from './random/guid';

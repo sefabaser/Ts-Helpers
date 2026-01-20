@@ -38,6 +38,10 @@ export class ConsoleHelper {
         return GRAY;
       case 'white':
         return WHITE;
+      default: {
+        let _: never = color;
+        throw new Error(`Unexpected case! "${color}"`);
+      }
     }
   }
 

@@ -5,6 +5,14 @@ export type Mutable<T> = {
 export type FixedArray<T, L extends number> = { length: L } & Array<T>;
 export type ReadonlyFixedArray<T, L extends number> = { length: L } & ReadonlyArray<T>;
 
+export type DeepPartial<T> = {
+  [P in keyof T]?: T[P] extends (infer U)[]
+    ? DeepPartial<U>[]
+    : T[P] extends ReadonlyArray<infer U>
+      ? readonly DeepPartial<U>[]
+      : DeepPartial<T[P]>;
+};
+
 export type DeepReadonly<T> = {
   readonly [P in keyof T]: T[P] extends (...args: any[]) => any
     ? T[P]

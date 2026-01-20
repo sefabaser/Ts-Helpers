@@ -96,6 +96,10 @@ export class Random {
 
         return center + gaussianClamped * range;
       }
+      default: {
+        let _: never = type;
+        throw new Error(`Unexpected case! "${type}"`);
+      }
     }
   }
 
