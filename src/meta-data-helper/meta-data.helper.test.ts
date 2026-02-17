@@ -25,8 +25,8 @@ describe('MetaDataHelper', () => {
 
     // Replace the function with a new function
     let originalFunction = instance.test;
-    instance.test = function (...args: any[]) {
-      return originalFunction.apply(this, args);
+    instance.test = function (a: string, b: number) {
+      return originalFunction.apply(this, [a, b]);
     };
 
     MetaDataHelper.carryMetaDataOfFunction(originalFunction, instance.test);
