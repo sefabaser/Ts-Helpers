@@ -218,7 +218,17 @@ export class JsonHelper {
     return obj;
   }
 
-  static objectToMap<T extends string | number | symbol, K>(object: Record<T, K>): Map<T, K> {
-    return new Map(Object.entries(object) as [T, K][]);
+  static objectToMap<T extends string | number | symbol, K>(obj: Record<T, K>): Map<T, K> {
+    return new Map(Object.entries(obj) as [T, K][]);
+  }
+
+  static objectForEach<T extends string | number | symbol, K>(obj: Record<T, K>, callback: (key: T, value: K) => void): void {
+    Object.entries(obj).forEach(([key, value]) => {
+      callback(key as T, value as K);
+    });
+  }
+
+  static objectMap<T extends string | number | symbol, K, R>(obj: Record<T, K>, transformFunction: (key: T, value: K) => R): R[] {
+    return Object.entries(obj).map(([key, value]) => transformFunction(key as T, value as K));
   }
 }

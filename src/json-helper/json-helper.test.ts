@@ -457,4 +457,85 @@ describe(`Json Helper: `, () => {
       expect(back).toEqual(original);
     });
   });
+
+  describe(`Object For Each: `, () => {
+    test('empty object', () => {
+      let keys: string[] = [];
+      JsonHelper.objectForEach({}, key => {
+        keys.push(key);
+      });
+      expect(keys).toEqual([]);
+    });
+
+    test('iterates all entries', () => {
+      let entries: [string, number][] = [];
+      JsonHelper.objectForEach({ a: 1, b: 2, c: 3 }, (key, value) => {
+        entries.push([key, value]);
+      });
+      expect(entries).toEqual([
+        ['a', 1],
+        ['b', 2],
+        ['c', 3]
+      ]);
+    });
+
+    test('provides correct key and value to callback', () => {
+      let result: Record<string, string> = {};
+      JsonHelper.objectForEach({ x: 'hello', y: 'world' }, (key, value) => {
+        result[key] = value.toUpperCase();
+      });
+      expect(result).toEqual({ x: 'HELLO', y: 'WORLD' });
+    });
+
+    test('number keys are passed as strings', () => {
+      let keys: string[] = [];
+      JsonHelper.objectForEach({ 1: 'a', 2: 'b' }, key => {
+        keys.push(typeof key);
+      });
+      expect(keys).toEqual(['string', 'string']);
+    });
+
+    test('does not mutate the original object', () => {
+      let obj = { a: 1, b: 2 };
+      JsonHelper.objectForEach(obj, () => {});
+      expect(obj).toEqual({ a: 1, b: 2 });
+    });
+  });
+
+  describe(`Object Map: `, () => {
+    test('empty object', () => {
+      let result = JsonHelper.objectMap({}, () => 0);
+      expect(result).toEqual([]);
+    });
+
+    test('transforms values', () => {
+      let result = JsonHelper.objectMap({ a: 1, b: 2 }, (_key, value) => value * 10);
+      expect(result).toEqual([10, 20]);
+    });
+
+    test('transforms keys', () => {
+      let result = JsonHelper.objectMap({ a: 1, b: 2 }, key => key.toUpperCase());
+      expect(result).toEqual(['A', 'B']);
+    });
+
+    test('transforms keys and values together', () => {
+      let result = JsonHelper.objectMap({ x: 'hello', y: 'world' }, (key, value) => `${key}:${value}`);
+      expect(result).toEqual(['x:hello', 'y:world']);
+    });
+
+    test('returns array with different type than input values', () => {
+      let result = JsonHelper.objectMap({ a: 1, b: 2, c: 3 }, (key, value) => ({ name: key, double: value * 2 }));
+      expect(result).toEqual([
+        { name: 'a', double: 2 },
+        { name: 'b', double: 4 },
+        { name: 'c', double: 6 }
+      ]);
+    });
+
+    test('does not mutate the original object', () => {
+      let obj = { a: 1, b: 2 };
+      JsonHelper.objectMap(obj, (_key, value) => value * 2);
+      expect(obj).toEqual({ a: 1, b: 2 });
+    });
+  });
 });
