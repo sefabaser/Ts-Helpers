@@ -1,4 +1,5 @@
 import { Comparator } from '../comparator/comparator';
+import { MapDifference } from '.';
 
 export const DEEP_COPYABLE_SYMBOL = '_deepCopyable';
 
@@ -89,8 +90,31 @@ export class JsonHelper {
     return Comparator.isEqual(item1, item2);
   }
 
-  static mergeMaps(map1: Map<any, any>, map2: Map<any, any>): Map<any, any> {
+  static mergeMaps<T, K>(map1: Map<T, K>, map2: Map<T, K>): Map<T, K> {
     return new Map([...Array.from(map1.entries()), ...Array.from(map2.entries())]);
+  }
+
+  static differenceMaps<T, K>(map1: Map<T, K>, map2: Map<T, K>): Map<T, MapDifference<T, K>> {
+    let result = new Map<T, MapDifference<T, K>>();
+    map1.forEach((value: K, key: T) => {
+      let value2 = map2.get(key);
+      if (value2) {
+        if (value2 === value) {
+          result.set(key, { state: 'same', key, value1: value, value2: value2 });
+        } else {
+          result.set(key, { state: 'different', key, value1: value, value2: value2 });
+        }
+      } else {
+        result.set(key, { state: 'minus', key, value1: value, value2: undefined });
+      }
+    });
+    map2.forEach((value: K, key: T) => {
+      let value1 = map1.get(key);
+      if (!value1) {
+        result.set(key, { state: 'plus', key, value1: undefined, value2: value });
+      }
+    });
+    return result;
   }
 
   static stringify(obj: any): string {
@@ -175,5 +199,26 @@ export class JsonHelper {
       obj[key] = outputItem;
     });
     return obj;
+  }
+
+  static mapToObject<T extends string | number | symbol, K>(
+    map: Map<T, K>,
+    options?: {
+      transformFunction?: (item: T) => K;
+    }
+  ): Record<T, K> {
+    let obj: Record<T, K> = {} as Record<T, K>;
+    map.forEach((value, key) => {
+      if (options?.transformFunction) {
+        obj[key] = options.transformFunction(key);
+      } else {
+        obj[key] = value;
+      }
+    });
+    return obj;
+  }
+
+  static objectToMap<T extends string | number | symbol, K>(object: Record<T, K>): Map<T, K> {
+    return new Map(Object.entries(object) as [T, K][]);
   }
 }

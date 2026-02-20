@@ -147,6 +147,110 @@ describe(`Json Helper: `, () => {
       expect(mergedMap.get('x')).toEqual('3');
       expect(mergedMap.get('y')).toEqual('4');
     });
+
+    test('different type maps should complain', () => {
+      let map1 = new Map<string, string>();
+      let map2 = new Map<number, string>();
+      let map3 = new Map<string, number>();
+
+      // @ts-expect-error
+      JsonHelper.mergeMaps(map1, map2);
+      // @ts-expect-error
+      JsonHelper.mergeMaps(map1, map3);
+    });
+  });
+
+  describe(`Difference Maps: `, () => {
+    test('empty maps', () => {
+      let result = JsonHelper.differenceMaps(new Map(), new Map());
+      expect(result.size).toEqual(0);
+    });
+
+    test('same values', () => {
+      let map1 = new Map([
+        ['a', 1],
+        ['b', 2]
+      ]);
+      let map2 = new Map([
+        ['a', 1],
+        ['b', 2]
+      ]);
+      let result = JsonHelper.differenceMaps(map1, map2);
+      expect([...result.entries()]).toEqual([
+        ['a', { state: 'same', key: 'a', value1: 1, value2: 1 }],
+        ['b', { state: 'same', key: 'b', value1: 2, value2: 2 }]
+      ]);
+    });
+
+    test('different values', () => {
+      let map1 = new Map([['a', 1]]);
+      let map2 = new Map([['a', 99]]);
+      let result = JsonHelper.differenceMaps(map1, map2);
+      expect([...result.entries()]).toEqual([['a', { state: 'different', key: 'a', value1: 1, value2: 99 }]]);
+    });
+
+    test('key only in map1 (minus)', () => {
+      let map1 = new Map([['a', 1]]);
+      let map2 = new Map<string, number>();
+      let result = JsonHelper.differenceMaps(map1, map2);
+      expect([...result.entries()]).toEqual([['a', { state: 'minus', key: 'a', value1: 1, value2: undefined }]]);
+    });
+
+    test('key only in map2 (plus)', () => {
+      let map1 = new Map<string, number>();
+      let map2 = new Map([['a', 1]]);
+      let result = JsonHelper.differenceMaps(map1, map2);
+      expect([...result.entries()]).toEqual([['a', { state: 'plus', key: 'a', value1: undefined, value2: 1 }]]);
+    });
+
+    test('mixed states', () => {
+      let map1 = new Map([
+        ['same', 1],
+        ['diff', 2],
+        ['minus', 3]
+      ]);
+      let map2 = new Map([
+        ['same', 1],
+        ['diff', 99],
+        ['plus', 4]
+      ]);
+      let result = JsonHelper.differenceMaps(map1, map2);
+      expect([...result.entries()]).toEqual([
+        ['same', { state: 'same', key: 'same', value1: 1, value2: 1 }],
+        ['diff', { state: 'different', key: 'diff', value1: 2, value2: 99 }],
+        ['minus', { state: 'minus', key: 'minus', value1: 3, value2: undefined }],
+        ['plus', { state: 'plus', key: 'plus', value1: undefined, value2: 4 }]
+      ]);
+    });
+
+    test('does not mutate the original maps', () => {
+      let map1 = new Map([['a', 1]]);
+      let map2 = new Map([['b', 2]]);
+      JsonHelper.differenceMaps(map1, map2);
+      expect([...map1.entries()]).toEqual([['a', 1]]);
+      expect([...map2.entries()]).toEqual([['b', 2]]);
+    });
+
+    test('undefined as value', () => {
+      let map1 = new Map([['a', undefined]]);
+      let map2 = new Map([['b', undefined]]);
+      let result = JsonHelper.differenceMaps(map1, map2);
+      expect([...result.entries()]).toEqual([
+        ['a', { state: 'minus', key: 'a', value1: undefined, value2: undefined }],
+        ['b', { state: 'plus', key: 'b', value1: undefined, value2: undefined }]
+      ]);
+    });
+
+    test('different type maps should complain', () => {
+      let map1 = new Map<string, string>();
+      let map2 = new Map<number, string>();
+      let map3 = new Map<string, number>();
+
+      // @ts-expect-error
+      JsonHelper.differenceMaps(map1, map2);
+      // @ts-expect-error
+      JsonHelper.differenceMaps(map1, map3);
+    });
   });
 
   describe(`Get Subset: `, () => {
@@ -249,6 +353,108 @@ describe(`Json Helper: `, () => {
         { removeKey: true }
       );
       expect(result).toEqual({ one: { a: { b: 1 }, val: 1 }, two: { a: { b: 2 }, val: 2 } });
+    });
+  });
+
+  describe(`Map to Object: `, () => {
+    test('empty map', () => {
+      let map = new Map<string, number>();
+      expect(JsonHelper.mapToObject(map)).toEqual({});
+    });
+
+    test('string keys', () => {
+      let map = new Map<string, number>([
+        ['a', 1],
+        ['b', 2]
+      ]);
+      expect(JsonHelper.mapToObject(map)).toEqual({ a: 1, b: 2 });
+    });
+
+    test('number keys', () => {
+      let map = new Map<number, string>([
+        [1, 'a'],
+        [2, 'b']
+      ]);
+      expect(JsonHelper.mapToObject(map)).toEqual({ 1: 'a', 2: 'b' });
+    });
+
+    test('with transform function', () => {
+      let map = new Map<string, number>([
+        ['a', 1],
+        ['b', 2]
+      ]);
+      expect(JsonHelper.mapToObject(map, { transformFunction: key => key.length })).toEqual({ a: 1, b: 1 });
+    });
+
+    test('does not mutate the original map', () => {
+      let map = new Map<string, number>([
+        ['a', 1],
+        ['b', 2]
+      ]);
+      JsonHelper.mapToObject(map);
+      expect([...map.entries()]).toEqual([
+        ['a', 1],
+        ['b', 2]
+      ]);
+    });
+
+    test('transform function overrides original value', () => {
+      let map = new Map<string, number>([['x', 99]]);
+      expect(JsonHelper.mapToObject(map, { transformFunction: () => 0 })).toEqual({ x: 0 });
+    });
+
+    test('transform function overrides original value', () => {
+      interface Foo {
+        a: string;
+      }
+      let foo: Foo = { a: 'b' };
+      let map = new Map<Foo, number>([[foo, 99]]);
+      // @ts-expect-error - we want to test the type error
+      JsonHelper.mapToObject(map);
+    });
+  });
+
+  describe(`Object to Map: `, () => {
+    test('empty object', () => {
+      let result = JsonHelper.objectToMap({});
+      expect(result.size).toEqual(0);
+    });
+
+    test('string keys', () => {
+      let result = JsonHelper.objectToMap({ a: 1, b: 2 });
+      expect([...result.entries()]).toEqual([
+        ['a', 1],
+        ['b', 2]
+      ]);
+    });
+
+    test('number keys', () => {
+      let result = JsonHelper.objectToMap({ 1: 'a', 2: 'b' });
+      expect([...result.entries()]).toEqual([
+        ['1', 'a'],
+        ['2', 'b']
+      ]);
+    });
+
+    test('returns a Map instance', () => {
+      let result = JsonHelper.objectToMap({ x: 10 });
+      expect(result).toBeInstanceOf(Map);
+    });
+
+    test('object values', () => {
+      let result = JsonHelper.objectToMap({ a: { nested: true }, b: { nested: false } });
+      expect([...result.entries()]).toEqual([
+        ['a', { nested: true }],
+        ['b', { nested: false }]
+      ]);
+    });
+
+    test('roundtrip with mapToObject', () => {
+      type Foo = 'a' | 'b' | 'c';
+      let original: Record<Foo, number> = { a: 1, b: 2, c: 3 };
+      let map = JsonHelper.objectToMap(original);
+      let back = JsonHelper.mapToObject(map);
+      expect(back).toEqual(original);
     });
   });
 });
