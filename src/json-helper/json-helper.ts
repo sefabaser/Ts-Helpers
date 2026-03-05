@@ -222,13 +222,15 @@ export class JsonHelper {
     return new Map(Object.entries(obj) as [T, K][]);
   }
 
-  static objectForEach<T extends string | number | symbol, K>(obj: Record<T, K>, callback: (key: T, value: K) => void): void {
-    Object.entries(obj).forEach(([key, value]) => {
-      callback(key as T, value as K);
-    });
+  static objectKeys<T extends string | number | symbol, K>(obj: Record<T, K>): T[] {
+    return Object.keys(obj) as T[];
   }
 
-  static objectMap<T extends string | number | symbol, K, R>(obj: Record<T, K>, transformFunction: (key: T, value: K) => R): R[] {
-    return Object.entries(obj).map(([key, value]) => transformFunction(key as T, value as K));
+  static objectValues<T extends string | number | symbol, K>(obj: Record<T, K>): K[] {
+    return Object.values(obj) as K[];
+  }
+
+  static objectEntries<T extends string | number | symbol, K>(obj: Record<T, K>): [T, K][] {
+    return Object.entries(obj) as [T, K][];
   }
 }
