@@ -1,5 +1,5 @@
-import { Comparator } from '../comparator/comparator';
-import { MapDifference } from '.';
+import { Comparator } from '..';
+import { type MapDifference } from '.';
 
 export const DEEP_COPYABLE_SYMBOL = '_deepCopyable';
 
