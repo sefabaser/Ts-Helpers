@@ -37,53 +37,68 @@ export class JsonHelper {
       skipDeepCopyableSymbol?: boolean;
     }
   ): T {
-    try {
-      // biome-ignore lint: allowed null
-      if (!Comparator.isObject(instance) || instance === null) {
-        return instance;
-      }
+    let seen = new WeakMap<object, any>();
+    return this._deepCopy(instance, options, seen);
+  }
 
-      if (Array.isArray(instance)) {
-        return instance.map(item => this.deepCopy(item, options)) as T;
-      }
+  private static _deepCopy<T>(
+    instance: T,
+    options: { skipDeepCopyableSymbol?: boolean } | undefined,
+    seen: WeakMap<object, any>
+  ): T {
+    // biome-ignore lint: allowed null
+    if (!Comparator.isObject(instance) || instance === null) {
+      return instance;
+    }
 
-      if (instance instanceof Set) {
-        return new Set([...instance].map(item => this.deepCopy(item, options))) as T;
-      }
+    if (seen.has(instance)) {
+      return seen.get(instance);
+    }
 
-      if (instance instanceof Map) {
-        return new Map([...instance].map(([key, value]) => [this.deepCopy(key, options), this.deepCopy(value, options)])) as T;
-      }
+    if (Array.isArray(instance)) {
+      let clone: any[] = [];
+      seen.set(instance, clone);
+      instance.forEach(item => clone.push(this._deepCopy(item, options, seen)));
+      return clone as T;
+    }
 
-      if (typeof instance === 'object') {
-        let deepCopyableSymbol = options?.skipDeepCopyableSymbol ? undefined : (instance as any)[DEEP_COPYABLE_SYMBOL];
-        if (deepCopyableSymbol) {
-          if (typeof deepCopyableSymbol === 'function') {
-            return deepCopyableSymbol.call(instance) as T;
-          } else {
-            throw new Error('Deep copy attempt on object with invalid deep copy function!');
-          }
+    if (instance instanceof Set) {
+      let clone = new Set();
+      seen.set(instance, clone);
+      instance.forEach(item => clone.add(this._deepCopy(item, options, seen)));
+      return clone as T;
+    }
+
+    if (instance instanceof Map) {
+      let clone = new Map();
+      seen.set(instance, clone);
+      instance.forEach((value, key) => clone.set(this._deepCopy(key, options, seen), this._deepCopy(value, options, seen)));
+      return clone as T;
+    }
+
+    if (typeof instance === 'object') {
+      let deepCopyableSymbol = options?.skipDeepCopyableSymbol ? undefined : (instance as any)[DEEP_COPYABLE_SYMBOL];
+      if (deepCopyableSymbol) {
+        if (typeof deepCopyableSymbol === 'function') {
+          return deepCopyableSymbol.call(instance) as T;
         } else {
-          let clone = Object.create(Object.getPrototypeOf(instance));
-
-          for (let key of Object.keys(instance)) {
-            let value = (instance as any)[key];
-            (clone as any)[key] = this.deepCopy(value, options);
-          }
-          return clone;
+          throw new Error('Deep copy attempt on object with invalid deep copy function!');
         }
-      }
-
-      throw new Error(
-        `Comparator: all types are exhausted but couldn't found a fitting one. Type: "${typeof instance}", value: "${instance}"`
-      );
-    } catch (e) {
-      if (e instanceof RangeError) {
-        throw new Error('Deep copy attempt on circularly dependent object!');
       } else {
-        throw e;
+        let clone = Object.create(Object.getPrototypeOf(instance));
+        seen.set(instance, clone);
+
+        for (let key of Object.keys(instance)) {
+          let value = (instance as any)[key];
+          (clone as any)[key] = this._deepCopy(value, options, seen);
+        }
+        return clone;
       }
     }
+
+    throw new Error(
+      `Comparator: all types are exhausted but couldn't found a fitting one. Type: "${typeof instance}", value: "${instance}"`
+    );
   }
 
   static deepCompare(item1: any, item2: any): boolean {
