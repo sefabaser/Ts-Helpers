@@ -105,6 +105,12 @@ export class JsonHelper {
     return Comparator.isEqual(item1, item2);
   }
 
+  static removeUndefinedProperties<T extends object>(source: T): Partial<T> {
+    return Object.entries(source)
+      .filter(([, value]) => value !== undefined)
+      .reduce<Partial<T>>((accumulator, [propertyKey, propertyValue]) => ({ ...accumulator, [propertyKey]: propertyValue }), {});
+  }
+
   static mergeMaps<T, K>(map1: Map<T, K>, map2: Map<T, K>): Map<T, K> {
     return new Map([...Array.from(map1.entries()), ...Array.from(map2.entries())]);
   }

@@ -132,6 +132,42 @@ describe(`Json Helper: `, () => {
     });
   });
 
+  describe(`Remove Undefined Properties: `, () => {
+    test('empty object', () => {
+      expect(JsonHelper.removeUndefinedProperties({})).toEqual({});
+    });
+
+    test('omits keys whose value is undefined', () => {
+      let source = { a: 1, b: undefined, c: 'x' };
+      expect(JsonHelper.removeUndefinedProperties(source)).toEqual({ a: 1, c: 'x' });
+    });
+
+    test('all undefined values yields empty object', () => {
+      let source = { a: undefined, b: undefined };
+      expect(JsonHelper.removeUndefinedProperties(source)).toEqual({});
+    });
+
+    test('preserves null zero false and empty string', () => {
+      let nullValue = JSON.parse('null');
+      let source = { n: nullValue, z: 0, f: false, s: '' };
+      expect(JsonHelper.removeUndefinedProperties(source)).toEqual({ n: nullValue, z: 0, f: false, s: '' });
+    });
+
+    test('nested values kept by reference', () => {
+      let inner = { x: 1 };
+      let source = { a: inner, b: undefined };
+      let result = JsonHelper.removeUndefinedProperties(source);
+      expect(result).toEqual({ a: inner });
+      expect(result.a).toBe(inner);
+    });
+
+    test('does not mutate source', () => {
+      let source = { a: 1, b: undefined };
+      JsonHelper.removeUndefinedProperties(source);
+      expect(source).toEqual({ a: 1, b: undefined });
+    });
+  });
+
   describe(`Merge Maps: `, () => {
     test('should combines all entries of two maps', () => {
       let map1 = new Map<string, string>();

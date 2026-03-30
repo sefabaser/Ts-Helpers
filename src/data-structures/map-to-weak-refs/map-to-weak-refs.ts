@@ -1,3 +1,6 @@
+/**
+ * Holds WeakRefs as values. If a referanced object is removed from memory, the entry becomes void.
+ */
 export class MapToWeakRefs<ValueType extends object, KeyType extends number | string = string> {
   private _refs: Map<KeyType, WeakRef<ValueType>> = new Map();
 
