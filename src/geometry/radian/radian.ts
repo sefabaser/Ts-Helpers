@@ -31,8 +31,8 @@ export const PI_360 = Math.PI * 2;
 const TRIPLE_EPSILON = Number.EPSILON * 3;
 
 export interface RadianCache {
-  vector?: Vector;
-  alreadyNormalized?: boolean;
+  vector: Vector | undefined;
+  alreadyNormalized: boolean | undefined;
 }
 
 export class Radian {
@@ -117,7 +117,7 @@ export class Radian {
   abs(): Radian {
     // Cache - vector: Unknown, requires calculation.
     // Cache - alreadyNormalized: During the calculation, the value will be normalized.
-    return new Radian(Math.abs(this.value), { alreadyNormalized: true });
+    return new Radian(Math.abs(this.value), { vector: undefined, alreadyNormalized: true });
   }
 
   noHigherThan(radian: Radian): Radian {
