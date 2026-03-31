@@ -31,35 +31,35 @@ export const PI_360 = Math.PI * 2;
 const TRIPLE_EPSILON = Number.EPSILON * 3;
 
 export interface RadianCache {
-  vector: Vector | undefined;
-  alreadyNormalized: boolean | undefined;
+  vector?: Vector | undefined;
+  alreadyNormalized?: boolean | undefined;
 }
 
 export class Radian {
   // Normalize - skip: The values are always in normalized range.
   // Cache - vector: If anyone gets the vector of the radian, it will set the cache for all requests. There is no need to cache beforehand.
-  static readonly get0 = new Radian(0, { vector: undefined, alreadyNormalized: true });
-  static readonly get30 = new Radian(DEGREE_30, { vector: undefined, alreadyNormalized: true });
-  static readonly get45 = new Radian(DEGREE_45, { vector: undefined, alreadyNormalized: true });
-  static readonly get60 = new Radian(DEGREE_60, { vector: undefined, alreadyNormalized: true });
-  static readonly get90 = new Radian(DEGREE_90, { vector: undefined, alreadyNormalized: true });
-  static readonly get120 = new Radian(DEGREE_120, { vector: undefined, alreadyNormalized: true });
-  static readonly get135 = new Radian(DEGREE_135, { vector: undefined, alreadyNormalized: true });
-  static readonly get150 = new Radian(DEGREE_150, { vector: undefined, alreadyNormalized: true });
-  static readonly get180 = new Radian(DEGREE_180, { vector: undefined, alreadyNormalized: true });
-  static readonly get210 = new Radian(DEGREE_210, { vector: undefined, alreadyNormalized: true });
-  static readonly get225 = new Radian(DEGREE_225, { vector: undefined, alreadyNormalized: true });
-  static readonly get240 = new Radian(DEGREE_240, { vector: undefined, alreadyNormalized: true });
-  static readonly get270 = new Radian(DEGREE_270, { vector: undefined, alreadyNormalized: true });
-  static readonly get300 = new Radian(DEGREE_300, { vector: undefined, alreadyNormalized: true });
-  static readonly get315 = new Radian(DEGREE_315, { vector: undefined, alreadyNormalized: true });
-  static readonly get330 = new Radian(DEGREE_330, { vector: undefined, alreadyNormalized: true });
+  static readonly get0 = new Radian(0, { alreadyNormalized: true });
+  static readonly get30 = new Radian(DEGREE_30, { alreadyNormalized: true });
+  static readonly get45 = new Radian(DEGREE_45, { alreadyNormalized: true });
+  static readonly get60 = new Radian(DEGREE_60, { alreadyNormalized: true });
+  static readonly get90 = new Radian(DEGREE_90, { alreadyNormalized: true });
+  static readonly get120 = new Radian(DEGREE_120, { alreadyNormalized: true });
+  static readonly get135 = new Radian(DEGREE_135, { alreadyNormalized: true });
+  static readonly get150 = new Radian(DEGREE_150, { alreadyNormalized: true });
+  static readonly get180 = new Radian(DEGREE_180, { alreadyNormalized: true });
+  static readonly get210 = new Radian(DEGREE_210, { alreadyNormalized: true });
+  static readonly get225 = new Radian(DEGREE_225, { alreadyNormalized: true });
+  static readonly get240 = new Radian(DEGREE_240, { alreadyNormalized: true });
+  static readonly get270 = new Radian(DEGREE_270, { alreadyNormalized: true });
+  static readonly get300 = new Radian(DEGREE_300, { alreadyNormalized: true });
+  static readonly get315 = new Radian(DEGREE_315, { alreadyNormalized: true });
+  static readonly get330 = new Radian(DEGREE_330, { alreadyNormalized: true });
 
   static random(): Radian {
     let radian = Math.random() * PI_360 - PI_180;
     // Cache - vector: Unknown, requires calculation.
     // Cache - alreadyNormalized: The value is always in normalized range.
-    return new Radian(radian, { vector: undefined, alreadyNormalized: true });
+    return new Radian(radian, { alreadyNormalized: true });
   }
 
   static getAverage(...radians: Radian[]): Radian {
@@ -87,7 +87,7 @@ export class Radian {
 
   constructor(value: number, cache?: RadianCache) {
     this._value = value;
-    this._cache = cache ?? { vector: undefined, alreadyNormalized: undefined };
+    this._cache = cache ?? {};
   }
 
   subtract(radian: Radian): Radian {
@@ -117,7 +117,7 @@ export class Radian {
   abs(): Radian {
     // Cache - vector: Unknown, requires calculation.
     // Cache - alreadyNormalized: During the calculation, the value will be normalized.
-    return new Radian(Math.abs(this.value), { vector: undefined, alreadyNormalized: true });
+    return new Radian(Math.abs(this.value), { alreadyNormalized: true });
   }
 
   noHigherThan(radian: Radian): Radian {
@@ -144,7 +144,7 @@ export class Radian {
     }
     // Cache - vector: Unknown, requires calculation.
     // Cache - alreadyNormalized: The value is always in normalized range.
-    return new Radian(result, { vector: undefined, alreadyNormalized: true });
+    return new Radian(result, { alreadyNormalized: true });
   }
 
   isBetweenAngles(start: Radian, end: Radian): boolean {

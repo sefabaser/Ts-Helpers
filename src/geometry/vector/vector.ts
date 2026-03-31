@@ -7,23 +7,23 @@ export interface Vec2 {
 }
 
 export interface VectorCache {
-  length: number | undefined;
-  radian: Radian | undefined;
+  length?: number | undefined;
+  radian?: Radian | undefined;
 }
 
 // Each "new Vector()" should consider the cache and have "Cache" comments.
 export class Vector {
   // Cache - length: Known, equals to zero.
   // Cache - radian: If anyone gets the radian of the vector, it will set the cache for all requests. There is no need to cache beforehand.
-  static zero = new Vector(0, 0, { length: 0, radian: undefined });
+  static zero = new Vector(0, 0, { length: 0 });
 
   // Cache - length: Known
   // Cache - radian: If anyone gets the radian of the vector, it will set the cache for all requests. There is no need to cache beforehand.
-  static half = new Vector(0.5, 0.5, { length: 0.7071068, radian: undefined });
+  static half = new Vector(0.5, 0.5, { length: 0.7071068 });
 
   // Cache - length: Known
   // Cache - radian: If anyone gets the radian of the vector, it will set the cache for all requests. There is no need to cache beforehand.
-  static one = new Vector(1, 1, { length: 1.4142136, radian: undefined });
+  static one = new Vector(1, 1, { length: 1.4142136 });
 
   static fromVec2(vector: Vec2): Vector {
     // Cache - length: Unknown, requires calculation.
@@ -74,7 +74,7 @@ export class Vector {
   constructor(x: number, y: number, cache?: VectorCache) {
     this.x = x;
     this.y = y;
-    this._cache = cache ?? { length: undefined, radian: undefined };
+    this._cache = cache ?? {};
   }
 
   isEqual(vector: Vector | undefined): boolean {
@@ -139,7 +139,7 @@ export class Vector {
   multiplyNumber(multiplier: number): Vector {
     // Cache - length: Unknown, requires calculation.
     // Cache - radian: Known, stays the same.
-    return new Vector(this.x * multiplier, this.y * multiplier, { length: undefined, radian: this._cache.radian });
+    return new Vector(this.x * multiplier, this.y * multiplier, { radian: this._cache.radian });
   }
 
   divide(vector: Vector): Vector {
@@ -151,7 +151,7 @@ export class Vector {
   divideNumber(divider: number): Vector {
     // Cache - length: Unknown, requires calculation.
     // Cache - radian: Known, stays the same.
-    return new Vector(this.x / divider, this.y / divider, { length: undefined, radian: this._cache.radian });
+    return new Vector(this.x / divider, this.y / divider, { radian: this._cache.radian });
   }
 
   round(options?: { rollHalfsDown?: boolean }): Vector {
@@ -223,7 +223,7 @@ export class Vector {
     let multiplier = dotProduct / (vectorLength * vectorLength);
     // Cache - length: Unknown, requires calculation.
     // Cache - radian: Known, it is equal to the radian of the given vector.
-    return new Vector(vector.x * multiplier, vector.y * multiplier, { length: undefined, radian: vector._cache.radian });
+    return new Vector(vector.x * multiplier, vector.y * multiplier, { radian: vector._cache.radian });
   }
 
   dotProduct(vector: Vector): number {
