@@ -1,4 +1,4 @@
-import { Comparator } from '..';
+import { Comparator, type NoWiden, type UndefinedToOptional } from '..';
 import { type MapDifference } from '.';
 
 export const DEEP_COPYABLE_SYMBOL = '_deepCopyable';
@@ -105,10 +105,14 @@ export class JsonHelper {
     return Comparator.isEqual(item1, item2);
   }
 
-  static removeUndefinedProperties<T extends object>(source: T): Partial<T> {
-    return Object.entries(source)
-      .filter(([, value]) => value !== undefined)
-      .reduce<Partial<T>>((accumulator, [propertyKey, propertyValue]) => ({ ...accumulator, [propertyKey]: propertyValue }), {});
+  static removeUndefinedProperties<const T extends NoWiden<T>>(source: T): UndefinedToOptional<T> {
+    const result = {} as UndefinedToOptional<T>;
+    for (const key in source) {
+      if (source[key] !== undefined) {
+        (result as any)[key] = source[key];
+      }
+    }
+    return result;
   }
 
   static mergeMaps<T, K>(map1: Map<T, K>, map2: Map<T, K>): Map<T, K> {

@@ -62,3 +62,20 @@ export type TypeValuePair<M extends Record<T, any>, T extends string = keyof M &
 }[T];
 
 export type EmptyObject = Record<string, never>;
+
+type UndefinedTypesToOptionalTypes<T> = { [K in keyof T]: T[K] } & {};
+export type UndefinedToOptional<T> = UndefinedTypesToOptionalTypes<
+  {
+    [K in keyof T as undefined extends T[K] ? K : never]?: Exclude<T[K], undefined>;
+  } & {
+    [K in keyof T as undefined extends T[K] ? never : K]: T[K];
+  }
+>;
+
+export type NoWiden<T> = {
+  [K in keyof T]: T[K] extends string ? T[K] : T[K] extends number ? T[K] : T[K];
+};
+
+export type PartialOrUndefined<T> = {
+  [K in keyof T]?: T[K] | undefined;
+};
