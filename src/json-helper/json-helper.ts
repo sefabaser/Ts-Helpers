@@ -1,4 +1,4 @@
-import { Comparator, type NoWiden, type UndefinedToOptional } from '..';
+import { Comparator, type UndefinedToOptional } from '..';
 import { type MapDifference } from '.';
 
 export const DEEP_COPYABLE_SYMBOL = '_deepCopyable';
@@ -105,7 +105,7 @@ export class JsonHelper {
     return Comparator.isEqual(item1, item2);
   }
 
-  static removeUndefinedProperties<const T extends NoWiden<T>>(source: T): UndefinedToOptional<T> {
+  static removeUndefinedProperties<T>(source: T): UndefinedToOptional<T> {
     const result = {} as UndefinedToOptional<T>;
     for (const key in source) {
       if (source[key] !== undefined) {

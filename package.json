@@ -1,6 +1,6 @@
 {
   "name": "helpers-lib",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Typescript Helpers Library",
   "main": "src/index.ts",
   "publishConfig": {
