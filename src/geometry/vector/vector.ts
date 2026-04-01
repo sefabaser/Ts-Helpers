@@ -7,23 +7,23 @@ export interface Vec2 {
 }
 
 export interface VectorCache {
-  length?: number;
-  radian?: Radian;
+  length?: number | undefined;
+  radian?: Radian | undefined;
 }
 
 // Each "new Vector()" should consider the cache and have "Cache" comments.
 export class Vector {
   // Cache - length: Known, equals to zero.
   // Cache - radian: If anyone gets the radian of the vector, it will set the cache for all requests. There is no need to cache beforehand.
-  static zero = new Vector(0, 0, { length: 0, radian: undefined });
+  static zero = new Vector(0, 0, { length: 0 });
 
   // Cache - length: Known
   // Cache - radian: If anyone gets the radian of the vector, it will set the cache for all requests. There is no need to cache beforehand.
-  static half = new Vector(0.5, 0.5, { length: 0.7071068, radian: undefined });
+  static half = new Vector(0.5, 0.5, { length: 0.7071068 });
 
   // Cache - length: Known
   // Cache - radian: If anyone gets the radian of the vector, it will set the cache for all requests. There is no need to cache beforehand.
-  static one = new Vector(1, 1, { length: 1.4142136, radian: undefined });
+  static one = new Vector(1, 1, { length: 1.4142136 });
 
   static fromVec2(vector: Vec2): Vector {
     // Cache - length: Unknown, requires calculation.
@@ -74,7 +74,7 @@ export class Vector {
   constructor(x: number, y: number, cache?: VectorCache) {
     this.x = x;
     this.y = y;
-    this._cache = cache ?? { length: undefined, radian: undefined };
+    this._cache = cache ?? {};
   }
 
   isEqual(vector: Vector | undefined): boolean {
