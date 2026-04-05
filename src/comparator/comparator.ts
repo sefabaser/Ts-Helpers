@@ -20,12 +20,12 @@ export class Comparator {
     return a instanceof Date && !isNaN(a.getTime());
   }
 
-  static isInteger(a: any): boolean {
-    return Number.isInteger(a);
-  }
-
   static isNumber(a: any): a is number {
     return typeof a === 'number' && a === a;
+  }
+
+  static isInteger(a: any): boolean {
+    return Number.isInteger(a);
   }
 
   static isBoolean(a: any): a is boolean {

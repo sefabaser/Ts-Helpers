@@ -102,6 +102,12 @@ export class UnitTestHelper {
     await this._checkCallbackErrors(callback);
 
     this.silenceConsole(true);
+
+    start = performance.now();
+    for (let i = 0; i < options.repetationCount; i++) {}
+    end = performance.now();
+    let emptyCallDuration = end - start;
+
     for (let v = 0; v < options.sampleCount; v++) {
       start = performance.now();
       for (let i = 0; i < options.repetationCount; i++) {
@@ -111,7 +117,7 @@ export class UnitTestHelper {
         }
       }
       end = performance.now();
-      durations.push(end - start);
+      durations.push(end - start - emptyCallDuration);
 
       await this.forceGarbageCollection();
     }

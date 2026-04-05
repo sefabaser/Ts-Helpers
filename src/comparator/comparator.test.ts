@@ -79,23 +79,6 @@ describe('Comparator: ', () => {
     });
   });
 
-  describe(`IsInteger: `, () => {
-    test('should compare non integer object', () => {
-      let obj = 'str';
-      expect(Comparator.isInteger(obj)).toEqual(false);
-    });
-
-    test('should compare integer', () => {
-      let obj = 2;
-      expect(Comparator.isInteger(obj)).toEqual(true);
-    });
-
-    test('should not be confused with other numbers', () => {
-      let obj = 2.2;
-      expect(Comparator.isInteger(obj)).toEqual(false);
-    });
-  });
-
   describe(`IsNumber: `, () => {
     test('non number object', () => {
       let obj = {};
@@ -112,9 +95,51 @@ describe('Comparator: ', () => {
       expect(Comparator.isNumber(obj)).toEqual(false);
     });
 
+    test('negative number', () => {
+      let obj = -2;
+      expect(Comparator.isNumber(obj)).toEqual(true);
+    });
+
+    test('decimal number', () => {
+      let obj = 2.2;
+      expect(Comparator.isNumber(obj)).toEqual(true);
+    });
+
+    test('negative decimal number', () => {
+      let obj = -2.2;
+      expect(Comparator.isNumber(obj)).toEqual(true);
+    });
+
     test('NaN', () => {
       let obj = NaN;
       expect(Comparator.isNumber(obj)).toEqual(false);
+    });
+  });
+
+  describe(`IsInteger: `, () => {
+    test('should compare non integer object', () => {
+      let obj = 'str';
+      expect(Comparator.isInteger(obj)).toEqual(false);
+    });
+
+    test('should compare integer', () => {
+      let obj = 2;
+      expect(Comparator.isInteger(obj)).toEqual(true);
+    });
+
+    test('should compare negative integer', () => {
+      let obj = -2;
+      expect(Comparator.isInteger(obj)).toEqual(true);
+    });
+
+    test('decimal number', () => {
+      let obj = 2.2;
+      expect(Comparator.isInteger(obj)).toEqual(false);
+    });
+
+    test('negative decimal number', () => {
+      let obj = -2.2;
+      expect(Comparator.isInteger(obj)).toEqual(false);
     });
   });
 
